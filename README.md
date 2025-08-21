@@ -20,8 +20,8 @@ uv sync --frozen
 # Data
 
 
-# demo use
-# summary with llm
+# Demo usage
+## Summary with LLM
 `uv run scripts/test_sum_comments.py`
 
 
