@@ -5,7 +5,7 @@ from pathlib import Path
 # Add the src directory to the path to import our modules
 sys.path.append(str(Path(__file__).parent.parent))
 
-from models.openai_api_models import OpenAIClientBase
+from models.LanguageModel import LanguageModel
 from utils.prompts.summarization import SummarizationPrompt
 
 
@@ -25,7 +25,7 @@ class CommentSummarizer:
         """
         self.model = model
         self.system_prompt = system_prompt
-        self.client = OpenAIClientBase(model=model)
+        self.client = LanguageModel(model=model)
     
     def summarize_topic_modeling(self, comments: str) -> str:
         """
@@ -41,7 +41,7 @@ class CommentSummarizer:
         system_prompt, user_input = prompt.topic_modeling_prompt_first_round()
         
         try:
-            response = self.client.chat_completion(system_prompt=system_prompt, input=user_input)
+            response = self.client.chat_completion(system_prompt=system_prompt, input_text=user_input)
             return response
         except Exception as e:
             return f"Error generating summary: {str(e)}"
@@ -61,7 +61,7 @@ class CommentSummarizer:
         system_prompt, user_input = prompt.topic_modeling_prompt_second_round(topics)
         
         try:
-            response = self.client.chat_completion(system_prompt=system_prompt, input=user_input)
+            response = self.client.chat_completion(system_prompt=system_prompt, input_text=user_input)
             return response
         except Exception as e:
             return f"Error merging topics: {str(e)}"
@@ -80,7 +80,7 @@ class CommentSummarizer:
         system_prompt, user_input = prompt.summarizing_main_points_prompt()
         
         try:
-            response = self.client.chat_completion(system_prompt=system_prompt, input=user_input)
+            response = self.client.chat_completion(system_prompt=system_prompt, input_text=user_input)
             return response
         except Exception as e:
             return f"Error generating main points summary: {str(e)}"
@@ -103,7 +103,7 @@ class CommentSummarizer:
             
             response = self.client.chat_completion(
                 system_prompt=custom_system_prompt, 
-                input=formatted_user_prompt
+                input_text=formatted_user_prompt
             )
             return response
         except Exception as e:

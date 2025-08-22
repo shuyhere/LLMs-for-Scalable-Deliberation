@@ -16,6 +16,13 @@ uv python install
 uv sync --frozen
 ```
 
+Also you need to create .env file at the root of this project folder
+```bash
+OPENAI_API_KEY=YOUR_OPENAI_KEY
+
+ZHI_API_KEY=YOUR_ZHIZENGZENG_KEY
+```
+
 
 # Data
 

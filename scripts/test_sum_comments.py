@@ -81,7 +81,7 @@ def read_comments_from_csv(csv_path: str) -> tuple[str, str]:
 def main():
     """Main function to run comment summarization."""
     
-    csv_path = "/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/demo_datasets/deliberation_comments_aggregated.csv"
+    csv_path = "datasets/demo_datasets/deliberation_comments_aggregated.csv"
     
     if not Path(csv_path).exists():
         print(f"CSV file not found: {csv_path}")
