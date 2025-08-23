@@ -1,25 +1,31 @@
-# Dataset	
+## Dataset
 
-## Data format
+### JSON format
+```
+{
+  "question": "...",
+  "comments": [
+    {"index": 0, "comment": "..."},
+    {"index": 1, "comment": "..."}
+  ]
+}
+```
 
-## Download
+### Files
+- datasets/bowling-green.json 
+  - 580 items   
+  - question: What do you believe should change in Bowling Green/Warren County in order to make it a better place to live, work and spend time?
 
-## Source
+- datasets/operation.json 
+  - 233 items 
+  - question: What does the collective movement want? What are we fighting for? What direction do we want to see our country go? What are the ‘marching orders’ we are going to give our elected officials?
 
-* Existing datasets (for automatic evaluation)
-	* Protest: 300 participants
-	Gun usage: 300 participants
-	Abortion: several thousand
-	* Democracy: several thousand
-	* AI: several thousands
-* Other accessible datasets from Polis (including (abusive, not on topic) views that need moderating)
-	* Taiwan Uber (Traditional Chinese): 4668 views
-	* Land Bank: 405 views
-	* New minimum wage law: 6184 views
-	* Bowling Green/Warren County: 2031 views
-	* Football concussions: 5109 views 
-	* Marching orders: 6290 views
-	* …
-* Statement and voting
+- datasets/protest.json 
+  - 474 items 
+  - question: Do you support the use of military force against civilians if there are peaceful protests when the next president takes office?
+
+- datasets/gun_use.json 
+  - 212 items 
+  - question: Should people with mental illness be legally allowed to purchase guns?
 
 
