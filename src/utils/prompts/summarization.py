@@ -26,11 +26,11 @@ class SummarizationPrompt(BasePrompt):
         """Required abstract method - defaults to first round behavior."""
         return self.get_user_input_first_round()
     
-    def get_user_input_first_round(self) -> str:
+    def get_topic_first_round(self) -> str:
         """Generate user input with comments from external info."""
         return f"I want you to do topic modeling on the given comments. Print the detected topics line by line. Here are the comments: {self.get_external_info('comments')}"
     
-    def get_user_input_second_round(self) -> str:
+    def get_topic_second_round(self) -> str:
         """Generate user input for second round topic modeling."""
         return f"I want you to merge the given lists of topics into smallest set of topics that are comprehensive. Here are the lists of topics: {self.get_external_info('topics')}"
     
@@ -41,7 +41,7 @@ class SummarizationPrompt(BasePrompt):
         Returns:
             Tuple of (system_prompt, user_input)
         """
-        return self.get_system_prompt(), self.get_user_input_first_round()
+        return self.get_system_prompt(), self.get_topic_first_round()
     
     def topic_modeling_prompt_second_round(self, topics: str) -> tuple[str, str]:
         """
@@ -57,20 +57,31 @@ class SummarizationPrompt(BasePrompt):
         self.update_external_info({"topics": topics})
         
         # Return system prompt and the second round user input
-        return self.get_system_prompt(), self.get_user_input_second_round()
+        return self.get_system_prompt(), self.get_topic_second_round()
     
-    def get_user_input_summarizing_main_points(self) -> str:
+    def get_summarizing_main_points_from_votes(self) -> str:
         """Generate user input for summarizing main points with topic modeling and agreement analysis."""
         return f"""In each line, I provide you with comments and percentage of votes that agreed and disagreed with them for Group 0 and Group 1. I want you to do topic modeling on the given comments. Print the detected topics line by line. At the end, generate an overall summary of the comments. In the summary, make sure to include information and quantification on how much agreement versus disagreement there was across Group 0 and Group 1 for different topics. Here are the comments: {self.get_external_info('comments')}"""
 
-    def summarizing_main_points_prompt(self) -> tuple[str, str]:
+    def summarizing_main_points_prompt_from_votes(self) -> tuple[str, str]:
         """
         Get the prompt pair for summarizing main points.
         
         Returns:
             Tuple of (system_prompt, user_input)
         """
-        return self.get_system_prompt(), self.get_user_input_summarizing_main_points()
+        return self.get_system_prompt(), self.get_summarizing_main_points_from_votes()
+    
+    def get_summarizing_main_points_from_comments(self) -> str:
+        """Generate user input for summarizing main points with topic modeling and agreement analysis."""
+        return f"""In each line, I provide you with comments for a question{self.get_external_info('question')}. At the end, generate an overall summary of the comments. Here are the comments: {self.get_external_info('comments')}"""
+    
+    def summarizing_main_points_prompt_from_comments(self) -> tuple[str, str]:
+        """
+        Get the prompt pair for summarizing main points.
+        """
+        return self.get_system_prompt(), self.get_summarizing_main_points_from_comments()
+    
 
 if __name__ == "__main__":
     # Example usage - First round

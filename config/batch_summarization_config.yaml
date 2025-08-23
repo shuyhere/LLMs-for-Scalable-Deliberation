@@ -1,0 +1,45 @@
+# Configuration file for batch summarization
+
+# Model configuration
+model:
+  name: "gpt-4o-mini"  # Model to use for summarization
+  temperature: 0.7      # Temperature for generation
+  # max_tokens: 30000      # Maximum tokens for summary
+
+# Dataset configuration
+datasets:
+  - "datasets/protest.json"
+  - "datasets/gun_use.json"
+  - "datasets/operation.json"
+  - "datasets/bowling-green.json"
+
+# Processing configuration
+processing:
+  num_samples: 100      # Number of comments to use per dataset (0 for all)
+  parallel: false       # Process datasets in parallel (not recommended for API rate limits)
+  save_comment_content: false  # Save comment content (false = only save indices)
+
+# Output configuration
+output:
+  directory: "results/summary"  # Output directory for results
+  format: "json"                # Output format
+  include_metadata: true        # Include metadata in results
+  include_statistics: true      # Include statistics in results
+
+# Custom prompts
+# prompts:
+#   custom_system_prompt: "You are an expert data analyst specializing in public opinion analysis."
+#   custom_user_prompt: "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}"
+
+# Summary types to generate
+summary_types:
+  topic_modeling: False      # Generate topic modeling summary
+  main_points: True         # Generate main points summary
+  custom_analysis: False     # Generate custom prompt summary  
+
+# Quality control
+quality_control:
+    # min_summary_length: 50    # Minimum summary length
+    # max_summary_length: 2000  # Maximum summary length
+  retry_failed: true        # Retry failed summaries
+  max_retries: 5           # Maximum retry attempts

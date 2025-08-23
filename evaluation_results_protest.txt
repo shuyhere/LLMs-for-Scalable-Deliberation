@@ -1,0 +1,85 @@
+SUMMARY EVALUATION RESULTS
+==================================================
+
+Input file: datasets/protest.json
+Data type: JSON
+Question: Do you support the use of military force against civilians if there are peaceful protests when the next president takes office?
+Generated Summary: Overall Summary:
+The overwhelming sentiment expressed across the comments is that peaceful protests are a fundamental right, protected by the Constitution, and a vital aspect of democracy. There is a strong consensus that military force should not be used against civilians during peaceful protests, with many emphasizing that violence is not an acceptable response. The idea of using the military in such scenarios is widely rejected, with the belief that their involvement could escalate tensions and impede on civil liberties. The comments also highlight the distinction between peaceful protests and violent actions, advocating for the protection of the former while denouncing the latter. It is clear that the majority of individuals value the right to peaceful assembly and view it as a cornerstone of American society.
+
+Total Comments: 10
+
+Comment 1: Peaceful protest is a freedom of expression
+Score: 5
+Status: success
+Response: The comment "Peaceful protest is a freedom of expression" would be best represented by option \boxed{5}. The summary emphasizes the sentiment that peaceful protests are a fundamental right and a vital aspect of democracy, which aligns closely with the idea that peaceful protest is a form of freedom of expression. Someone who had read the summary would likely find reinforcement and clarity in their understanding by seeing this specific comment.
+----------------------------------------
+
+Comment 2: The use of force against civilians during peaceful protests is terrifying - that's not the country I want to live in
+Score: 4
+Status: success
+Response: \boxed{4}
+----------------------------------------
+
+Comment 3: We do not need to utilize our military when there are peaceful protests. If anything, they can utilize police officers
+Score: 4
+Status: success
+Response: The comment is best represented by option \boxed{4}. The summary covers most of the information in the comment about not needing to utilize the military during peaceful protests, but it lacks the specific suggestion of utilizing police officers instead.
+----------------------------------------
+
+Comment 4: It's the peoples right to protest
+Score: 5
+Status: success
+Response: The comment is best represented by option \boxed{5}. The summary covers all the information in the comment.
+----------------------------------------
+
+Comment 5: Peaceful protest is a right and military force would not be used.
+Score: 4
+Status: success
+Response: The comment is mostly represented in the summary. Someone who had read the summary would not gain new information as a result of reading the comment. Therefore, the appropriate option is \boxed{4}.
+----------------------------------------
+
+Comment 6: Force should not be used if the protest is peaceful
+Score: 5
+Status: success
+Response: The comment is best represented by option \boxed{5}. The summary covers all the information in the comment, as both emphasize the idea that force should not be used during peaceful protests.
+----------------------------------------
+
+Comment 7: If a protest is peaceful, there should be no reason for the military to get involved.
+Score: 5
+Status: success
+Response: The comment is best represented by option \boxed{5}. The summary covers all the information in the comment.
+----------------------------------------
+
+Comment 8: If there is no violence on the side of protestor then there should be no violence from the military.
+Score: 4
+Status: success
+Response: The comment is best represented by option \boxed{4}. The summary covers most of the information in the comment about the absence of violence from protesters and its relation to military response, but it may lack some nuance or detail that the comment provides.
+----------------------------------------
+
+Comment 9: The military is not allowed to operate on domestic soil. No exceptions.
+Score: 4
+Status: success
+Response: \boxed{4}
+----------------------------------------
+
+Comment 10: Peaceful protests pose no risk to the public and the use of military force is never acceptable in this case.
+Score: 5
+Status: success
+Response: \boxed{5}
+----------------------------------------
+
+STATISTICS
+--------------------
+total_comments: 10
+successful_evaluations: 10
+error_evaluations: 0
+average_score: 4.5
+score_distribution:
+  Score 1: 0 comments
+  Score 2: 0 comments
+  Score 3: 0 comments
+  Score 4: 5 comments
+  Score 5: 5 comments
+min_score: 4
+max_score: 5

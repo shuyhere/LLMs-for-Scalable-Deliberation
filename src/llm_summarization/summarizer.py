@@ -25,7 +25,7 @@ class CommentSummarizer:
         """
         self.model = model
         self.system_prompt = system_prompt
-        self.client = LanguageModel(model=model)
+        self.client = LanguageModel(model_name=model)
     
     def summarize_topic_modeling(self, comments: str) -> str:
         """
@@ -77,7 +77,7 @@ class CommentSummarizer:
             Comprehensive summary with topics and agreement analysis
         """
         prompt = SummarizationPrompt(comments=comments, system_prompt=self.system_prompt)
-        system_prompt, user_input = prompt.summarizing_main_points_prompt()
+        system_prompt, user_input = prompt.summarizing_main_points_prompt_from_comments()
         
         try:
             response = self.client.chat_completion(system_prompt=system_prompt, input_text=user_input)
