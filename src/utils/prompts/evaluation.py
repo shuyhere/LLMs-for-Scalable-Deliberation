@@ -60,7 +60,7 @@ How well is the comment represented in the summary? Would someone who had read t
 (4) The summary covers most of the information in the comment, but is missing some nuance or detail.
 (5) The summary covers all the information in the comment.
 
-Please respond with one of these options. Put your final option inside \\boxed{{option}}."""
+Please respond with full reasoning and one of these options. Put your final option inside \\boxed{{option}}."""
     
     def summary_evaluation_prompt_from_comments(self) -> tuple[str, str]:
         """

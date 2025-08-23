@@ -2,6 +2,7 @@ import sys
 import os
 from pathlib import Path
 from typing import List, Dict, Any
+from datetime import datetime
 
 # Add the src directory to the path to import our modules
 sys.path.append(str(Path(__file__).parent.parent))
@@ -15,19 +16,21 @@ class SummaryEvaluator:
     A class to evaluate how well comments are represented in summaries using LLM models.
     """
     
-    def __init__(self, model: str = "gpt-4o-mini", system_prompt: str = "You are a helpful assistant"):
+    def __init__(self, model: str = "gpt-4o-mini", system_prompt: str = "You are a helpful assistant", temperature: float = 0.7):
         """
         Initialize the evaluator.
         
         Args:
             model: The LLM model to use for evaluation
             system_prompt: Custom system prompt for the model
+            temperature: Temperature for model generation (0.0 to 2.0)
         """
         self.model = model
         self.system_prompt = system_prompt
-        self.client = LanguageModel(model_name=model)
+        self.temperature = temperature
+        self.client = LanguageModel(model_name=model, temperature=temperature)
     
-    def evaluate_comment_representation(self, summary: str, comment: str) -> str:
+    def evaluate_comment_representation(self, summary: str, comment: str) -> Dict[str, Any]:
         """
         Evaluate how well a comment is represented in a summary.
         
@@ -36,7 +39,7 @@ class SummaryEvaluator:
             comment: The comment to evaluate representation of
             
         Returns:
-            Evaluation result with score (1-5) and reasoning
+            Dictionary containing full evaluation response and extracted score
         """
         prompt = EvaluationPrompt(summary=summary, comment=comment, system_prompt=self.system_prompt)
         system_prompt, user_input = prompt.summary_evaluation_prompt_from_comments()
@@ -50,7 +53,14 @@ class SummaryEvaluator:
         if response is None:
             raise Exception("Language model returned None - API call failed")
         
-        return response
+        # Extract score from response
+        score = self._extract_score_from_response(response)
+        
+        return {
+            "full_response": response,  # Complete model response
+            "extracted_score": score,   # Extracted numerical score
+            "evaluation_timestamp": datetime.now().isoformat()  # When evaluation was performed
+        }
     
     def evaluate_multiple_comments(self, summary: str, comments: List[str]) -> List[Dict[str, Any]]:
         """
@@ -67,25 +77,32 @@ class SummaryEvaluator:
         
         for i, comment in enumerate(comments):
             try:
-                response = self.evaluate_comment_representation(summary, comment)
-                
-                # Try to extract the score from the response
-                score = self._extract_score_from_response(response)
+                evaluation_result = self.evaluate_comment_representation(summary, comment)
                 
                 result = {
                     "comment_index": i,
                     "comment": comment,
-                    "evaluation_response": response,
-                    "score": score,
-                    "status": "success"
+                    "evaluation_response": evaluation_result["full_response"], 
+                    "extracted_score": evaluation_result["extracted_score"],   # Extracted score
+                    "score": evaluation_result["extracted_score"],            # Backward compatibility
+                    "status": "success",
+                    "evaluation_model": self.model,                          # Model used for this evaluation
+                    "evaluation_details": {
+                        "evaluation_timestamp": evaluation_result["evaluation_timestamp"]
+                    }
                 }
             except Exception as e:
                 result = {
                     "comment_index": i,
                     "comment": comment,
                     "evaluation_response": f"Error: {str(e)}",
+                    "extracted_score": None,
                     "score": None,
-                    "status": "error"
+                    "status": "error",
+                    "evaluation_model": self.model,                          # Model used for this evaluation
+                    "evaluation_details": {
+                        "evaluation_timestamp": datetime.now().isoformat()
+                    }
                 }
             
             results.append(result)

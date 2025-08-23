@@ -25,11 +25,21 @@ ZHI_API_KEY=YOUR_ZHIZENGZENG_KEY
 
 
 # Data
+We use the following datasets:
+- protest.json
+- gun_use.json
+- operation.json
+- bowling-green.json
 
 
 # Demo usage
 ## Summary with LLM
-`uv run scripts/test_sum_comments.py`
+`uv run scripts/batch_gen_summarization.py`
+
+## Evaluation with LLM
+`uv run scripts/batch_evaluate_summaries.py --evaluation-model gpt-4o-mini`
+
+`uv run scripts/batch_evaluate_summaries.py --evaluation-model gpt-5-nano`
 
 
 

@@ -80,12 +80,17 @@ def create_summary_result(
         "metadata": {
             "dataset_name": dataset_name,
             "question": question,
-            "model": model,
+            "summary_model": model,
             "num_samples": num_samples,
             "timestamp": datetime.now().isoformat(),
             "version": "1.0"
         },
-        "parameters": parameters,
+        "summary_parameters": {
+            "summary_types": parameters.get("summary_types", {}),
+            "custom_system_prompt": parameters.get("custom_system_prompt"),
+            "custom_user_prompt": parameters.get("custom_user_prompt"),
+            "script_version": parameters.get("script_version", "1.0")
+        },
         "summaries": {
             "topic_modeling": topic_summary,
             "main_points": main_summary,
@@ -102,7 +107,7 @@ def create_summary_result(
     }
 
 
-def save_summary_result(result: Dict[str, Any], output_dir: str, dataset_name: str) -> str:
+def save_summary_result(result: Dict[str, Any], output_dir: str, dataset_name: str, model: str) -> str:
     """
     Save summary result to JSON file.
     
@@ -110,17 +115,19 @@ def save_summary_result(result: Dict[str, Any], output_dir: str, dataset_name: s
         result: Summary result dictionary
         output_dir: Output directory path
         dataset_name: Name of the dataset
+        model: Model used for summarization
         
     Returns:
         Path to saved file
     """
-    # Create output directory if it doesn't exist
-    os.makedirs(output_dir, exist_ok=True)
+    # Create directory structure: summary/model/dataset
+    model_dir = os.path.join(output_dir, model)
+    dataset_dir = os.path.join(model_dir, dataset_name)
+    os.makedirs(dataset_dir, exist_ok=True)
     
-    # Create filename with timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"summary_{dataset_name}_{timestamp}.json"
-    filepath = os.path.join(output_dir, filename)
+    # Create filename without timestamp
+    filename = f"summary_{dataset_name}.json"
+    filepath = os.path.join(dataset_dir, filename)
     
     # Save to JSON file
     with open(filepath, 'w', encoding='utf-8') as f:
@@ -235,7 +242,7 @@ def process_dataset(
         )
         
         # Save result
-        output_file = save_summary_result(result, output_dir, dataset_name)
+        output_file = save_summary_result(result, output_dir, dataset_name, model)
         print(f"\nResults saved to: {output_file}")
         
         return result
@@ -371,8 +378,10 @@ def main():
             "results": results
         }
         
-        # Save summary report
-        report_file = os.path.join(output_dir, f"batch_summary_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+        # Save summary report in the model directory
+        model_dir = os.path.join(output_dir, model)
+        os.makedirs(model_dir, exist_ok=True)
+        report_file = os.path.join(model_dir, "batch_summary_report.json")
         with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(summary_report, f, indent=2, ensure_ascii=False)
         

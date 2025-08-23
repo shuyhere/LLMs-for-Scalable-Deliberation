@@ -146,9 +146,9 @@ python scripts/batch_summarization.py \
 ```
 results/
 └── summary/
-    ├── summary_protest_20240115_103000.json
-    ├── summary_gun_use_20240115_103000.json
-    ├── summary_operation_20240115_103000.json
-    ├── summary_bowling-green_20240115_103000.json
-    └── batch_summary_report_20240115_103000.json
+    ├── summary_protest.json
+    ├── summary_gun_use.json
+    ├── summary_operation.json
+    ├── summary_bowling-green.json
+    └── batch_summary_report.json
 ```
