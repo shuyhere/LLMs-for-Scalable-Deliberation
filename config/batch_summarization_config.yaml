@@ -15,7 +15,7 @@ datasets:
 
 # Processing configuration
 processing:
-  num_samples: 100      # Number of comments to use per dataset (0 for all)
+  num_samples: 0    # Number of comments to use per dataset (0 for all)
   parallel: false       # Process datasets in parallel (not recommended for API rate limits)
   save_comment_content: false  # Save comment content (false = only save indices)
 

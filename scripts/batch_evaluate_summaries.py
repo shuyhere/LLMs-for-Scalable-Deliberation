@@ -3,6 +3,7 @@
 Batch evaluation script for assessing summary quality.
 Reads summary files from results/summary directory and evaluates comment representation.
 Saves evaluation results in the same directory structure with 'eva_' prefix.
+Supports checkpoint and resume functionality.
 """
 
 import sys
@@ -46,6 +47,126 @@ def load_config(config_path: str = None) -> Dict[str, Any]:
     except Exception as e:
         print(f"Warning: Failed to load configuration from {config_path}: {e}")
         return {}
+
+
+def load_checkpoint(checkpoint_file: str) -> Dict[str, Any]:
+    """
+    Load checkpoint data if it exists.
+    
+    Args:
+        checkpoint_file: Path to checkpoint file
+        
+    Returns:
+        Checkpoint data dictionary
+    """
+    if not os.path.exists(checkpoint_file):
+        return {
+            "completed_files": [],
+            "failed_files": [],
+            "start_time": datetime.now().isoformat(),
+            "evaluation_model": None,
+            "total_files": 0
+        }
+    
+    try:
+        with open(checkpoint_file, 'r', encoding='utf-8') as f:
+            checkpoint_data = json.load(f)
+        print(f"Checkpoint loaded from: {checkpoint_file}")
+        return checkpoint_data
+    except Exception as e:
+        print(f"Warning: Failed to load checkpoint from {checkpoint_file}: {e}")
+        return {
+            "completed_files": [],
+            "failed_files": [],
+            "start_time": datetime.now().isoformat(),
+            "evaluation_model": None,
+            "total_files": 0
+        }
+
+
+def save_checkpoint(checkpoint_file: str, checkpoint_data: Dict[str, Any]) -> None:
+    """
+    Save checkpoint data.
+    
+    Args:
+        checkpoint_file: Path to checkpoint file
+        checkpoint_data: Checkpoint data to save
+    """
+    try:
+        # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(checkpoint_file), exist_ok=True)
+        
+        # Update checkpoint data
+        checkpoint_data["last_updated"] = datetime.now().isoformat()
+        
+        with open(checkpoint_file, 'w', encoding='utf-8') as f:
+            json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Warning: Failed to save checkpoint to {checkpoint_file}: {e}")
+
+
+def update_checkpoint(checkpoint_file: str, completed_file: str = None, failed_file: str = None) -> None:
+    """
+    Update checkpoint with completed or failed file.
+    
+    Args:
+        checkpoint_file: Path to checkpoint file
+        completed_file: Path to completed file (optional)
+        failed_file: Path to failed file (optional)
+    """
+    checkpoint_data = load_checkpoint(checkpoint_file)
+    
+    if completed_file:
+        if completed_file not in checkpoint_data["completed_files"]:
+            checkpoint_data["completed_files"].append(completed_file)
+            print(f"  ✓ Added to completed files: {os.path.basename(completed_file)}")
+    
+    if failed_file:
+        if failed_file not in checkpoint_data["failed_files"]:
+            checkpoint_data["failed_files"].append(failed_file)
+            print(f"  ✗ Added to failed files: {os.path.basename(failed_file)}")
+    
+    save_checkpoint(checkpoint_file, checkpoint_data)
+
+
+def is_file_completed(checkpoint_file: str, file_path: str) -> bool:
+    """
+    Check if a file has already been completed based on checkpoint.
+    
+    Args:
+        checkpoint_file: Path to checkpoint file
+        file_path: Path to file to check
+        
+    Returns:
+        True if file is already completed
+    """
+    checkpoint_data = load_checkpoint(checkpoint_file)
+    return file_path in checkpoint_data["completed_files"]
+
+
+def get_remaining_files(all_files: List[str], checkpoint_file: str) -> List[str]:
+    """
+    Get list of files that still need to be processed.
+    
+    Args:
+        all_files: List of all files to process
+        checkpoint_file: Path to checkpoint file
+        
+    Returns:
+        List of remaining files to process
+    """
+    checkpoint_data = load_checkpoint(checkpoint_file)
+    completed_files = set(checkpoint_data["completed_files"])
+    
+    remaining_files = [f for f in all_files if f not in completed_files]
+    
+    if remaining_files:
+        print(f"Resuming from checkpoint: {len(remaining_files)} files remaining out of {len(all_files)} total")
+        print(f"Already completed: {len(completed_files)} files")
+    else:
+        print("All files already completed according to checkpoint!")
+    
+    return remaining_files
 
 
 def load_original_dataset(dataset_name: str, datasets_dir: str = "datasets") -> Optional[tuple]:
@@ -382,12 +503,13 @@ def process_summary_file(summary_file_path: str, output_dir: str, evaluation_mod
         return False
 
 
-def find_summary_files(results_dir: str) -> List[str]:
+def find_summary_files(results_dir: str, target_dataset: str = None) -> List[str]:
     """
-    Find all summary files in the results directory.
+    Find summary files in the results directory.
     
     Args:
         results_dir: Path to results directory
+        target_dataset: Specific dataset to look for (if None, find all)
         
     Returns:
         List of paths to summary files
@@ -402,7 +524,21 @@ def find_summary_files(results_dir: str) -> List[str]:
     for root, dirs, files in os.walk(results_dir):
         for file in files:
             if file.startswith("summary_") and file.endswith(".json"):
-                summary_files.append(os.path.join(root, file))
+                file_path = os.path.join(root, file)
+                
+                # If target dataset is specified, filter by dataset name
+                if target_dataset:
+                    # Extract dataset name from file path
+                    # Path format: results/summary/model/dataset/summary_dataset.json
+                    path_parts = file_path.split(os.sep)
+                    if len(path_parts) >= 4:  # Ensure we have enough path components
+                        file_dataset = path_parts[-2]  # Second to last part is dataset name
+                        if file_dataset == target_dataset:
+                            summary_files.append(file_path)
+                            print(f"  Found summary file for dataset '{target_dataset}': {file}")
+                else:
+                    # No target dataset specified, include all files
+                    summary_files.append(file_path)
     
     return summary_files
 
@@ -432,6 +568,28 @@ def main():
         help="Output directory for evaluation results (overrides config file)"
     )
     
+    parser.add_argument(
+        "--checkpoint",
+        help="Path to checkpoint file for resume functionality (default: logs/evaluation_checkpoint.json)"
+    )
+    
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Resume from checkpoint if it exists"
+    )
+    
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Force reprocessing of already completed files"
+    )
+    
+    parser.add_argument(
+        "--dataset",
+        help="Specific dataset to evaluate (if None, evaluate all)"
+    )
+    
     args = parser.parse_args()
     
     # Load configuration file
@@ -441,27 +599,55 @@ def main():
     default_results_dir = config.get("paths", {}).get("results_directory", "results/summary")
     default_evaluation_model = config.get("evaluation_model", {}).get("name", "gpt-4o-mini")
     default_output_dir = config.get("paths", {}).get("output_directory", "results/summary")
+    default_checkpoint = "evalsum_logs/evaluation_checkpoint.json"
     
     # Use command line arguments if provided, otherwise use config defaults
     results_dir = args.results_dir if args.results_dir else default_results_dir
     evaluation_model = args.evaluation_model if args.evaluation_model else default_evaluation_model
     output_dir = args.output_dir if args.output_dir else default_output_dir
+    checkpoint_file = args.checkpoint if args.checkpoint else default_checkpoint
+    target_dataset = args.dataset
     
     print("=== BATCH SUMMARY EVALUATION SCRIPT ===")
     print(f"Configuration file: {args.config or 'config/batch_evaluation_config.yaml (default)'}")
     print(f"Results directory: {results_dir}")
     print(f"Evaluation model: {evaluation_model}")
     print(f"Output directory: {output_dir}")
+    print(f"Checkpoint file: {checkpoint_file}")
+    print(f"Resume mode: {'Enabled' if args.resume else 'Disabled'}")
+    print(f"Force reprocess: {'Enabled' if args.force else 'Disabled'}")
+    print(f"Target dataset: {target_dataset or 'All datasets'}")
     
     # Find all summary files
     print(f"\nSearching for summary files in {results_dir}...")
-    summary_files = find_summary_files(results_dir)
+    summary_files = find_summary_files(results_dir, target_dataset)
     
     if not summary_files:
         print("No summary files found!")
         return
     
     print(f"Found {len(summary_files)} summary files")
+    
+    # Handle checkpoint and resume functionality
+    if args.resume:
+        # Load checkpoint and get remaining files
+        summary_files = get_remaining_files(summary_files, checkpoint_file)
+        if not summary_files:
+            print("No files remaining to process!")
+            return
+    elif not args.force:
+        # Check if checkpoint exists and ask user what to do
+        if os.path.exists(checkpoint_file):
+            print(f"\nCheckpoint file found: {checkpoint_file}")
+            print("Use --resume to continue from checkpoint or --force to reprocess all files")
+            print("Or delete the checkpoint file to start fresh")
+            return
+    
+    # Initialize checkpoint data
+    checkpoint_data = load_checkpoint(checkpoint_file)
+    checkpoint_data["evaluation_model"] = evaluation_model
+    checkpoint_data["total_files"] = len(summary_files)
+    save_checkpoint(checkpoint_file, checkpoint_data)
     
     # Process each summary file
     successful_evaluations = 0
@@ -470,10 +656,29 @@ def main():
     for i, summary_file in enumerate(summary_files, 1):
         print(f"\n[{i}/{len(summary_files)}] Processing: {summary_file}")
         
-        if process_summary_file(summary_file, output_dir, evaluation_model, config):
+        # Check if file is already completed (unless force mode)
+        if not args.force and is_file_completed(checkpoint_file, summary_file):
+            print(f"  ⏭️  Skipping already completed file: {os.path.basename(summary_file)}")
             successful_evaluations += 1
-        else:
+            continue
+        
+        try:
+            if process_summary_file(summary_file, output_dir, evaluation_model, config):
+                successful_evaluations += 1
+                # Update checkpoint with successful completion
+                update_checkpoint(checkpoint_file, completed_file=summary_file)
+            else:
+                failed_evaluations += 1
+                # Update checkpoint with failed file
+                update_checkpoint(checkpoint_file, failed_file=summary_file)
+        except KeyboardInterrupt:
+            print(f"\n⚠️  Interrupted by user. Progress saved to checkpoint: {checkpoint_file}")
+            print("Use --resume to continue from this point")
+            return
+        except Exception as e:
+            print(f"  ❌ Unexpected error processing {summary_file}: {e}")
             failed_evaluations += 1
+            update_checkpoint(checkpoint_file, failed_file=summary_file)
     
     # Print summary
     print(f"\n{'='*60}")
@@ -488,6 +693,16 @@ def main():
         file_prefix = config.get("output", {}).get("file_prefix", "eva_summary_")
         print(f"\nEvaluation files saved with '{file_prefix}' prefix in the same directory structure.")
         print(f"Each evaluation file contains the original summary data plus evaluation results.")
+    
+    # Final checkpoint update
+    checkpoint_data = load_checkpoint(checkpoint_file)
+    checkpoint_data["completion_time"] = datetime.now().isoformat()
+    checkpoint_data["final_status"] = "completed" if failed_evaluations == 0 else "completed_with_errors"
+    save_checkpoint(checkpoint_file, checkpoint_data)
+    
+    print(f"\nCheckpoint saved to: {checkpoint_file}")
+    if failed_evaluations > 0:
+        print(f"Failed files can be retried by running with --resume flag")
 
 
 if __name__ == "__main__":

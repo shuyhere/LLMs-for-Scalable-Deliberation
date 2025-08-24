@@ -88,12 +88,10 @@ class LanguageModel:
         """Detect provider based on model name."""
         model_lower = model_name.lower()
         
-        if self._is_openai_model(model_lower):
-            return "openai"
-        elif self._is_zhizengzeng_model(model_lower):
+        if self._is_zhizengzeng_model(model_lower):
             return "zhizengzeng"
         else:
-            raise ValueError(f"Unsupported model: {model_name}. Supported providers: OpenAI, Zhizengzeng")
+            return "openai"
     
     def _is_openai_model(self, model_name: str) -> bool:
         """Check if model is OpenAI."""

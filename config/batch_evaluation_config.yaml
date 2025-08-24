@@ -20,7 +20,7 @@ evaluation:
   # Comment sampling settings
   comment_sampling:
     # Maximum comments to evaluate per dataset (null = all comments used in summary)
-    max_comments_per_dataset: 5
+    max_comments_per_dataset: null
     
     # Sampling strategy: "random", "first_n", "last_n", "stratified"
     sampling_strategy: "first_n"
