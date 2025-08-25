@@ -1,25 +1,30 @@
 #!/bin/bash
 
 # Master script for submitting multiple evaluation sbatch jobs
-# Usage: ./sbatch_eval.sh [model] [dataset] [email]
+# Usage: ./sbatch_eval.sh [evaluation_model] [summary_model] [dataset] [email]
 
 # Default values
-DEFAULT_MODEL="all"
+DEFAULT_EVAL_MODEL="all"
+DEFAULT_SUMMARY_MODEL="all"
 DEFAULT_DATASET="all"
 
 # Parse command line arguments
-MODEL=${1:-$DEFAULT_MODEL}
-DATASET=${2:-$DEFAULT_DATASET}
+EVAL_MODEL=${1:-$DEFAULT_EVAL_MODEL}
+SUMMARY_MODEL=${2:-$DEFAULT_SUMMARY_MODEL}
+DATASET=${3:-$DEFAULT_DATASET}
 
 # Available models and datasets
-MODELS=("gpt-4o-mini" "gpt-5-nano" "gemini-2.5-flash-lite" "web-rev-claude-3-7-sonnet-20250219")
+EVAL_MODELS=("gpt-4o-mini" "gpt-5-nano" "gemini-2.5-flash-lite" "web-rev-claude-3-7-sonnet-20250219")
+# SUMMARY_MODELS=("gpt-5-nano" "gemini-2.5-flash-lite" "web-rev-claude-3-7-sonnet-20250219" "gpt-4o-mini")
+SUMMARY_MODELS=("web-rev-claude-3-7-sonnet-20250219")
 DATASETS=("protest" "gun_use" "operation" "bowling-green")
 
 # Function to submit a single sbatch job
 submit_job() {
-    local model=$1
-    local dataset=$2
-    local job_name="eval_${model}_${dataset}"
+    local eval_model=$1
+    local summary_model=$2
+    local dataset=$3
+    local job_name="eval_${eval_model}_${summary_model}_${dataset}"
     
     # Create sbatch script content
     cat > "temp_${job_name}.sh" << EOF
@@ -34,11 +39,11 @@ submit_job() {
 # Set working directory
 cd /ibex/project/c2328/LLMs-Scalable-Deliberation
 
-echo "Starting evaluation: Model=${model}, Dataset=${dataset} at \$(date)"
+echo "Starting evaluation: Eval_Model=${eval_model}, Summary_Model=${summary_model}, Dataset=${dataset} at \$(date)"
 echo "=================================================="
 
 # Check if checkpoint exists and resume if possible
-checkpoint_file="evalsum_logs/evaluation_checkpoint_${model}_${dataset}.json"
+checkpoint_file="evalsum_logs/evaluation_checkpoint_${eval_model}_${summary_model}_${dataset}.json"
 if [ -f "\$checkpoint_file" ]; then
     echo "Found existing checkpoint: \$checkpoint_file"
     echo "Resuming from checkpoint..."
@@ -48,9 +53,10 @@ else
     resume_flag=""
 fi
 
-# Run evaluation with checkpoint support for this specific dataset
+# Run evaluation with checkpoint support for this specific model and dataset
 uv run scripts/batch_evaluate_summaries.py \\
-    --evaluation-model ${model} \\
+    --evaluation-model ${eval_model} \\
+    --summary-model ${summary_model} \\
     --dataset ${dataset} \\
     --config config/batch_evaluation_config.yaml \\
     --checkpoint "\$checkpoint_file" \\
@@ -100,14 +106,22 @@ show_checkpoints() {
 # Main execution logic
 echo "LLMs-Scalable-Deliberation Evaluation Job Submitter"
 echo "=================================================="
-echo "Model: ${MODEL}"
+echo "Evaluation Model: ${EVAL_MODEL}"
+echo "Summary Model: ${SUMMARY_MODEL}"
 echo "Dataset: ${DATASET}"
 echo "=================================================="
 
-# Check if model is valid
-if [[ ! " ${MODELS[@]} " =~ " ${MODEL} " ]] && [[ "$MODEL" != "all" ]]; then
-    echo "Error: Invalid model '${MODEL}'"
-    echo "Available models: ${MODELS[*]}"
+# Check if evaluation model is valid
+if [[ ! " ${EVAL_MODELS[@]} " =~ " ${EVAL_MODEL} " ]] && [[ "$EVAL_MODEL" != "all" ]]; then
+    echo "Error: Invalid evaluation model '${EVAL_MODEL}'"
+    echo "Available evaluation models: ${EVAL_MODELS[*]}"
+    exit 1
+fi
+
+# Check if summary model is valid
+if [[ ! " ${SUMMARY_MODELS[@]} " =~ " ${SUMMARY_MODEL} " ]] && [[ "$SUMMARY_MODEL" != "all" ]]; then
+    echo "Error: Invalid summary model '${SUMMARY_MODEL}'"
+    echo "Available summary models: ${SUMMARY_MODELS[*]}"
     exit 1
 fi
 
@@ -119,35 +133,57 @@ if [[ ! " ${DATASETS[@]} " =~ " ${DATASET} " ]] && [[ "$DATASET" != "all" ]]; th
 fi
 
 # Submit jobs based on parameters
-if [[ "$MODEL" == "all" && "$DATASET" == "all" ]]; then
-    # Submit jobs for ALL models and ALL datasets
-    echo "Submitting jobs for ALL models and ALL datasets..."
-    for model in "${MODELS[@]}"; do
-        for dataset in "${DATASETS[@]}"; do
-            submit_job "$model" "$dataset"
-            sleep 1  # Small delay between submissions
+if [[ "$EVAL_MODEL" == "all" && "$SUMMARY_MODEL" == "all" && "$DATASET" == "all" ]]; then
+    # Submit jobs for ALL evaluation models, ALL summary models, and ALL datasets
+    echo "Submitting jobs for ALL evaluation models, ALL summary models, and ALL datasets..."
+    for eval_model in "${EVAL_MODELS[@]}"; do
+        for summary_model in "${SUMMARY_MODELS[@]}"; do
+            for dataset in "${DATASETS[@]}"; do
+                submit_job "$eval_model" "$summary_model" "$dataset"
+                sleep 1  # Small delay between submissions
+            done
         done
     done
     echo "All jobs submitted successfully!"
-elif [[ "$MODEL" == "all" ]]; then
-    # Submit jobs for ALL models and specific dataset
-    echo "Submitting jobs for ALL models and dataset: $DATASET"
-    for model in "${MODELS[@]}"; do
-        submit_job "$model" "$DATASET"
-        sleep 1
+elif [[ "$EVAL_MODEL" == "all" && "$SUMMARY_MODEL" == "all" ]]; then
+    # Submit jobs for ALL evaluation models, ALL summary models, and specific dataset
+    echo "Submitting jobs for ALL evaluation models, ALL summary models, and dataset: $DATASET"
+    for eval_model in "${EVAL_MODELS[@]}"; do
+        for summary_model in "${SUMMARY_MODELS[@]}"; do
+            submit_job "$eval_model" "$summary_model" "$DATASET"
+            sleep 1
+        done
     done
     echo "All jobs for dataset $DATASET submitted successfully!"
-elif [[ "$DATASET" == "all" ]]; then
-    # Submit jobs for specific model and ALL datasets
-    echo "Submitting jobs for model: $MODEL and ALL datasets"
-    for dataset in "${DATASETS[@]}"; do
-        submit_job "$MODEL" "$dataset"
+elif [[ "$SUMMARY_MODEL" == "all" && "$DATASET" == "all" ]]; then
+    # Submit jobs for specific evaluation model, ALL summary models, and ALL datasets
+    echo "Submitting jobs for evaluation model: $EVAL_MODEL, ALL summary models, and ALL datasets"
+    for summary_model in "${SUMMARY_MODELS[@]}"; do
+        for dataset in "${DATASETS[@]}"; do
+            submit_job "$EVAL_MODEL" "$summary_model" "$dataset"
+            sleep 1
+        done
+    done
+    echo "All jobs for evaluation model $EVAL_MODEL submitted successfully!"
+elif [[ "$SUMMARY_MODEL" == "all" ]]; then
+    # Submit jobs for specific evaluation model, ALL summary models, and specific dataset
+    echo "Submitting jobs for evaluation model: $EVAL_MODEL, ALL summary models, and dataset: $DATASET"
+    for summary_model in "${SUMMARY_MODELS[@]}"; do
+        submit_job "$EVAL_MODEL" "$summary_model" "$DATASET"
         sleep 1
     done
-    echo "All jobs for model $MODEL submitted successfully!"
+    echo "All jobs for evaluation model $EVAL_MODEL and dataset $DATASET submitted successfully!"
+elif [[ "$DATASET" == "all" ]]; then
+    # Submit jobs for specific evaluation model, specific summary model, and ALL datasets
+    echo "Submitting jobs for evaluation model: $EVAL_MODEL, summary model: $SUMMARY_MODEL, and ALL datasets"
+    for dataset in "${DATASETS[@]}"; do
+        submit_job "$EVAL_MODEL" "$SUMMARY_MODEL" "$dataset"
+        sleep 1
+    done
+    echo "All jobs for evaluation model $EVAL_MODEL and summary model $SUMMARY_MODEL submitted successfully!"
 else
-    # Single model and dataset
-    submit_job "$MODEL" "$DATASET"
+    # Single evaluation model, summary model, and dataset
+    submit_job "$EVAL_MODEL" "$SUMMARY_MODEL" "$DATASET"
     echo "Single job submitted successfully!"
 fi
 
@@ -163,4 +199,9 @@ echo "Quick commands:"
 echo "  ./sbatch_eval.sh status    # Check job status"
 echo "  ./sbatch_eval.sh checkpoints # Show available checkpoints"
 echo ""
-echo "Note: Each dataset runs in a separate sbatch job for parallel processing!"
+echo "Usage examples:"
+echo "  ./sbatch_eval.sh gpt-4o-mini gpt-5-nano protest    # Evaluate gpt-5-nano summaries with gpt-4o-mini"
+echo "  ./sbatch_eval.sh gpt-5-nano all all                # Evaluate all summary models with gpt-5-nano"
+echo "  ./sbatch_eval.sh all gpt-5-nano all                # Evaluate gpt-5-nano summaries with all evaluation models"
+echo ""
+echo "Note: Each combination runs in a separate sbatch job for parallel processing!"

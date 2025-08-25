@@ -503,13 +503,14 @@ def process_summary_file(summary_file_path: str, output_dir: str, evaluation_mod
         return False
 
 
-def find_summary_files(results_dir: str, target_dataset: str = None) -> List[str]:
+def find_summary_files(results_dir: str, target_dataset: str = None, target_model: str = None) -> List[str]:
     """
     Find summary files in the results directory.
     
     Args:
         results_dir: Path to results directory
         target_dataset: Specific dataset to look for (if None, find all)
+        target_model: Specific model to look for (if None, find all)
         
     Returns:
         List of paths to summary files
@@ -526,19 +527,31 @@ def find_summary_files(results_dir: str, target_dataset: str = None) -> List[str
             if file.startswith("summary_") and file.endswith(".json"):
                 file_path = os.path.join(root, file)
                 
-                # If target dataset is specified, filter by dataset name
-                if target_dataset:
-                    # Extract dataset name from file path
-                    # Path format: results/summary/model/dataset/summary_dataset.json
-                    path_parts = file_path.split(os.sep)
-                    if len(path_parts) >= 4:  # Ensure we have enough path components
-                        file_dataset = path_parts[-2]  # Second to last part is dataset name
-                        if file_dataset == target_dataset:
-                            summary_files.append(file_path)
-                            print(f"  Found summary file for dataset '{target_dataset}': {file}")
-                else:
-                    # No target dataset specified, include all files
+                # Path format: results/summary/model/dataset/summary_dataset.json
+                path_parts = file_path.split(os.sep)
+                if len(path_parts) >= 4:  # Ensure we have enough path components
+                    file_model = path_parts[-3]  # Third to last part is model name
+                    file_dataset = path_parts[-2]  # Second to last part is dataset name
+                    
+                    # Filter by model if specified
+                    if target_model and file_model != target_model:
+                        continue
+                    
+                    # Filter by dataset if specified
+                    if target_dataset and file_dataset != target_dataset:
+                        continue
+                    
                     summary_files.append(file_path)
+                    
+                    # Print what we found
+                    if target_model and target_dataset:
+                        print(f"  Found summary file: {file} (Model: {file_model}, Dataset: {file_dataset})")
+                    elif target_model:
+                        print(f"  Found summary file: {file} (Model: {file_model}, Dataset: {file_dataset})")
+                    elif target_dataset:
+                        print(f"  Found summary file: {file} (Model: {file_model}, Dataset: {file_dataset})")
+                    else:
+                        print(f"  Found summary file: {file} (Model: {file_model}, Dataset: {file_dataset})")
     
     return summary_files
 
@@ -561,6 +574,11 @@ def main():
     parser.add_argument(
         "--evaluation-model",
         help="Model to use for evaluation (overrides config file)"
+    )
+    
+    parser.add_argument(
+        "--summary-model",
+        help="Specific summary model to evaluate (if None, evaluate all models)"
     )
     
     parser.add_argument(
@@ -607,11 +625,13 @@ def main():
     output_dir = args.output_dir if args.output_dir else default_output_dir
     checkpoint_file = args.checkpoint if args.checkpoint else default_checkpoint
     target_dataset = args.dataset
+    summary_model = args.summary_model
     
     print("=== BATCH SUMMARY EVALUATION SCRIPT ===")
     print(f"Configuration file: {args.config or 'config/batch_evaluation_config.yaml (default)'}")
     print(f"Results directory: {results_dir}")
     print(f"Evaluation model: {evaluation_model}")
+    print(f"Summary model to evaluate: {summary_model or 'All models'}")
     print(f"Output directory: {output_dir}")
     print(f"Checkpoint file: {checkpoint_file}")
     print(f"Resume mode: {'Enabled' if args.resume else 'Disabled'}")
@@ -620,7 +640,7 @@ def main():
     
     # Find all summary files
     print(f"\nSearching for summary files in {results_dir}...")
-    summary_files = find_summary_files(results_dir, target_dataset)
+    summary_files = find_summary_files(results_dir, target_dataset, summary_model)
     
     if not summary_files:
         print("No summary files found!")

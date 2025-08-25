@@ -25,7 +25,31 @@ class CommentSummarizer:
         """
         self.model = model
         self.system_prompt = system_prompt
-        self.client = LanguageModel(model_name=model)
+        
+        # Auto-adjust temperature for GPT-5 models
+        temperature = self._get_optimal_temperature(model)
+        
+        self.client = LanguageModel(model_name=model, temperature=temperature)
+    
+    def _get_optimal_temperature(self, model: str) -> float:
+        """
+        Get optimal temperature setting for the given model.
+        
+        Args:
+            model: Model name
+            
+        Returns:
+            Optimal temperature value
+        """
+        model_lower = model.lower()
+        
+        # GPT-5 models only support temperature=1 (default)
+        if "gpt-5" in model_lower or "gpt5" in model_lower:
+            print(f"  Auto-adjusting temperature to 1.0 for GPT-5 model: {model}")
+            return 1.0
+        
+        # For other models, use default temperature
+        return 0.7
     
     def summarize_topic_modeling(self, comments: str) -> str:
         """
