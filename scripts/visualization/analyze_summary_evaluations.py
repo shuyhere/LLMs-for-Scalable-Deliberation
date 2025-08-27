@@ -135,7 +135,11 @@ def plot_heatmap(means_df: pd.DataFrame, topic: str, out_dir: Path) -> None:
     fig_width = 2.0 + 1.6 * num_cols
     fig_height = 1.5 + 1.2 * num_rows
     fig, ax = plt.subplots(figsize=(fig_width, fig_height))
-    sns.heatmap(pivot, annot=True, fmt=".2f", cmap="viridis", cbar_kws={"label": "Mean score"}, ax=ax)
+    
+    # Use warm-to-cold color scheme (red to blue) with score range 1-5
+    sns.heatmap(pivot, annot=True, fmt=".2f", cmap="RdBu_r", 
+                cbar_kws={"label": "Mean score"}, ax=ax, vmin=1, vmax=5)
+    
     ax.set_title(f"Mean evaluation scores by summarizer and evaluator\nTopic: {topic}")
     ax.set_xlabel("Summarization model")
     ax.set_ylabel("Evaluation model")
@@ -265,13 +269,17 @@ def main() -> None:
     parser.add_argument(
         "--out-dir",
         type=str,
-        default=str(Path(__file__).resolve().parent / "outputs"),
-        help="Directory to write visualizations and CSVs",
+        default=None,  # Will be set dynamically based on results-dir
+        help="Directory to write visualizations and CSVs (default: {results-dir}/visualization)",
     )
     args = parser.parse_args()
 
     results_dir = Path(args.results_dir).resolve()
-    out_root = Path(args.out_dir).resolve()
+    # Set default out-dir to visualization folder under results-dir
+    if args.out_dir is None:
+        out_root = results_dir / "visualization"
+    else:
+        out_root = Path(args.out_dir).resolve()
     ensure_out_dir(out_root)
 
     if not results_dir.exists():

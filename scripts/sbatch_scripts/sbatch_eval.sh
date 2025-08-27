@@ -7,6 +7,9 @@
 DEFAULT_EVAL_MODEL="all"
 DEFAULT_SUMMARY_MODEL="all"
 DEFAULT_DATASET="all"
+# Keep NUM_SAMPLES in sync with generation; summaries live under results/summary/${NUM_SAMPLES}
+GEN_NUM_SAMPLES=${NUM_SAMPLES:-210}
+GEN_RESULTS_BASE_DIR="results/summary/${GEN_NUM_SAMPLES}"
 
 # Parse command line arguments
 EVAL_MODEL=${1:-$DEFAULT_EVAL_MODEL}
@@ -15,9 +18,12 @@ DATASET=${3:-$DEFAULT_DATASET}
 
 # Available models and datasets
 EVAL_MODELS=("gpt-4o-mini" "gpt-5-nano" "gemini-2.5-flash-lite" "web-rev-claude-3-7-sonnet-20250219")
-# SUMMARY_MODELS=("gpt-5-nano" "gemini-2.5-flash-lite" "web-rev-claude-3-7-sonnet-20250219" "gpt-4o-mini")
-SUMMARY_MODELS=("web-rev-claude-3-7-sonnet-20250219")
-DATASETS=("protest" "gun_use" "operation" "bowling-green")
+SUMMARY_MODELS=("gpt-5-nano" "gemini-2.5-flash-lite" "web-rev-claude-3-7-sonnet-20250219" "gpt-4o-mini")
+# SUMMARY_MODELS=("web-rev-claude-3-7-sonnet-20250219")
+DATASETS=("protest" "gun_use" "operation" "bowling-green" "GenAI" "LouisvilleCivicAssembly")
+
+# Ensure logs directory exists
+mkdir -p evalsum_logs
 
 # Function to submit a single sbatch job
 submit_job() {
@@ -54,12 +60,14 @@ else
 fi
 
 # Run evaluation with checkpoint support for this specific model and dataset
-uv run scripts/batch_evaluate_summaries.py \\
-    --evaluation-model ${eval_model} \\
-    --summary-model ${summary_model} \\
-    --dataset ${dataset} \\
-    --config config/batch_evaluation_config.yaml \\
-    --checkpoint "\$checkpoint_file" \\
+uv run scripts/batch_evaluate_summaries.py \
+    --results-dir "${GEN_RESULTS_BASE_DIR}" \
+    --output-dir "${GEN_RESULTS_BASE_DIR}" \
+    --evaluation-model ${eval_model} \
+    --summary-model ${summary_model} \
+    --dataset ${dataset} \
+    --config config/batch_evaluation_config.yaml \
+    --checkpoint "\$checkpoint_file" \
     \$resume_flag
 
 # Check exit status
@@ -109,6 +117,8 @@ echo "=================================================="
 echo "Evaluation Model: ${EVAL_MODEL}"
 echo "Summary Model: ${SUMMARY_MODEL}"
 echo "Dataset: ${DATASET}"
+echo "NUM_SAMPLES: ${GEN_NUM_SAMPLES}"
+echo "Results Base Dir: ${GEN_RESULTS_BASE_DIR}"
 echo "=================================================="
 
 # Check if evaluation model is valid

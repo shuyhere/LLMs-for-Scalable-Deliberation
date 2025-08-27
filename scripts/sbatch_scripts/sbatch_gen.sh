@@ -7,10 +7,10 @@
 set -e
 
 # Default values
-MODELS=("gpt-5-nano" "gemini-2.5-flash-lite" "web-rev-claude-3-7-sonnet-20250219")
-DATASETS=("datasets/protest.json" "datasets/bowling-green.json" "datasets/gun_use.json" "datasets/operation.json")
-NUM_SAMPLES=0
-OUTPUT_BASE_DIR="results/summary"
+MODELS=("gpt-5-nano" "gemini-2.5-flash-lite" "web-rev-claude-3-7-sonnet-20250219" "gpt-4o-mini")
+DATASETS=("datasets/protest.json" "datasets/bowling-green.json" "datasets/gun_use.json" "datasets/operation.json" "datasets/GenAI.json" "datasets/LouisvilleCivicAssembly.json")
+NUM_SAMPLES=210
+OUTPUT_BASE_DIR="results/summary/${NUM_SAMPLES}"
 DEBUG_MODE=""
 DRY_RUN=""
 MAX_PARALLEL_JOBS=5
