@@ -1,0 +1,90 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <!-- Two-column layout: instance on left, schema on right -->
+      <div class="col-md-6">
+        <div name="context_text" class="instance">
+          <div id="instance-text" name="instance_text" style="max-width:100%; font-size: 14px;">
+            {{instance | safe}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="annotation_schemas" style="display: flex; flex-direction: column; gap: 20px; max-width:100%;">
+          {{annotation_schematic}}
+        </div>
+        
+        <!-- Instructions for highlighting text -->
+        <div id="highlight-instructions" class="highlight-instructions" style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 2px solid #3949ab; display: none;">
+          <h5 style="color: #3949ab; font-weight: 600;">Highlighting Instructions:</h5>
+          <ol style="margin-bottom: 0; padding-left: 20px;">
+            <li>Click a highlight button above to select a category</li>
+            <li>Select text in the left panel to apply the highlight</li>
+            <li>To remove a highlight, click on the already highlighted text</li>
+            <li>The text is scrollable</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Script to dynamically hide forms based on instance-text content
+      document.addEventListener('DOMContentLoaded', function() {
+        const instanceText = document.getElementById('instance-text');
+        if (instanceText) {
+          // Updated selector to match the correct class name
+          const forms = document.querySelectorAll('.annotation_schemas form');
+          console.log('Forms found:', forms.length);
+          
+          if (instanceText.textContent.includes('[Question]')) {
+            // If instance-text includes [Question], hide the third and fourth form
+            if (instanceText.textContent.includes('[Options]')) {
+              console.log('only keep first question form');
+              forms[1].style.display = 'none';
+              forms[2].style.display = 'none';
+              forms[3].style.display = 'none';
+              forms[4].style.display = 'none';
+              forms[1].remove();
+              forms[2].remove();
+              forms[3].remove();
+              forms[4].remove();
+            }
+            else {
+              console.log('only keep second question form');
+              forms[0].style.display = 'none';
+              forms[3].style.display = 'none';
+              forms[4].style.display = 'none';
+              forms[0].remove();
+              forms[3].remove();
+              forms[4].remove();
+            }
+          } else {
+            // Otherwise, hide the first two forms
+            if (forms.length >= 2) {
+              console.log('Hiding form 1 and 2 and 3');
+              forms[0].style.display = 'none';
+              forms[1].style.display = 'none';
+              forms[2].style.display = 'none';
+              // Remove the hidden form
+              forms[0].remove();
+              forms[1].remove(); 
+              forms[2].remove();
+            }
+          }
+          
+          // Check if there's a span annotation schema and show instructions if found
+          const spanInputs = document.querySelectorAll('input[for_span="True"]');
+          const highlightInstructions = document.getElementById('highlight-instructions');
+          
+          if (spanInputs.length > 0 && highlightInstructions) {
+            console.log('Span annotation found, showing highlighting instructions');
+            highlightInstructions.style.display = 'block';
+          }
+        }
+      });
+    </script>
+
+    <div style="height: 15px;" />
+
+  </div>
+</div>
