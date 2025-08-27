@@ -30,6 +30,8 @@ We use the following datasets:
 - gun_use.json
 - operation.json
 - bowling-green.json
+- LouisvilleCivicAssembly.json
+- GenAI.json
 
 
 # Demo usage
@@ -45,6 +47,10 @@ default setting can be found in [config/batch_summarization_config.yaml](./confi
 `uv run scripts/batch_evaluate_summaries.py --evaluation-model gpt-4o-mini`
 
 `uv run scripts/batch_evaluate_summaries.py --evaluation-model gpt-5-nano`
+
+## Analysis scripts
+
+use `uv run xx.py` to analyze the results, all the analysis scripts are in the `scripts/visualization` folder.
 
 
 
