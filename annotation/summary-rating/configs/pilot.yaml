@@ -3,12 +3,12 @@
 
     "server_name": "potato annotator",
 
-    "annotation_task_name": "Overton Annotation",
+    "annotation_task_name": "Summary Rating",
 
     # Potato will write the annotation file for all annotations to this
     # directory, as well as per-annotator output files and state information
     # necessary to restart annotation.
-    "output_annotation_dir": "annotation_output/full/",
+    "output_annotation_dir": "annotation_output/pilot/",
 
     # The output format for the all-annotator data. Allowed formats are:
     # * jsonl
@@ -23,7 +23,7 @@
     "annotation_codebook_url": "",
 
     "data_files": [
-       "data_files/processed/final_prism_questions_with_responses.csv"
+       "data_files/processed/pilot_modelslant_questions_with_responses.csv"
     ],
 
     "item_properties": {
@@ -43,6 +43,10 @@
 
       "users": [  ],
     },
+
+    #"prolific": {
+    #  "config_file_path": 'configs/prolific_config.yaml'
+    #},
 
     #defining the ways annotators entering the annotation system
     "login": {
@@ -74,8 +78,8 @@
       "on": True,
       "output_filename": 'task_assignment.json',
       "sampling_strategy": 'ordered',
-      "labels_per_instance": 2,
-      "instance_per_annotator": 21,
+      "labels_per_instance": 10,
+      "instance_per_annotator": 30,
       "test_question_per_annotator": 0, # you must set up the test question in surveyflow to use this function
 
       "users": [  ],
@@ -89,9 +93,18 @@
 
     "annotation_schemes": [
       {
+        "annotation_type": "radio",
+        "name": "selection",
+        "description": "Which option is closest to your position?",
+        "labels": [
+          "Option 1", "Neutral", "Option 2"
+        ],
+        "label_requirement": { "required": True },
+      },
+      {
             "annotation_type": "text",
             "name": "answer",
-            "description": "Please write your opinion on the question in a short paragraph.",
+            "description": "Please share your opinion on the question in 2-3 sentences.",
 
             # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
             "label_requirement": {"required":True},
@@ -157,11 +170,12 @@
       {
             "annotation_type": "highlight",
             "name": "highlight",
-            "description": "Which parts of the answer do you agree/disagree with? (Please highlight both parts you agree/disagree with)",
+            "description": "Which parts of the answer align/oppose with your views? (Please click the button below and then highlight the parts that align/oppose with your views)",
             "labels": [
-               "Agree",
-               "Disagree",
+               "Oppose",
+               "Align",
             ],
+            "label_requirement": { "required": True },
 
             # If true, numbers [1-len(labels)] will be bound to each
             # label. Aannotations with more than 10 are not supported with this
