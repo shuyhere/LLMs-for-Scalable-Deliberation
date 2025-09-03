@@ -107,7 +107,7 @@ def create_summary_result(
     }
 
 
-def save_summary_result(result: Dict[str, Any], output_dir: str, dataset_name: str, model: str) -> str:
+def save_summary_result(result: Dict[str, Any], output_dir: str, dataset_name: str, model: str, num_samples: int = None, sample_id: int = 1) -> str:
     """
     Save summary result to JSON file.
     
@@ -116,18 +116,25 @@ def save_summary_result(result: Dict[str, Any], output_dir: str, dataset_name: s
         output_dir: Output directory path
         dataset_name: Name of the dataset
         model: Model used for summarization
+        num_samples: Number of samples used (for directory structure)
+        sample_id: Sample ID for multiple runs (default: 1)
         
     Returns:
         Path to saved file
     """
-    # Create directory structure: summary/model/dataset
+    # Create directory structure: model/num_samples/
     model_dir = os.path.join(output_dir, model)
-    dataset_dir = os.path.join(model_dir, dataset_name)
-    os.makedirs(dataset_dir, exist_ok=True)
+    if num_samples is not None:
+        samples_dir = os.path.join(model_dir, str(num_samples))
+        os.makedirs(samples_dir, exist_ok=True)
+        target_dir = samples_dir
+    else:
+        os.makedirs(model_dir, exist_ok=True)
+        target_dir = model_dir
     
-    # Create filename without timestamp
-    filename = f"summary_{dataset_name}.json"
-    filepath = os.path.join(dataset_dir, filename)
+    # Create filename: {dataset_name}_summary_{sample_id}.json
+    filename = f"{dataset_name}_summary_{sample_id}.json"
+    filepath = os.path.join(target_dir, filename)
     
     # Save to JSON file
     with open(filepath, 'w', encoding='utf-8') as f:
@@ -141,7 +148,8 @@ def process_dataset(
     model: str,
     num_samples: int,
     output_dir: str,
-    parameters: Dict[str, Any]
+    parameters: Dict[str, Any],
+    sample_id: int = 1
 ) -> Dict[str, Any]:
     """
     Process a single dataset and generate summaries.
@@ -152,6 +160,7 @@ def process_dataset(
         num_samples: Number of comments to use
         output_dir: Output directory for results
         parameters: Additional parameters
+        sample_id: Sample ID for multiple runs (default: 1)
         
     Returns:
         Summary result dictionary
@@ -184,7 +193,7 @@ def process_dataset(
             print(f"Using all {len(comments_to_use)} comments")
         
         # Format comments for summarization
-        formatted_comments = "\n".join([f"Comment {i+1}: {comment}" for i, comment in enumerate(comments_to_use)])
+        formatted_comments = "\n".join([f"{comment}" for i, comment in enumerate(comments_to_use)])
         
         # Initialize summarizer
         summarizer = CommentSummarizer(model=model)
@@ -242,7 +251,7 @@ def process_dataset(
         )
         
         # Save result
-        output_file = save_summary_result(result, output_dir, dataset_name, model)
+        output_file = save_summary_result(result, output_dir, dataset_name, model, num_samples, sample_id)
         print(f"\nResults saved to: {output_file}")
         
         return result
@@ -296,6 +305,13 @@ def main():
         help="Custom user prompt template for analysis (overrides config file)"
     )
     
+    parser.add_argument(
+        "--sample-id",
+        type=int,
+        default=1,
+        help="Sample ID for multiple runs of the same configuration (default: 1)"
+    )
+    
     args = parser.parse_args()
     
     # Load configuration file
@@ -318,6 +334,7 @@ def main():
     output_dir = args.output_dir if args.output_dir else default_output_dir
     custom_system_prompt = args.custom_system_prompt if args.custom_system_prompt else default_system_prompt
     custom_user_prompt = args.custom_user_prompt if args.custom_user_prompt else default_user_prompt
+    sample_id = args.sample_id
     
     # Create parameters dictionary
     parameters = {
@@ -355,7 +372,8 @@ def main():
             model=model,
             num_samples=num_samples,
             output_dir=output_dir,
-            parameters=parameters
+            parameters=parameters,
+            sample_id=sample_id
         )
         
         if result:

@@ -74,7 +74,7 @@ class SummarizationPrompt(BasePrompt):
     
     def get_summarizing_main_points_from_comments(self) -> str:
         """Generate user input for summarizing main points with topic modeling and agreement analysis."""
-        return f"""In each line, I provide you with comments for a question{self.get_external_info('question')}. At the end, generate an overall summary of the comments. Here are the comments: {self.get_external_info('comments')}"""
+        return f"""In each line, I provide you with human comments for a deliberation question{self.get_external_info('question')}. At the end, generate an overall summary of the comments. Please do not mention the total number of comments or participants. If you need to provide statistical information, use percentages instead of absolute numbers. Here are the comments: {self.get_external_info('comments')}"""
     
     def summarizing_main_points_prompt_from_comments(self) -> tuple[str, str]:
         """

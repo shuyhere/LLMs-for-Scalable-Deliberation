@@ -102,7 +102,7 @@ class LanguageModel:
     def _is_zhizengzeng_model(self, model_name: str) -> bool:
         """Check if model is Zhizengzeng."""
         return any(keyword in model_name for keyword in [
-            "qwen", "llama", "deepseek"
+            "qwen", "llama", "deepseek", "gemini"
         ])
     
     def _create_client(self, **kwargs):

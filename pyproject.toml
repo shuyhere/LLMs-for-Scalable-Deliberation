@@ -15,4 +15,6 @@ dependencies = [
     "scikit-learn>=1.7.1",
     "scipy>=1.16.1",
     "seaborn>=0.13.2",
+    "sentence-transformers>=5.1.0",
+    "wordcloud>=1.9.4",
 ]
