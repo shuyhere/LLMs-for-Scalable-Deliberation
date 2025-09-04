@@ -2,14 +2,14 @@
   <div class="col-md-12">
     <div class="row">
       <!-- Two-column layout: instance on left, schema on right -->
-      <div class="col-md-6">
+      <div class="col-md-8">
         <div name="context_text" class="instance">
           <div id="instance-text" name="instance_text" style="max-width:100%; font-size: 14px;">
             {{instance | safe}}
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="annotation_schemas" style="display: flex; flex-direction: column; gap: 20px; max-width:100%;">
           {{annotation_schematic}}
         </div>
@@ -37,8 +37,6 @@
           console.log('Forms found:', forms.length);
           
           if (instanceText.textContent.includes('[Question]')) {
-            // If instance-text includes [Question], hide the third and fourth form
-            if (instanceText.textContent.includes('[Options]')) {
               console.log('only keep first question form');
               forms[1].style.display = 'none';
               forms[2].style.display = 'none';
@@ -48,27 +46,13 @@
               forms[2].remove();
               forms[3].remove();
               forms[4].remove();
-            }
-            else {
-              console.log('only keep second question form');
-              forms[0].style.display = 'none';
-              forms[3].style.display = 'none';
-              forms[4].style.display = 'none';
-              forms[0].remove();
-              forms[3].remove();
-              forms[4].remove();
-            }
           } else {
-            // Otherwise, hide the first two forms
+            // Otherwise, hide the first form
             if (forms.length >= 2) {
-              console.log('Hiding form 1 and 2 and 3');
+              console.log('Hiding form 1');
               forms[0].style.display = 'none';
-              forms[1].style.display = 'none';
-              forms[2].style.display = 'none';
               // Remove the hidden form
               forms[0].remove();
-              forms[1].remove(); 
-              forms[2].remove();
             }
           }
           

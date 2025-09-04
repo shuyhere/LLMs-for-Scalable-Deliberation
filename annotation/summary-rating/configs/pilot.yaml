@@ -23,7 +23,7 @@
     "annotation_codebook_url": "",
 
     "data_files": [
-       "data_files/processed/pilot_modelslant_questions_with_responses.csv"
+       "data_files/processed/sum_humanstudy_v0903_pilot_20.csv"
     ],
 
     "item_properties": {
@@ -65,8 +65,8 @@
       "on": True,
       #"order" : ['pre_annotation', 'prestudy_passed', 'prestudy_failed', 'post_annotation'],
       "order" : ['pre_annotation', 'post_annotation'],
-      "pre_annotation": ['surveyflow/intro.jsonl', 'surveyflow/instruction.jsonl', 'surveyflow/consent.jsonl'],
-      "post_annotation": ['surveyflow/political_spectrum.jsonl','surveyflow/end.jsonl'],
+      "pre_annotation": ['surveyflow/intro.jsonl'],
+      "post_annotation": ['surveyflow/end.jsonl'],
       # If set, we will automatically generate testing questions similar to the annotation instances, but explicitly ask the annotator to choose one option
       "testing": ['surveyflow/testing.jsonl'],
     },
@@ -78,8 +78,8 @@
       "on": True,
       "output_filename": 'task_assignment.json',
       "sampling_strategy": 'ordered',
-      "labels_per_instance": 10,
-      "instance_per_annotator": 30,
+      "labels_per_instance": 3,
+      "instance_per_annotator": 2,
       "test_question_per_annotator": 0, # you must set up the test question in surveyflow to use this function
 
       "users": [  ],
@@ -92,15 +92,6 @@
     "horizontal_key_bindings": true,
 
     "annotation_schemes": [
-      {
-        "annotation_type": "radio",
-        "name": "selection",
-        "description": "Which option is closest to your position?",
-        "labels": [
-          "Option 1", "Neutral", "Option 2"
-        ],
-        "label_requirement": { "required": True },
-      },
       {
             "annotation_type": "text",
             "name": "answer",
@@ -120,29 +111,6 @@
             # simple keybinding and will need to use the full item specification
             # to bind all labels to keys.
             #"sequential_key_binding": True,
-      },
-      {
-        "annotation_type": "likert",
-
-        # This name gets used in reporting the annotation results
-        "name": "How important is this question to you?",
-
-        # This text is shown to the user and can be a longer statement
-        "description": "How important is this question to you?",
-
-        # The min and max labels are text shown at each end of the scale
-        "min_label": "Not at all",
-        "max_label": "Very important",
-        # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
-        "label_requirement": { "required": True },
-        # How many scale points to show
-        "size": 5,
-
-        # If true, keys [1-size] will be bound to scale responses. Likert
-        # scales larger than 10 are not supported with this simple
-        # keybinding and will need to use the full item specification to
-        # bind all scale points to keys.
-        #"sequential_key_binding": True,
       },
       {
         "annotation_type": "likert",
@@ -168,21 +136,75 @@
         #"sequential_key_binding": True,
       },
       {
-            "annotation_type": "highlight",
-            "name": "highlight",
-            "description": "Which parts of the answer align/oppose with your views? (Please click the button below and then highlight the parts that align/oppose with your views)",
-            "labels": [
-               "Oppose",
-               "Align",
-            ],
-            "label_requirement": { "required": True },
+        "annotation_type": "likert",
 
-            # If true, numbers [1-len(labels)] will be bound to each
-            # label. Aannotations with more than 10 are not supported with this
-            # simple keybinding and will need to use the full item specification
-            # to bind all labels to keys.
-            #"sequential_key_binding": True,                        
-        },
+        # This name gets used in reporting the annotation results
+        "name": "How informative is this summary?",
+
+        # This text is shown to the user and can be a longer statement
+        "description": "How informative is this summary?",
+
+        # The min and max labels are text shown at each end of the scale
+        "min_label": "Not at all",
+        "max_label": "Very informative",
+        # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
+        "label_requirement": { "required": True },
+        # How many scale points to show
+        "size": 5,
+
+        # If true, keys [1-size] will be bound to scale responses. Likert
+        # scales larger than 10 are not supported with this simple
+        # keybinding and will need to use the full item specification to
+        # bind all scale points to keys.
+        #"sequential_key_binding": True,
+      },
+      {
+        "annotation_type": "likert",
+
+        # This name gets used in reporting the annotation results
+        "name": "Do you think this summary presents a neutral and balanced view of the issue?",
+
+        # This text is shown to the user and can be a longer statement
+        "description": "Do you think this summary presents a neutral and balanced view of the issue?",
+
+        # The min and max labels are text shown at each end of the scale
+        "min_label": "Not at all",
+        "max_label": "Very balanced",
+        # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
+        "label_requirement": { "required": True },
+        # How many scale points to show
+        "size": 5,
+
+        # If true, keys [1-size] will be bound to scale responses. Likert
+        # scales larger than 10 are not supported with this simple
+        # keybinding and will need to use the full item specification to
+        # bind all scale points to keys.
+        #"sequential_key_binding": True,
+      },
+            {
+        "annotation_type": "likert",
+
+        # This name gets used in reporting the annotation results
+        "name": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?",
+
+        # This text is shown to the user and can be a longer statement
+        "description": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?",
+
+        # The min and max labels are text shown at each end of the scale
+        "min_label": "Not at all",
+        "max_label": "Completely",
+        # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
+        "label_requirement": { "required": True },
+        # How many scale points to show
+        "size": 5,
+
+        # If true, keys [1-size] will be bound to scale responses. Likert
+        # scales larger than 10 are not supported with this simple
+        # keybinding and will need to use the full item specification to
+        # bind all scale points to keys.
+        #"sequential_key_binding": True,
+      },
+      
 
     ],
 
