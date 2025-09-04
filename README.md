@@ -49,9 +49,11 @@ default setting can be found in [config/batch_summarization_config.yaml](./confi
 `uv run scripts/batch_evaluate_summaries.py --evaluation-model gpt-5-nano`
 
 ## Analysis scripts
-
 use `uv run xx.py` to analyze the results, all the analysis scripts are in the `scripts/visualization` folder.
 
+
+wordcloud analysis:
+`python scripts/visualization/data_visualization/wordcloud_analysis.py `
 
 
 
