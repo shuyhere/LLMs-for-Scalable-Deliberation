@@ -40,8 +40,8 @@
               padding: 20px;
               display: block;
               justify-content: center;
-              width: fit-content;
-              max-width: 80%;
+              width: 100%;
+              max-width: 100%;
               text-align: left;
               margin: 0 auto;
               font-size: 16pt;
@@ -305,11 +305,11 @@
               top: 100px;
             }
             
-            /* Make the instance text scrollable */
+            /* Remove scroll on the instance text layer */
             .instance #instance-text {
-              max-height: 70vh;
-              overflow-y: auto;
-              padding-right: 10px;
+              max-height: none;
+              overflow-y: visible;
+              padding-right: 0;
               border-radius: 6px;
               background-color: #ffffff;
               border: 1px solid #f0f0f0;

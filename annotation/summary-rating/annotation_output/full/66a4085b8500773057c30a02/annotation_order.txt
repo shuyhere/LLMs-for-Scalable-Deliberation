@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_1941_question
+triplet_1941_rating
+triplet_1941_comparison
+Summary-Rating-end.html

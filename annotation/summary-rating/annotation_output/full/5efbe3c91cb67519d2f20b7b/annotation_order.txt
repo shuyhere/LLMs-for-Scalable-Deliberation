@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_529_question
+triplet_529_rating
+triplet_529_comparison
+Summary-Rating-end.html

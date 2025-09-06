@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_1924_question
+triplet_1924_rating
+triplet_1924_comparison
+Summary-Rating-end.html

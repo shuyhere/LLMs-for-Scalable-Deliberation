@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_90_question
+triplet_90_rating
+triplet_90_comparison
+Summary-Rating-end.html

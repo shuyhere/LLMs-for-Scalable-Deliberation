@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_824_question
+triplet_824_rating
+triplet_824_comparison
+Summary-Rating-end.html

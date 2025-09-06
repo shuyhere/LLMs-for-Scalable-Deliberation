@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="annotation_schemas" style="display: flex; flex-direction: column; gap: 20px; max-width:100%;">
+        <div class="annotation_schemas" style="display: flex; flex-direction: column; gap: 20px; font-size: 14px; max-width:100%;">
           {{annotation_schematic}}
         </div>
         
@@ -28,38 +28,90 @@
     </div>
 
     <script>
-      // Script to dynamically hide forms based on instance-text content
+      // Script to dynamically show/hide forms based on instance type (robust to CSV text changes)
       document.addEventListener('DOMContentLoaded', function() {
         const instanceText = document.getElementById('instance-text');
+        const instanceIdInput = document.getElementById('instance_id');
         if (instanceText) {
-          // Updated selector to match the correct class name
           const forms = document.querySelectorAll('.annotation_schemas form');
           console.log('Forms found:', forms.length);
-          
-          if (instanceText.textContent.includes('[Question]')) {
-              console.log('only keep first question form');
-              forms[1].style.display = 'none';
-              forms[2].style.display = 'none';
-              forms[3].style.display = 'none';
-              forms[4].style.display = 'none';
-              forms[1].remove();
-              forms[2].remove();
-              forms[3].remove();
-              forms[4].remove();
-          } else {
-            // Otherwise, hide the first form
-            if (forms.length >= 2) {
-              console.log('Hiding form 1');
+
+          const textContent = instanceText.textContent || '';
+          const instanceId = instanceIdInput ? (instanceIdInput.value || '') : '';
+
+          // Prefer instance_id-based routing
+          if (instanceId.includes('_question')) {
+            console.log('Question page (by id): showing only text input form');
+            for (let i = 1; i < forms.length && i <= 8; i++) {
+              if (forms[i]) {
+                forms[i].style.display = 'none';
+                forms[i].remove();
+              }
+            }
+          } else if (instanceId.includes('_rating')) {
+            console.log('Rating page (by id): showing rating forms (1-4)');
+            if (forms[0]) {
               forms[0].style.display = 'none';
-              // Remove the hidden form
               forms[0].remove();
             }
+            for (let i = 5; i < forms.length && i <= 8; i++) {
+              if (forms[i]) {
+                forms[i].style.display = 'none';
+                forms[i].remove();
+              }
+            }
+          } else if (instanceId.includes('_comparison')) {
+            console.log('Comparison page (by id): showing comparison forms (5-8)');
+            if (forms[0]) {
+              forms[0].style.display = 'none';
+              forms[0].remove();
+            }
+            for (let i = 1; i <= 4 && i < forms.length; i++) {
+              if (forms[i]) {
+                forms[i].style.display = 'none';
+                forms[i].remove();
+              }
+            }
+          } else {
+            // Fallback to text-based detection for backward compatibility
+            if (textContent.includes('[Question]')) {
+              console.log('Question page (by text): showing only text input form');
+              for (let i = 1; i < forms.length && i <= 8; i++) {
+                if (forms[i]) {
+                  forms[i].style.display = 'none';
+                  forms[i].remove();
+                }
+              }
+            } else if (textContent.includes('Below is a summary of people\'s opinions on the issue')) {
+              console.log('Rating page (by text): showing rating forms (1-4)');
+              if (forms[0]) {
+                forms[0].style.display = 'none';
+                forms[0].remove();
+              }
+              for (let i = 5; i < forms.length && i <= 8; i++) {
+                if (forms[i]) {
+                  forms[i].style.display = 'none';
+                  forms[i].remove();
+                }
+              }
+            } else if (textContent.includes('Below are two summaries of people\'s opinions on the issue') || textContent.includes('Two summaries of opinions are shown below')) {
+              console.log('Comparison page (by text): showing comparison forms (5-8)');
+              if (forms[0]) {
+                forms[0].style.display = 'none';
+                forms[0].remove();
+              }
+              for (let i = 1; i <= 4 && i < forms.length; i++) {
+                if (forms[i]) {
+                  forms[i].style.display = 'none';
+                  forms[i].remove();
+                }
+              }
+            }
           }
-          
-          // Check if there's a span annotation schema and show instructions if found
+
+          // Show highlighting instructions if any span annotation schema exists
           const spanInputs = document.querySelectorAll('input[for_span="True"]');
           const highlightInstructions = document.getElementById('highlight-instructions');
-          
           if (spanInputs.length > 0 && highlightInstructions) {
             console.log('Span annotation found, showing highlighting instructions');
             highlightInstructions.style.display = 'block';

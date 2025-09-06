@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_478_question
+triplet_478_rating
+triplet_478_comparison
+Summary-Rating-end.html

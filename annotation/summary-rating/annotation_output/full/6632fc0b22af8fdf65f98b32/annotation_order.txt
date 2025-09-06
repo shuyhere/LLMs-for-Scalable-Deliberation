@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_1033_question
+triplet_1033_rating
+triplet_1033_comparison
+Summary-Rating-end.html

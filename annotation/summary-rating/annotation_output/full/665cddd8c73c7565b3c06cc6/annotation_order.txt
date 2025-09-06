@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_365_question
+triplet_365_rating
+triplet_365_comparison
+Summary-Rating-end.html

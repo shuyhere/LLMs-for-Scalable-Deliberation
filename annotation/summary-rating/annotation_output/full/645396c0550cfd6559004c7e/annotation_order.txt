@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_1978_question
+triplet_1978_rating
+triplet_1978_comparison
+Summary-Rating-end.html

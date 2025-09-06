@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_518_question
+triplet_518_rating
+triplet_518_comparison
+Summary-Rating-end.html
