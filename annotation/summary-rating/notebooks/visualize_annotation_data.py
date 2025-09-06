@@ -165,7 +165,7 @@ def plot_5scale_distributions(df, scale_cols):
             ax.set_title(f'No data: {question[:30]}...', fontsize=11)
     
     plt.tight_layout()
-    plt.savefig('/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/notebooks/5scale_distributions.png', 
+    plt.savefig('./annotation/summary-rating/notebooks/5scale_distributions.png', 
                 dpi=300, bbox_inches='tight')
     plt.show()
 
