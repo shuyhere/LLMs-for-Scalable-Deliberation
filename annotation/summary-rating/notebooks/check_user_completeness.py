@@ -1,89 +1,253 @@
 #!/usr/bin/env python3
 """
-检查每个用户是否完成了三个问题类型的标注：question、rating、comparison
+检查每个用户是否完成了三个问题类型的标注
+数据结构：每个用户有3行数据（question, rating, comparison），但不一定连续
 """
 
 import pandas as pd
+import numpy as np
+import os
 
-# 加载标注数据
-annotation_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full/annotated_instances.csv'
-df = pd.read_csv(annotation_path)
-
-print("检查用户标注完成情况...")
-print("="*50)
-
-# 提取实例类型
-df['instance_type'] = df['instance_id'].apply(
-    lambda x: 'comparison' if 'comparison' in x 
-    else 'rating' if 'rating' in x 
-    else 'question' if 'question' in x
-    else 'unknown'
-)
-
-print(f"总标注记录数: {len(df)}")
-print(f"总用户数: {df['user'].nunique()}")
-
-# 按用户和实例类型统计
-user_type_counts = df.groupby(['user', 'instance_type']).size().unstack(fill_value=0)
-
-print(f"\n实例类型分布:")
-for instance_type in ['question', 'rating', 'comparison', 'unknown']:
-    if instance_type in user_type_counts.columns:
-        count = user_type_counts[instance_type].sum()
-        print(f"  {instance_type}: {count} 个标注")
-
-print(f"\n用户完成情况检查:")
-
-# 检查每个用户是否完成了所有三种类型
-complete_users = []
-incomplete_users = []
-
-for user in user_type_counts.index:
-    user_counts = user_type_counts.loc[user]
+def check_user_directories():
+    """检查用户目录结构，找出只有assigned_user_data.json的用户"""
+    annotation_dir = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full'
     
-    has_question = user_counts.get('question', 0) > 0
-    has_rating = user_counts.get('rating', 0) > 0  
-    has_comparison = user_counts.get('comparison', 0) > 0
+    assigned_only_users = []
     
-    if has_question and has_rating and has_comparison:
-        complete_users.append(user)
-        total_annotations = user_counts.sum()
-        print(f"✅ {user}: 完整 (question:{user_counts.get('question', 0)}, rating:{user_counts.get('rating', 0)}, comparison:{user_counts.get('comparison', 0)}) 总计:{total_annotations}")
-    else:
-        incomplete_users.append(user)
-        missing = []
-        if not has_question: missing.append('question')
-        if not has_rating: missing.append('rating')
-        if not has_comparison: missing.append('comparison')
-        total_annotations = user_counts.sum()
-        print(f"❌ {user}: 不完整 - 缺少:{missing} (question:{user_counts.get('question', 0)}, rating:{user_counts.get('rating', 0)}, comparison:{user_counts.get('comparison', 0)}) 总计:{total_annotations}")
+    # 遍历所有子目录
+    for item in os.listdir(annotation_dir):
+        item_path = os.path.join(annotation_dir, item)
+        
+        # 跳过非目录和特殊目录
+        if not os.path.isdir(item_path) or item in ['archived_users']:
+            continue
+        
+        # 检查目录中的文件
+        try:
+            files = os.listdir(item_path)
+            
+            # 如果只有assigned_user_data.json，说明用户被分配但未开始
+            if len(files) == 1 and 'assigned_user_data.json' in files:
+                assigned_only_users.append(item)
+            elif len(files) < 3:
+                # 如果文件数少于3个，也可能是不完整
+                print(f"⚠️  用户 {item}: 只有 {len(files)} 个文件: {files}")
+                
+        except PermissionError:
+            print(f"⚠️  无法访问目录: {item}")
+            continue
+    
+    return assigned_only_users
 
-print(f"\n总结:")
-print(f"- 完整用户数: {len(complete_users)} / {len(user_type_counts)} ({len(complete_users)/len(user_type_counts)*100:.1f}%)")
-print(f"- 不完整用户数: {len(incomplete_users)} / {len(user_type_counts)} ({len(incomplete_users)/len(user_type_counts)*100:.1f}%)")
+def check_user_completeness():
+    """检查用户完成情况，返回不完整用户列表"""
+    print("检查用户标注完成情况...")
+    print("="*50)
+    
+    # 1. 检查用户目录结构
+    print("1. 检查用户目录结构...")
+    assigned_only_users = check_user_directories()
+    
+    if assigned_only_users:
+        print(f"找到 {len(assigned_only_users)} 个只被分配但未开始的用户:")
+        for user in assigned_only_users[:10]:  # 只显示前10个
+            print(f"  - {user}")
+        if len(assigned_only_users) > 10:
+            print(f"  ... 还有 {len(assigned_only_users)-10} 个")
+    
+    # 2. 加载标注数据并检查完成情况
+    print(f"\n2. 检查CSV中的用户完成情况...")
+    annotation_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full/annotated_instances.csv'
+    df = pd.read_csv(annotation_path)
+    
+    print(f"总标注记录数: {len(df)}")
+    print(f"CSV中用户数: {df['user'].nunique()}")
+    
+    # 按用户分组检查CSV中的数据完整性
+    csv_incomplete_users = []
+    complete_users = []
+    
+    for user_id, user_data in df.groupby('user'):
+        user_issues = []
+        
+        # 检查是否有三种类型的数据
+        instance_types = user_data['instance_id'].tolist()
+        has_question = any('question' in str(inst_id) for inst_id in instance_types)
+        has_rating = any('rating' in str(inst_id) for inst_id in instance_types)
+        has_comparison = any('comparison' in str(inst_id) for inst_id in instance_types)
+        
+        if not (has_question and has_rating and has_comparison):
+            missing_types = []
+            if not has_question:
+                missing_types.append('question')
+            if not has_rating:
+                missing_types.append('rating')
+            if not has_comparison:
+                missing_types.append('comparison')
+            user_issues.append(f"缺少类型: {', '.join(missing_types)}")
+        
+        # 检查每种类型的数据完整性
+        for idx, row in user_data.iterrows():
+            instance_id = str(row['instance_id'])
+            
+            if 'question' in instance_id:
+                # triplet_n_question: answer:::text_box 列应该有值
+                text_answer = row.get('answer:::text_box', '')
+                if pd.isna(text_answer) or str(text_answer).strip() == '':
+                    user_issues.append(f"question类型无文本回答")
+                    
+            elif 'rating' in instance_id:
+                # triplet_n_rating: 应该在5个量表列有值
+                rating_columns = [
+                    'To what extent is your perspective represented in this response?:::scale_1',
+                    'To what extent is your perspective represented in this response?:::scale_2', 
+                    'To what extent is your perspective represented in this response?:::scale_3',
+                    'To what extent is your perspective represented in this response?:::scale_4',
+                    'To what extent is your perspective represented in this response?:::scale_5',
+                    'How informative is this summary?:::scale_1',
+                    'How informative is this summary?:::scale_2',
+                    'How informative is this summary?:::scale_3', 
+                    'How informative is this summary?:::scale_4',
+                    'How informative is this summary?:::scale_5',
+                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_1',
+                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_2',
+                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_3',
+                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_4', 
+                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_5',
+                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_1',
+                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_2',
+                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_3',
+                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_4',
+                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_5'
+                ]
+                
+                # 检查每个问题是否至少有一个量表值
+                questions = [
+                    'To what extent is your perspective represented in this response?',
+                    'How informative is this summary?',
+                    'Do you think this summary presents a neutral and balanced view of the issue?',
+                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?'
+                ]
+                
+                missing_questions = []
+                for question in questions:
+                    question_cols = [col for col in rating_columns if question in col]
+                    has_answer = any(not pd.isna(row.get(col, '')) and str(row.get(col, '')).strip() != '' 
+                                   for col in question_cols)
+                    if not has_answer:
+                        missing_questions.append(question[:50] + "...")
+                
+                if missing_questions:
+                    user_issues.append(f"rating类型缺少回答: {len(missing_questions)}个问题")
+                    
+            elif 'comparison' in instance_id:
+                # triplet_n_comparison: 应该在4个比较列有值
+                comparison_columns = [
+                    'Which summary is more representative of your perspective?:::scale_1',
+                    'Which summary is more representative of your perspective?:::scale_2',
+                    'Which summary is more informative?:::scale_1', 
+                    'Which summary is more informative?:::scale_2',
+                    'Which summary presents a more neutral and balanced view of the issue?:::scale_1',
+                    'Which summary presents a more neutral and balanced view of the issue?:::scale_2',
+                    'Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?:::scale_1',
+                    'Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?:::scale_2'
+                ]
+                
+                # 检查每个比较问题是否有回答
+                questions = [
+                    'Which summary is more representative of your perspective?',
+                    'Which summary is more informative?', 
+                    'Which summary presents a more neutral and balanced view of the issue?',
+                    'Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?'
+                ]
+                
+                missing_questions = []
+                for question in questions:
+                    question_cols = [col for col in comparison_columns if question in col]
+                    has_answer = any(not pd.isna(row.get(col, '')) and str(row.get(col, '')).strip() != '' 
+                                   for col in question_cols)
+                    if not has_answer:
+                        missing_questions.append(question[:50] + "...")
+                
+                if missing_questions:
+                    user_issues.append(f"comparison类型缺少回答: {len(missing_questions)}个问题")
+        
+        # 判断用户是否完整
+        if user_issues:
+            csv_incomplete_users.append(user_id)
+            if len(csv_incomplete_users) <= 10:  # 只显示前10个不完整用户的详细信息
+                print(f"❌ 用户 {user_id}: {'; '.join(user_issues)}")
+        else:
+            complete_users.append(user_id)
+            if len(complete_users) <= 5:  # 只显示前5个完整用户
+                print(f"✅ 用户 {user_id}: 完整")
+    
+    # 3. 合并所有不完整用户
+    all_incomplete_users = list(set(assigned_only_users + csv_incomplete_users))
+    
+    csv_users = len(df['user'].unique())
+    total_assigned_users = csv_users + len(assigned_only_users)
+    complete_count = len(complete_users)
+    incomplete_count = len(all_incomplete_users)
+    
+    print(f"\n总结:")
+    print(f"- 被分配任务的总用户数: {total_assigned_users}")
+    print(f"- CSV中的用户数: {csv_users}")
+    print(f"- 只被分配未开始的用户数: {len(assigned_only_users)}")
+    print(f"- CSV中不完整的用户数: {len(csv_incomplete_users)}")
+    print(f"- 完整用户数: {complete_count} ({complete_count/total_assigned_users*100:.1f}%)")
+    print(f"- 总不完整用户数: {incomplete_count} ({incomplete_count/total_assigned_users*100:.1f}%)")
+    
+    if all_incomplete_users:
+        print(f"\n所有不完整用户列表 (前20个):")
+        for i, user in enumerate(all_incomplete_users[:20]):
+            user_type = "未开始" if user in assigned_only_users else "CSV中不完整"
+            print(f"  {i+1:2d}. {user} ({user_type})")
+        if len(all_incomplete_users) > 20:
+            print(f"  ... 还有 {len(all_incomplete_users)-20} 个用户")
+    
+    return all_incomplete_users
 
-# 检查是否每个用户恰好回答3个问题
-print(f"\n详细检查每个用户的标注数量:")
-user_total_counts = df['user'].value_counts()
+def save_incomplete_users(incomplete_users):
+    """保存不完整用户列表到文件"""
+    if not incomplete_users:
+        print("没有不完整用户需要保存")
+        return None
+        
+    user_file_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/notebooks/incomplete_users.txt'
+    
+    with open(user_file_path, 'w') as f:
+        for user in incomplete_users:
+            f.write(str(user) + '\n')
+    
+    print(f"\n不完整用户列表已保存到: {user_file_path}")
+    print(f"共 {len(incomplete_users)} 个用户需要移除")
+    
+    return user_file_path
 
-exactly_3_users = []
-not_3_users = []
+def main():
+    """主函数"""
+    print("检查用户标注完成情况")
+    print("="*60)
+    
+    try:
+        # 检查用户完成情况
+        incomplete_users = check_user_completeness()
+        
+        # 保存不完整用户列表
+        user_file_path = save_incomplete_users(incomplete_users)
+        
+        if user_file_path:
+            print(f"\n下一步可以运行:")
+            print(f"python3 clean_incomplete_users.py")
+            print(f"来移除这些不完整的用户")
+        else:
+            print(f"\n✅ 所有用户都已完成标注!")
+            
+    except Exception as e:
+        print(f"错误: {e}")
+        import traceback
+        traceback.print_exc()
 
-for user, count in user_total_counts.items():
-    if count == 3:
-        exactly_3_users.append(user)
-    else:
-        not_3_users.append((user, count))
-
-print(f"- 恰好3个标注的用户: {len(exactly_3_users)} 个")
-print(f"- 非3个标注的用户: {len(not_3_users)} 个")
-
-if not_3_users:
-    print(f"\n非3个标注的用户详情:")
-    for user, count in not_3_users:
-        print(f"  {user}: {count} 个标注")
-
-if len(exactly_3_users) == len(user_total_counts):
-    print(f"\n✅ 所有用户都恰好完成了3个标注！")
-else:
-    print(f"\n⚠️ 有 {len(not_3_users)} 个用户的标注数量不是3个")
+if __name__ == "__main__":
+    main()

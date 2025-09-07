@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_785_question
+triplet_785_rating
+triplet_785_comparison
+Summary-Rating-end.html
