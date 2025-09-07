@@ -1,0 +1,15 @@
+python3 /ibex/project/c2328/LLMs-Scalable-Deliberation/src/finetuning/sft_train.py \
+  --data-file /ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/finetuning_dataset/summary_rating_constructed.jsonl \
+  --output-dir /ibex/project/c2328/LLMs-Scalable-Deliberation/outputs/checkpoints/roberta-5class-eva/summary-rating \
+  --model-name FacebookAI/roberta-large \
+  --max-length 2048 \
+  --per-device-train-batch-size 32 \
+  --per-device-eval-batch-size 32 \
+  --gradient-accumulation-steps 2 \
+  --num-epochs 50 \
+  --learning-rate 1e-6 \
+  --weight-decay 0.01 \
+  --warmup-ratio 0.1 \
+  --eval-split 0.1 \
+  --test-split 0.1 \
+  --seed 42 

@@ -219,3 +219,7 @@ __marimo__/
 *outputs/*
 
 *logs/*
+
+*wandb/*
+
+src/finetuning/wandb/*

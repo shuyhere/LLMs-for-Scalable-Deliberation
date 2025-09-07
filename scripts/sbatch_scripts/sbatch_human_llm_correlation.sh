@@ -5,7 +5,7 @@
 
 # Default values
 DEFAULT_EVAL_MODEL="all"
-DEFAULT_SAMPLE_SIZE="5"
+DEFAULT_SAMPLE_SIZE="0"
 DEFAULT_TEMPERATURE="1.0"
 
 # Parse command line arguments
@@ -13,9 +13,9 @@ EVAL_MODEL=${1:-$DEFAULT_EVAL_MODEL}
 SAMPLE_SIZE=${2:-$DEFAULT_SAMPLE_SIZE}
 TEMPERATURE=${3:-$DEFAULT_TEMPERATURE}
 
-# EVAL_MODELS=("gpt-5-mini" "gpt-5-nano" "gpt-4o-mini" "gemini-2.5-flash-lite"  "web-rev-claude-3-7-sonnet-20250219" "web-rev-claude-sonnet-4-20250514" "gemini-2.5-flash" "deepseek-reasoner" "grok-4-latest" "TA/openai/gpt-oss-120b" "TA/openai/gpt-oss-20b" "qwen3-0.6b" "qwen3-1.7b" "qwen3-4b" "qwen3-8b" "qwen3-14b" "qwen3-30b-a3b" "qwen3-235b-a22b" "gpt-5" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro")
+EVAL_MODELS=("gpt-4o-mini" "gemini-2.5-flash-lite"  "web-rev-claude-3-7-sonnet-20250219" "web-rev-claude-sonnet-4-20250514" "gemini-2.5-flash" "deepseek-reasoner" "grok-4-latest" "TA/openai/gpt-oss-120b" "TA/openai/gpt-oss-20b" "qwen3-0.6b" "qwen3-1.7b" "qwen3-4b" "qwen3-8b" "qwen3-14b" "qwen3-30b-a3b" "qwen3-235b-a22b" "gpt-5" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro")
 
-EVAL_MODELS=("gpt-5-mini")
+# EVAL_MODELS=("gpt-5-nano" "gpt-5-mini")
 
 
 # Ensure logs directory exists
@@ -45,7 +45,7 @@ echo "Starting human-LLM correlation evaluation: Model=${eval_model}, Sample_Siz
 echo "=================================================="
 
 # Check if checkpoint exists and resume if possible
-checkpoint_file="eval_correlation_logs/correlation_checkpoint_${eval_model}_${sample_size}.json"
+checkpoint_file="results/eval_llm_human_correlation/checkpoint_${eval_model}.json"
 if [ -f "\$checkpoint_file" ]; then
     echo "Found existing checkpoint: \$checkpoint_file"
     echo "Resuming from checkpoint..."
@@ -61,7 +61,6 @@ python scripts/batch_human_aligned_evaluation_summaries.py \
     --sample-size ${sample_size} \
     --temperature ${temperature} \
     --output-dir results/eval_llm_human_correlation \
-    --debug \
     \$resume_flag
 
 # Check exit status
@@ -96,7 +95,7 @@ check_job_status() {
 # Function to show checkpoint files
 show_checkpoints() {
     echo "Available checkpoint files:"
-    find correlation_logs/ -name "correlation_checkpoint_*.json" 2>/dev/null | head -20
+    find results/eval_llm_human_correlation/ -name "checkpoint_*.json" 2>/dev/null | head -20
     echo ""
     echo "To resume a specific job, use:"
     echo "python scripts/batch_human_aligned_evaluation_summaries.py --model <model> --sample-size <size> --resume"
@@ -146,22 +145,3 @@ else
     submit_job "$EVAL_MODEL" "$SAMPLE_SIZE" "$TEMPERATURE"
     echo "Single job submitted successfully!"
 fi
-
-echo ""
-echo "Use 'squeue -u $USER' to check job status"
-echo "Use 'scancel <job_id>' to cancel a specific job"
-echo "Use 'scancel -u $USER' to cancel all your jobs"
-echo ""
-echo "Results will be saved in results/llm_human_correlation/ directory"
-echo ""
-echo "Quick commands:"
-echo "  ./sbatch_human_llm_correlation.sh status    # Check job status"
-echo "  ./sbatch_human_llm_correlation.sh checkpoints # Show available checkpoints"
-echo "  ./sbatch_human_llm_correlation.sh results   # Show available results"
-echo ""
-echo "Usage examples:"
-echo "  ./sbatch_human_llm_correlation.sh gpt-4o-mini 100 0.7    # Evaluate with gpt-4o-mini, 100 samples, temp 0.7"
-echo "  ./sbatch_human_llm_correlation.sh all 50 0.3             # Evaluate with all models, 50 samples, temp 0.3"
-echo "  ./sbatch_human_llm_correlation.sh gpt-4o 200 0.5         # Evaluate with gpt-4o, 200 samples, temp 0.5"
-echo ""
-echo "Note: Each model runs in a separate sbatch job for parallel processing!"

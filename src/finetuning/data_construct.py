@@ -20,6 +20,7 @@ import argparse
 import json
 from pathlib import Path
 from typing import Dict, List, Optional
+import re
 
 
 DEFAULT_SUMMARY_MODELS = [
@@ -82,11 +83,75 @@ def main() -> None:
         default=str(Path(__file__).resolve().parents[2] / "results" / "summary" / "210" / "finetuning" / "constructed.jsonl"),
         help="Path to write JSONL fine-tuning dataset",
     )
+    parser.add_argument(
+        "--summary-rating-file",
+        type=str,
+        default=None,
+        help="If provided, build dataset from datasets/finetuning_dataset/summary_rating_extracted.json",
+    )
+    parser.add_argument(
+        "--summary-rating-out",
+        type=str,
+        default=str(Path(__file__).resolve().parents[2] / "datasets" / "finetuning_dataset" / "summary_rating_constructed.jsonl"),
+        help="Output JSONL for summary-rating constructed dataset",
+    )
     args = parser.parse_args()
 
     results_dir = Path(args.results_dir).resolve()
     out_path = Path(args.out_file).resolve()
     out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # If summary-rating file is provided, build from that and exit
+    if args.summary_rating_file:
+        sr_path = Path(args.summary_rating_file).resolve()
+        if not sr_path.exists():
+            print(f"Summary-rating file not found: {sr_path}")
+            return
+        with sr_path.open("r", encoding="utf-8") as f:
+            try:
+                records = json.load(f)
+            except json.JSONDecodeError as e:
+                print(f"Failed to parse JSON: {e}")
+                return
+        sr_out = Path(args.summary_rating_out).resolve()
+        sr_out.parent.mkdir(parents=True, exist_ok=True)
+        written = 0
+        with sr_out.open("w", encoding="utf-8") as w:
+            for rec in records:
+                perspective = rec.get("perspective")
+                question = rec.get("question") or ""
+                # Remove leading [Question] token if present
+                question = re.sub(r"^\s*\[\s*Question\s*\]\s*", "", question, flags=re.IGNORECASE)
+                summary_text = rec.get("displayed_text") or ""
+                answer_text = rec.get("answer_text") or ""
+                if perspective is None:
+                    continue
+                # Build natural text prompt similar to evaluation prompt format
+                perspective_text = ""
+                if answer_text:
+                    perspective_text = (
+                        "\n\nOne annotator's opinion on this question is:\n"
+                        f"{answer_text}\n"
+                    )
+                prompt = (
+                    f"We have made a deliberation with many annotators on the issue: {question}\n\n"
+                    f"{perspective_text}"
+                    f"\n\n"
+                    f"{summary_text}\n\n"
+                    "Please evaluate this summary on the following 4 criteria using a 1-5 scale:\n\n"
+                    "**To what extent is the annotator's opinion represented in this response?**\n"
+                    "   (1 = Not at all, 2 = Slightly, 3 = Moderately, 4 = Well, 5 = Very well)\n\n"
+                )
+                meta = {
+                    "source": rec.get("source"),
+                    "folder_id": rec.get("folder_id"),
+                    "triplet_key": rec.get("triplet_key"),
+                }
+                obj = {"input": prompt, "output": str(rec.get("perspective")), "metadata": meta}
+                w.write(json.dumps(obj, ensure_ascii=False) + "\n")
+                written += 1
+        print(f"Wrote {written} examples to {sr_out}")
+        return
 
     summary_models = [m.strip() for m in args.summary_models.split(",") if m.strip()]
     eval_models = [m.strip() for m in args.eval_models.split(",") if m.strip()]
@@ -130,7 +195,6 @@ def main() -> None:
                         score_int = int(float(score_val))
                     except Exception:
                         # Best-effort parse
-                        import re
                         m = re.findall(r"[-+]?[0-9]+", str(score_val))
                         if not m:
                             continue

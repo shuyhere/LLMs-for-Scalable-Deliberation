@@ -121,6 +121,11 @@ def parse_args() -> argparse.Namespace:
         help="Early stopping patience",
     )
     parser.add_argument(
+        "--disable-early-stopping",
+        action="store_true",
+        help="Disable early stopping entirely",
+    )
+    parser.add_argument(
         "--label-smoothing",
         type=float,
         default=0.1,
@@ -337,7 +342,7 @@ def main() -> None:
         # Logging
         logging_dir=str(output_dir / "logs"),
         logging_strategy="steps",
-        logging_steps=25,  # More frequent logging
+        logging_steps=1,  # More frequent logging
         
         # Model selection
         load_best_model_at_end=True,
@@ -366,6 +371,10 @@ def main() -> None:
         trainer_class = Trainer
         trainer_kwargs = {}
 
+    callbacks_list = []
+    if not args.disable_early_stopping and args.early_stopping_patience and args.early_stopping_patience > 0:
+        callbacks_list.append(EarlyStoppingCallback(early_stopping_patience=args.early_stopping_patience))
+
     trainer = trainer_class(
         model=model,
         args=training_args,
@@ -374,7 +383,7 @@ def main() -> None:
         processing_class=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=args.early_stopping_patience)],
+        callbacks=callbacks_list,
         **trainer_kwargs
     )
 
