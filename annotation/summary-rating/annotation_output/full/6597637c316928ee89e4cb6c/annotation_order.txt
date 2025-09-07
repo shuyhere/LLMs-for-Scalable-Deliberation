@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_2019_question
+triplet_2019_rating
+triplet_2019_comparison
+Summary-Rating-end.html

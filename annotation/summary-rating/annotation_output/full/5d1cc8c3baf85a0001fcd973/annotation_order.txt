@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_617_question
+triplet_617_rating
+triplet_617_comparison
+Summary-Rating-end.html

@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_747_question
+triplet_747_rating
+triplet_747_comparison
+Summary-Rating-end.html
