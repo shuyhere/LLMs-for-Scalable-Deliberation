@@ -13,7 +13,7 @@ EVAL_MODEL=${1:-$DEFAULT_EVAL_MODEL}
 SAMPLE_SIZE=${2:-$DEFAULT_SAMPLE_SIZE}
 TEMPERATURE=${3:-$DEFAULT_TEMPERATURE}
 
-EVAL_MODELS=("gpt-4o-mini" "gemini-2.5-flash-lite"  "web-rev-claude-3-7-sonnet-20250219" "web-rev-claude-sonnet-4-20250514" "gemini-2.5-flash" "deepseek-reasoner" "grok-4-latest" "TA/openai/gpt-oss-120b" "TA/openai/gpt-oss-20b" "qwen3-0.6b" "qwen3-1.7b" "qwen3-4b" "qwen3-8b" "qwen3-14b" "qwen3-30b-a3b" "qwen3-235b-a22b" "gpt-5" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro")
+EVAL_MODELS=("gpt-4o-mini" "gemini-2.5-flash-lite"  "web-rev-claude-3-7-sonnet-20250219" "web-rev-claude-sonnet-4-20250514" "gemini-2.5-flash" "deepseek-reasoner" "grok-4-latest" "qwen3-0.6b" "qwen3-1.7b" "qwen3-4b" "qwen3-8b" "qwen3-14b" "qwen3-30b-a3b" "qwen3-235b-a22b" "gpt-5" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro")
 
 # EVAL_MODELS=("gpt-5-nano" "gpt-5-mini")
 

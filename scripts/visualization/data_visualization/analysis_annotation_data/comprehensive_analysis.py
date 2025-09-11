@@ -18,8 +18,43 @@ plt.rcParams['font.sans-serif'] = ['DejaVu Sans', 'Arial Unicode MS']
 plt.rcParams['axes.unicode_minus'] = False
 sns.set_style("whitegrid")
 
+# Define unified color palette with Pastel1 style
+UNIFIED_COLORS = {
+    'primary': plt.cm.Pastel1.colors[:5],  # Use first 5 colors from Pastel1
+    'heatmap': 'YlOrRd',  # Yellow-Orange-Red for softer appearance
+    'win_rate': 'RdBu'  # Red-Blue for win rates (softer than _r version)
+}
+
 # Project root directory
 PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
+
+# Model name mapping to unify display with Human Judge Corr
+MODEL_NAME_MAPPING = {
+    'web-rev-claude-sonnet-4-20250514': 'Claude-Sonnet-4',
+    'web-rev-claude-opus-4-20250514': 'Claude-Opus-4',
+    'web-rev-claude-3-7-sonnet-20250219': 'Claude-Sonnet-3.7',
+    'qwen3-235b-a22b': 'Qwen3-235B',
+    'qwen3-32b': 'Qwen3-32B',
+    'qwen3-30b-a3b': 'Qwen3-30B',
+    'qwen3-14b': 'Qwen3-14B',
+    'qwen3-8b': 'Qwen3-8B',
+    'qwen3-4b': 'Qwen3-4B',
+    'qwen3-1.7b': 'Qwen3-1.7B',
+    'qwen3-0.6b': 'Qwen3-0.6B',
+    'gpt-5': 'GPT-5',
+    'gpt-5-mini': 'GPT-5-Mini',
+    'gpt-5-nano': 'GPT-5-Nano',
+    'gpt-4o-mini': 'GPT-4o-Mini',
+    'gemini-2.5-pro': 'Gemini-2.5-Pro',
+    'gemini-2.5-flash': 'Gemini-2.5-Flash',
+    'gemini-2.5-flash-lite': 'Gemini-2.5-Flash-Lite',
+    'grok-4-latest': 'Grok-4-Latest',
+    'deepseek-chat': 'DeepSeek-Chat',
+    'deepseek-reasoner': 'DeepSeek-Reasoner',
+}
+
+def get_model_display_name(name: str) -> str:
+    return MODEL_NAME_MAPPING.get(name, name)
 
 # Topic name mapping
 TOPIC_NAME_MAP = {
@@ -34,6 +69,20 @@ TOPIC_NAME_MAP = {
     'Openqa-Updates-of-electronic-products': 'Electronic Products',
     'Openqa-Influencers-as-a-job': 'Influencer',
 }
+
+# Desired topic display order
+TOPIC_DISPLAY_ORDER = [
+    'Tipping System',
+    'AI Changes Life',
+    'Academic Funding',
+    'Influencer',
+    'Electronic Products',
+    'Tariff Policy',
+    'Health Care',
+    'Vaccination Policy',
+    'Refugee Policy',
+    'Online Identity',
+]
 
 def get_topic_display_name(topic: str) -> str:
     """Get display name for topic"""
@@ -380,13 +429,13 @@ def create_rating_visualization(overall_stats, output_path):
     axes = axes.flatten()
     
     questions_short = [
-        "Perspective Representation",
+        "Representiveness",
         "Informativeness",
-        "Neutrality & Balance",
+        "Neutrality",
         "Policy Approval"
     ]
     
-    colors = plt.cm.viridis(np.linspace(0.2, 0.9, 5))
+    colors = UNIFIED_COLORS['primary']
     
     for idx, (question, short_name) in enumerate(zip(overall_stats.keys(), questions_short)):
         ax = axes[idx]
@@ -400,11 +449,11 @@ def create_rating_visualization(overall_stats, output_path):
         
         bars = ax.bar(scales, values, color=colors, alpha=0.8, edgecolor='black')
         
-        ax.set_xlabel('Rating Scale', fontsize=14)
-        ax.set_ylabel('Frequency', fontsize=14)
-        ax.set_title(f'{short_name}\nMean: {stats["mean"]:.2f}, Std: {stats["std"]:.2f}, N={stats["count"]}', 
-                    fontsize=16, fontweight='bold')
+        ax.set_xlabel('Rating Scale', fontsize=18)
+        ax.set_ylabel('Frequency', fontsize=18)
+        ax.set_title(f'{short_name}', fontsize=18, fontweight='bold')
         ax.set_xticks(scales)
+        ax.tick_params(axis='both', labelsize=14)
         
         # Add value labels on bars
         for bar, val in zip(bars, values):
@@ -415,7 +464,7 @@ def create_rating_visualization(overall_stats, output_path):
         
         ax.grid(axis='y', alpha=0.3)
     
-    plt.suptitle('Overall Rating Distributions', fontsize=18, fontweight='bold')
+    plt.suptitle('Overall Rating Distributions', fontsize=20, fontweight='bold')
     plt.tight_layout()
     plt.savefig(output_path / 'overall_ratings.pdf', dpi=300, bbox_inches='tight')
     plt.close()
@@ -425,10 +474,12 @@ def create_topic_heatmap(topic_summary, output_path):
     if not topic_summary:
         return
     
-    questions_short = ["Perspective", "Informative", "Neutral", "Policy"]
+    questions_short = ["Representiveness", "Informativeness", "Neutrality", "Policy Approval"]
     
     # Prepare data for heatmap
     topics = list(topic_summary.keys())
+    # Sort topics by desired display order
+    topics.sort(key=lambda t: TOPIC_DISPLAY_ORDER.index(get_topic_display_name(t)) if get_topic_display_name(t) in TOPIC_DISPLAY_ORDER else len(TOPIC_DISPLAY_ORDER))
     questions = list(extract_rating_questions())
     
     matrix = []
@@ -442,7 +493,7 @@ def create_topic_heatmap(topic_summary, output_path):
                 row.append(np.nan)
         matrix.append(row)
         display_name = get_topic_display_name(topic)
-        annotations.append(f"{display_name} (n={topic_summary[topic]['total_annotations']})")
+        annotations.append(f"{display_name}")
     
     if matrix:
         plt.figure(figsize=(10, max(6, len(topics) * 0.4)))
@@ -451,11 +502,19 @@ def create_topic_heatmap(topic_summary, output_path):
                    vmin=1, vmax=5, center=3,
                    xticklabels=questions_short, 
                    yticklabels=annotations,
+                   annot_kws={'fontsize': 14},
                    cbar_kws={'label': 'Average Rating'})
         
         plt.title('Average Ratings by Topic', fontsize=16, fontweight='bold')
-        plt.xlabel('Rating Questions', fontsize=14)
-        plt.ylabel('Topics (with annotation counts)', fontsize=14)
+        plt.xlabel('Dimensions', fontsize=16)
+        plt.ylabel('Topics', fontsize=16)
+        plt.xticks(fontsize=12)
+        plt.yticks(fontsize=12)
+
+        # Increase colorbar fonts
+        cbar = plt.gcf().axes[-1]
+        cbar.tick_params(labelsize=14)
+        cbar.set_ylabel('Average Rating', fontsize=16)
         plt.tight_layout()
         plt.savefig(output_path / 'ratings_by_topic.pdf', dpi=300, bbox_inches='tight')
         plt.close()
@@ -465,7 +524,7 @@ def create_model_comparison_chart(model_summary, output_path):
     if not model_summary:
         return
     
-    questions_short = ["Perspective", "Informative", "Neutral", "Policy"]
+    questions_short = ["Representiveness", "Informativeness", "Neutrality", "Policy Approval"]
     questions = extract_rating_questions()
     
     # Calculate overall average for sorting
@@ -484,7 +543,9 @@ def create_model_comparison_chart(model_summary, output_path):
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
     axes = axes.flatten()
     
-    colors = plt.cm.Set3(np.linspace(0, 1, len(sorted_models)))
+    # Use unified colors, cycling if we have more models than colors
+    base_colors = UNIFIED_COLORS['primary']
+    colors = [base_colors[i % len(base_colors)] for i in range(len(sorted_models))]
     
     for idx, (question, short_name) in enumerate(zip(questions, questions_short)):
         ax = axes[idx]
@@ -499,7 +560,7 @@ def create_model_comparison_chart(model_summary, output_path):
                 stats = model_summary[model]['questions'][question]
                 model_means.append(stats['mean'])
                 model_stds.append(stats['std'])
-                model_names.append(f"{model[:15]}\n(n={stats['count']})")
+                model_names.append(f"{get_model_display_name(model)[:20]}")
                 model_counts.append(stats['count'])
         
         if model_means:
@@ -510,17 +571,18 @@ def create_model_comparison_chart(model_summary, output_path):
             
             ax.set_xticks(x_pos)
             ax.set_xticklabels(model_names, rotation=45, ha='right', fontsize=8)
-            ax.set_ylabel('Average Rating', fontsize=14)
-            ax.set_title(short_name, fontsize=16, fontweight='bold')
+            ax.set_ylabel('Average Rating', fontsize=18)
+            ax.set_title(short_name, fontsize=18, fontweight='bold')
             ax.set_ylim([1, 5])
             ax.grid(axis='y', alpha=0.3)
+            ax.tick_params(axis='both', labelsize=14)
             
             # Add value labels
             for bar, mean in zip(bars, model_means):
                 ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.05,
                        f'{mean:.2f}', ha='center', va='bottom', fontsize=8)
     
-    plt.suptitle('Average Ratings by Model (Top 10)', fontsize=18, fontweight='bold')
+    plt.suptitle('Average Ratings by Model', fontsize=20, fontweight='bold')
     plt.tight_layout()
     plt.savefig(output_path / 'ratings_by_model.pdf', dpi=300, bbox_inches='tight')
     plt.close()
@@ -531,7 +593,7 @@ def create_comment_num_chart(comment_summary, output_path):
         return
     
     questions = extract_rating_questions()
-    questions_short = ["Perspective", "Informative", "Neutral", "Policy"]
+    questions_short = ["Representiveness", "Informativeness", "Neutrality", "Policy Approval"]
     
     # Expected comment numbers
     expected_nums = ['10', '30', '50', '70', '90']
@@ -548,15 +610,17 @@ def create_comment_num_chart(comment_summary, output_path):
                 nums_with_data.append(int(num))
         
         if means:
-            plt.plot(nums_with_data, means, marker='o', label=short_name, linewidth=2, markersize=8)
+            color = UNIFIED_COLORS['primary'][q_idx % len(UNIFIED_COLORS['primary'])]
+            plt.plot(nums_with_data, means, marker='o', label=short_name, linewidth=2, markersize=8, color=color)
     
-    plt.xlabel('Number of Comments', fontsize=14)
-    plt.ylabel('Average Rating', fontsize=14)
-    plt.title('Average Ratings by Number of Comments', fontsize=16, fontweight='bold')
-    plt.legend()
+    plt.xlabel('Number of Comments', fontsize=18)
+    plt.ylabel('Average Rating', fontsize=18)
+    plt.title('Average Ratings by Number of Comments', fontsize=18, fontweight='bold')
+    plt.legend(fontsize=14)
     plt.grid(True, alpha=0.3)
     plt.ylim([1, 5])
-    plt.xticks([10, 30, 50, 70, 90])
+    plt.xticks([10, 30, 50, 70, 90], fontsize=14)
+    plt.yticks(fontsize=14)
     
     plt.tight_layout()
     plt.savefig(output_path / 'ratings_by_comment_number.pdf', dpi=300, bbox_inches='tight')
@@ -610,26 +674,31 @@ def create_win_rate_matrix(win_rates, output_path):
             if i == j:
                 row.append("---")
             elif count_matrix[i][j] > 0:
-                row.append(f"{matrix[i][j]:.1f}%\n(n={int(count_matrix[i][j])})")
+                row.append(f"{matrix[i][j]:.1f}%")
             else:
                 row.append("N/A")
         annot_matrix.append(row)
     
     sns.heatmap(matrix, annot=annot_matrix, fmt='', cmap='RdBu_r',
                center=50, vmin=0, vmax=100,
-               xticklabels=[m[:15] for m in all_models],
-               yticklabels=[m[:15] for m in all_models],
+               xticklabels=[get_model_display_name(m)[:20] for m in all_models],
+               yticklabels=[get_model_display_name(m)[:20] for m in all_models],
                cbar_kws={'label': 'Win Rate (%) - A vs B'},
-               annot_kws={'fontsize': 10})
+               annot_kws={'fontsize': 14})
     
     # Increase tick label font sizes
-    plt.xticks(fontsize=14)
-    plt.yticks(fontsize=14)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+
+    # Increase colorbar font sizes
+    cbar = plt.gcf().axes[-1]
+    cbar.tick_params(labelsize=14)
+    cbar.set_ylabel('Win Rate (%) - A vs B', fontsize=16)
     
     plt.title('Model Win Rates - Policy Maker Preference\n(A vs B: Row Model A wins against Column Model B)', 
-             fontsize=18, fontweight='bold')
-    plt.xlabel('Model B (Column)', fontsize=16)
-    plt.ylabel('Model A (Row)', fontsize=16)
+             fontsize=20, fontweight='bold')
+    plt.xlabel('Model B (Column)', fontsize=18)
+    plt.ylabel('Model A (Row)', fontsize=18)
     plt.tight_layout()
     plt.savefig(output_path / 'model_win_rates.pdf', dpi=300, bbox_inches='tight')
     plt.close()
@@ -730,7 +799,8 @@ def generate_comprehensive_report(valid_count, invalid_count, overall_stats,
         report.append(f"  {'-'*54}")
         
         for model, (avg, count) in sorted_models[:15]:  # Top 15 models
-            report.append(f"  {model[:30]:<30} {avg:<12.3f} {count:<12}")
+            display = get_model_display_name(model)
+            report.append(f"  {display[:30]:<30} {avg:<12.3f} {count:<12}")
     
     # Comment number analysis with exact numbers
     if comment_summary:
@@ -892,65 +962,9 @@ def main():
     
     print(f"Visualizations saved to: {output_path}")
     
-    # Save detailed data as CSV
-    print("\nSaving detailed data...")
-    
-    # Overall ratings to CSV
-    overall_df = pd.DataFrame(overall_stats).T
-    overall_df.to_csv(output_path / 'overall_ratings.csv')
-    
-    # Model summary to CSV
-    if model_summary:
-        model_data = []
-        for model, data in model_summary.items():
-            for question, stats in data['questions'].items():
-                model_data.append({
-                    'model': model,
-                    'total_annotations': data['total_annotations'],
-                    'question': question[:50],
-                    'mean': stats['mean'],
-                    'std': stats['std'],
-                    'median': stats['median'],
-                    'count': stats['count']
-                })
-        model_df = pd.DataFrame(model_data)
-        model_df.to_csv(output_path / 'model_ratings.csv', index=False)
-    
-    # Comment number summary to CSV
-    if comment_summary:
-        comment_data = []
-        for num, data in comment_summary.items():
-            for question, stats in data['questions'].items():
-                comment_data.append({
-                    'comment_number': int(num),
-                    'total_annotations': data['total_annotations'],
-                    'question': question[:50],
-                    'mean': stats['mean'],
-                    'std': stats['std'],
-                    'median': stats['median'],
-                    'count': stats['count']
-                })
-        comment_df = pd.DataFrame(comment_data)
-        comment_df = comment_df.sort_values(['comment_number', 'question'])
-        comment_df.to_csv(output_path / 'ratings_by_comment_number.csv', index=False)
-    
-    # Win rates to CSV
-    if win_rates:
-        win_data = []
-        for pair, data in win_rates.items():
-            for question, stats in data['questions'].items():
-                win_data.append({
-                    'model_pair': pair,
-                    'model_a': data['model_a'],
-                    'model_b': data['model_b'],
-                    'question': question[:50],
-                    **stats
-                })
-        win_df = pd.DataFrame(win_data)
-        win_df.to_csv(output_path / 'model_win_rates.csv', index=False)
-    
+    # Skip CSV outputs per requirement
     print("\nAnalysis complete!")
-    print(f"All results saved to: {output_path}")
+    print(f"Visualizations and report saved to: {output_path}")
 
 if __name__ == "__main__":
     main()

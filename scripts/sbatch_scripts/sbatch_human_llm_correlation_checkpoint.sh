@@ -1,24 +1,46 @@
 #!/bin/bash
 
-# Script to resume checkpoint jobs for human-LLM correlation evaluation
-# Usage: ./resume_checkpoint_jobs.sh [sample_size] [temperature]
+# Script to resume checkpoint jobs and process missing data for human-LLM correlation evaluation
+# Usage: ./resume_checkpoint_jobs.sh [mode] [model_name] [temperature]
+# Mode: 'resume' for resuming checkpoints, 'missing' for processing missing data
+# Model: specific model name to process (e.g., gpt-5-nano)
+# Temperature: temperature for model generation (default: 1.0)
+
+# List of all models to process
+EVAL_MODELS=("gpt-4o-mini" "gemini-2.5-flash-lite"  "web-rev-claude-3-7-sonnet-20250219" "web-rev-claude-sonnet-4-20250514" "gemini-2.5-flash" "deepseek-reasoner" "grok-4-latest" "qwen3-0.6b" "qwen3-1.7b" "qwen3-4b" "qwen3-8b" "qwen3-14b" "qwen3-30b-a3b" "qwen3-235b-a22b" "gpt-5" "gpt-5-mini" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro")
+
+# EVAL_MODELS=("gpt-5-nano")
 
 # Default values
-DEFAULT_SAMPLE_SIZE="0"
+DEFAULT_MODE="missing"
 DEFAULT_TEMPERATURE="1.0"
 
 # Parse command line arguments
-SAMPLE_SIZE=${1:-$DEFAULT_SAMPLE_SIZE}
+MODE=${1:-$DEFAULT_MODE}
 TEMPERATURE=${2:-$DEFAULT_TEMPERATURE}
+
+# Validate mode
+if [ "$MODE" != "resume" ] && [ "$MODE" != "missing" ]; then
+    echo "Error: Invalid mode. Use 'resume' or 'missing'"
+    exit 1
+fi
+
+# Show configuration
+echo "Will process the following models:"
+printf "  %s\n" "${EVAL_MODELS[@]}"
 
 # Checkpoint directory
 CHECKPOINT_DIR="results/eval_llm_human_correlation"
 
-echo "Resume Checkpoint Jobs for Human-LLM Correlation Evaluation"
+if [ "$MODE" == "resume" ]; then
+    echo "Resume Checkpoint Jobs for Human-LLM Correlation Evaluation"
+else
+    echo "Process Missing Data for Human-LLM Correlation Evaluation"
+fi
 echo "=========================================================="
-echo "Sample Size: ${SAMPLE_SIZE}"
+echo "Mode: ${MODE}"
 echo "Temperature: ${TEMPERATURE}"
-echo "Checkpoint Directory: ${CHECKPOINT_DIR}"
+echo "Results Directory: ${CHECKPOINT_DIR}"
 echo "=========================================================="
 
 # Check if checkpoint directory exists
@@ -27,27 +49,15 @@ if [ ! -d "$CHECKPOINT_DIR" ]; then
     exit 1
 fi
 
-# Find all checkpoint files
-checkpoint_files=($(find "$CHECKPOINT_DIR" -name "checkpoint_*.json" -type f))
+# Create results directory if it doesn't exist
+mkdir -p "$CHECKPOINT_DIR"
 
-if [ ${#checkpoint_files[@]} -eq 0 ]; then
-    echo "No checkpoint files found in $CHECKPOINT_DIR"
-    exit 0
-fi
-
-echo "Found ${#checkpoint_files[@]} checkpoint files:"
-for file in "${checkpoint_files[@]}"; do
-    echo "  - $(basename "$file")"
-done
-echo ""
-
-# Function to submit a resume job
-submit_resume_job() {
-    local checkpoint_file=$1
-    local model_name=$(basename "$checkpoint_file" | sed 's/checkpoint_\(.*\)\.json/\1/')
-    local job_name="resume_correlation_${model_name}_${SAMPLE_SIZE}samples"
+# Function to submit a job
+submit_job() {
+    local model_name=$1
+    local job_name="${MODE}_correlation_${model_name}"
     
-    echo "Submitting resume job for model: $model_name"
+    echo "Submitting job for model: $model_name"
     
     # Create sbatch script content
     cat > "temp_${job_name}.sh" << EOF
@@ -55,44 +65,45 @@ submit_resume_job() {
 #SBATCH --job-name=${job_name}
 #SBATCH --output=eval_correlation_logs/${job_name}_%j.out
 #SBATCH --error=eval_correlation_logs/${job_name}_%j.err
-#SBATCH --time=12:00:00
+#SBATCH --time=1-20:00:00
 #SBATCH --mem=32G
 #SBATCH --cpus-per-task=4
 
 # Set working directory
 cd /ibex/project/c2328/LLMs-Scalable-Deliberation
 
-echo "Resuming human-LLM correlation evaluation: Model=${model_name}, Sample_Size=${SAMPLE_SIZE}, Temperature=${TEMPERATURE} at \$(date)"
+echo "Running human-LLM correlation evaluation: Model=${model_name}, Temperature=${TEMPERATURE} at \$(date)"
 echo "=================================================="
 
-# Check if checkpoint exists
-checkpoint_file="${CHECKPOINT_DIR}/checkpoint_${model_name}.json"
-if [ -f "\$checkpoint_file" ]; then
-    echo "Found checkpoint: \$checkpoint_file"
-    echo "Resuming from checkpoint..."
-    
+if [ "$MODE" == "resume" ]; then
     # Run human-LLM correlation evaluation with resume
     python scripts/batch_human_aligned_evaluation_summaries.py \
-        --model ${model_name} \
-        --sample-size ${SAMPLE_SIZE} \
+        --model "${model_name}" \
         --temperature ${TEMPERATURE} \
         --output-dir results/eval_llm_human_correlation \
         --resume \
         --checkpoint-interval 5
-    
-    # Check exit status
-    if [ \$? -eq 0 ]; then
-        echo "=================================================="
-        echo "Correlation evaluation completed successfully at \$(date)"
-        echo "Results saved to: results/eval_llm_human_correlation/"
-    else
-        echo "=================================================="
-        echo "Correlation evaluation failed or was interrupted at \$(date)"
-        echo "Check logs for details: eval_correlation_logs/${job_name}_*.err"
-        exit 1
-    fi
 else
-    echo "Error: Checkpoint file \$checkpoint_file not found!"
+    # Process missing data
+    python scripts/batch_human_aligned_evaluation_summaries.py \
+        --model "${model_name}" \
+        --temperature ${TEMPERATURE} \
+        --results-dir results/eval_llm_human_correlation \
+        --check-coverage \
+        --process-missing \
+        --show-missing-ids \
+        --target-model "${model_name}"
+fi
+
+# Check exit status
+if [ \$? -eq 0 ]; then
+    echo "=================================================="
+    echo "Correlation evaluation completed successfully at \$(date)"
+    echo "Results saved to: results/eval_llm_human_correlation/"
+else
+    echo "=================================================="
+    echo "Correlation evaluation failed or was interrupted at \$(date)"
+    echo "Check logs for details: eval_correlation_logs/${job_name}_*.err"
     exit 1
 fi
 EOF
@@ -107,18 +118,49 @@ EOF
     return 0
 }
 
-# Submit resume jobs for all checkpoint files
-echo "Submitting resume jobs..."
-for checkpoint_file in "${checkpoint_files[@]}"; do
-    submit_resume_job "$checkpoint_file"
-    sleep 1  # Small delay between submissions
-done
+# Process models
+process_model() {
+    local current_model=$1
+    local job_id=""
+    
+    echo "Processing model: $current_model"
+    
+    # Submit job
+    job_id=$(submit_job "$current_model" | grep -o '[0-9]\+')
+    if [ -n "$job_id" ]; then
+        echo "Job ID: $job_id"
+        echo "Log files:"
+        echo "  eval_correlation_logs/${MODE}_correlation_${current_model}_${job_id}.out"
+        echo "  eval_correlation_logs/${MODE}_correlation_${current_model}_${job_id}.err"
+    fi
+}
+
+# Process all models in EVAL_MODELS
+echo "Processing all models..."
+echo "This will submit ${#EVAL_MODELS[@]} jobs."
+read -p "Continue? [y/N] " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    for model in "${EVAL_MODELS[@]}"; do
+        echo "=================================================="
+        process_model "$model"
+        echo
+    done
+    echo "All jobs submitted. Use 'squeue -u \$USER' to check status."
+else
+    echo "Operation cancelled."
+    exit 0
+fi
 
 echo ""
-echo "All resume jobs submitted successfully!"
+echo "Job submitted successfully!"
 echo ""
 echo "To check job status, run:"
 echo "  squeue -u \$USER"
 echo ""
 echo "To monitor logs, run:"
-echo "  tail -f eval_correlation_logs/resume_correlation_*.out"
+if [ "$MODE" == "resume" ]; then
+    echo "  tail -f eval_correlation_logs/resume_correlation_*_*.out"
+else
+    echo "  tail -f eval_correlation_logs/missing_correlation_*_*.out"
+fi

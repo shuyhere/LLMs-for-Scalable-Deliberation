@@ -63,22 +63,33 @@ def extract_fields(record: Dict[str, Any]) -> Dict[str, Any]:
     if rec_id.endswith("_rating"):
         extracted["displayed_text"] = strip_html(record.get("displayed_text"))
         label_annotations = record.get("label_annotations", {}) or {}
-        perspective = label_annotations.get(
+        
+        # Define the four rating questions in order
+        rating_questions = [
             "To what extent is your perspective represented in this response?",
-            {},
-        ) or {}
-        # Accept any available scale_* key; prefer scale_2 if present
-        value = None
-        if isinstance(perspective, dict):
-            if "scale_2" in perspective:
-                value = perspective.get("scale_2")
-            else:
-                # Fallback to any scale_* present deterministically by key name
-                for k in sorted(perspective.keys()):
-                    if k.startswith("scale_") and perspective.get(k):
-                        value = perspective[k]
-                        break
-        extracted["perspective"] = value
+            "How informative is this summary?",
+            "Do you think this summary presents a neutral and balanced view of the issue?",
+            "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?"
+        ]
+        
+        # Extract ratings for all four dimensions
+        rating_scores = []
+        for question in rating_questions:
+            question_data = label_annotations.get(question, {}) or {}
+            # Extract the rating value (1-5 scale)
+            score = None
+            if isinstance(question_data, dict):
+                # Look for any scale_* key and extract the numeric value
+                for k in sorted(question_data.keys()):
+                    if k.startswith("scale_") and question_data.get(k):
+                        try:
+                            score = int(question_data[k])
+                            break
+                        except (ValueError, TypeError):
+                            continue
+            rating_scores.append(score)
+        
+        extracted["rating_scores"] = rating_scores
     elif rec_id.endswith("_question"):
         label_annotations = record.get("label_annotations", {}) or {}
         answer = label_annotations.get("answer", {}) or {}
@@ -86,7 +97,7 @@ def extract_fields(record: Dict[str, Any]) -> Dict[str, Any]:
         # Also store the question text (HTML stripped) from displayed_text
         extracted["question"] = strip_html(record.get("displayed_text"))
     elif rec_id.endswith("_comparison"):
-        # No fields are extracted from comparison records per latest requirement
+        # Skip comparison records as per requirement
         pass
     return extracted
 
@@ -104,9 +115,21 @@ def merge_triplet(acc: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def validate(item: Dict[str, Any]) -> Optional[str]:
-    # Include record only if perspective exists
-    if not item.get("perspective"):
-        return "missing fields: perspective"
+    # Include record only if it has rating_scores (4-element list for the four dimensions)
+    rating_scores = item.get("rating_scores")
+    
+    if not rating_scores:
+        return "missing fields: rating_scores"
+    
+    # Validate that it's a 4-element list with valid rating values (1-5 or None)
+    if not isinstance(rating_scores, list) or len(rating_scores) != 4:
+        return "invalid rating_scores: must be 4-element list"
+    
+    # Check that all scores are either 1-5 or None
+    for i, score in enumerate(rating_scores):
+        if score is not None and (not isinstance(score, int) or score < 1 or score > 5):
+            return f"invalid rating score at position {i}: {score}, must be 1-5 or None"
+    
     return None
 
 
@@ -175,7 +198,7 @@ def main() -> None:
             "displayed_text": item.get("displayed_text"),
             "answer_text": item.get("answer_text"),
             "question": item.get("question"),
-            "perspective": item.get("perspective"),
+            "rating_scores": item.get("rating_scores"),  # 4-element list for regression training
             "folder_id": item.get("folder_id"),
             "source": item.get("source"),
         }
@@ -196,21 +219,40 @@ def main() -> None:
 
     # Print basic statistics
     total = len(items)
-    perspective_counter = Counter(
-        x.get("perspective") for x in items if x.get("perspective") is not None
-    )
     question_counter = Counter(
         x.get("question") for x in items if x.get("question")
     )
+    
+    # Statistics for rating_scores (4-tuple)
+    rating_dimension_names = [
+        "Perspective Representation",
+        "Informativeness", 
+        "Neutrality & Balance",
+        "Policy Approval"
+    ]
+    
+    rating_stats = {}
+    for i, dim_name in enumerate(rating_dimension_names):
+        dim_scores = [x.get("rating_scores", [None]*4)[i] for x in items if x.get("rating_scores")]
+        dim_scores = [s for s in dim_scores if s is not None]
+        if dim_scores:
+            rating_stats[dim_name] = {
+                'count': len(dim_scores),
+                'distribution': Counter(dim_scores),
+                'mean': sum(dim_scores) / len(dim_scores)
+            }
 
     print("\n==== Dataset Statistics ====")
     print(f"Total records: {total}")
-    print("Perspective distribution (value -> count):")
-    for val, cnt in sorted(perspective_counter.items(), key=lambda kv: str(kv[0])):
-        print(f"  {val}: {cnt}")
     print("Question occurrence counts:")
     for q, cnt in sorted(question_counter.items(), key=lambda kv: (-kv[1], kv[0])):
         print(f"  {cnt} - {q}")
+    
+    print("\nRating Scores Statistics (4-tuple for regression):")
+    for dim_name, stats in rating_stats.items():
+        print(f"  {dim_name}:")
+        print(f"    Count: {stats['count']}, Mean: {stats['mean']:.2f}")
+        print(f"    Distribution: {dict(sorted(stats['distribution'].items()))}")
 
 
 if __name__ == "__main__":
