@@ -103,7 +103,11 @@ def main():
     
     # Dataset arguments
     parser.add_argument("--dataset_path", type=str, required=True,
-                       help="Path to the custom dataset JSONL file")
+                       help="Path to a dataset JSONL file (used if train/test not provided)")
+    parser.add_argument("--train_path", type=str, default=None,
+                       help="Optional path to train JSONL (overrides dataset_path train)")
+    parser.add_argument("--test_path", type=str, default=None,
+                       help="Optional path to test JSONL (used only for final evaluation)")
     parser.add_argument("--dataset_train_split", type=str, default="train",
                        help="Name of the train split")
     parser.add_argument("--dataset_test_split", type=str, default="test", 
@@ -281,19 +285,39 @@ def main():
     ##############
     # Load dataset
     ##############
-    logger.info(f"Loading dataset from {args.dataset_path}")
-    dataset = load_custom_dataset(args.dataset_path)
-    
-    # Split dataset if needed
-    if args.eval_split > 0:
-        dataset = dataset.train_test_split(test_size=args.eval_split, seed=args.seed)
-        train_dataset = dataset['train']
-        eval_dataset = dataset['test']
-        logger.info(f"Split dataset: {len(train_dataset)} train, {len(eval_dataset)} eval")
+    # Load train/eval datasets
+    train_dataset = None
+    eval_dataset = None
+    test_dataset = None
+    if args.train_path is not None:
+        # Train from explicit train_path; create training-time eval via eval_split from the same training data (SFT-like)
+        logger.info(f"Loading train dataset from {args.train_path}")
+        base_train = load_custom_dataset(args.train_path)
+        if args.eval_split > 0:
+            split = base_train.train_test_split(test_size=args.eval_split, seed=args.seed)
+            train_dataset = split['train']
+            eval_dataset = split['test']
+            logger.info(f"Split train: {len(train_dataset)} train, {len(eval_dataset)} eval (eval_split={args.eval_split})")
+        else:
+            train_dataset = base_train
+            eval_dataset = None
+            logger.info(f"Using full train dataset without eval split: {len(train_dataset)} examples")
+        if args.test_path is not None:
+            logger.info(f"Loading held-out test dataset from {args.test_path}")
+            test_dataset = load_custom_dataset(args.test_path)
     else:
-        train_dataset = dataset
-        eval_dataset = None
-        logger.info(f"Using full dataset for training: {len(train_dataset)} examples")
+        # Fallback: single dataset_path; create eval via eval_split from it if requested
+        logger.info(f"Loading dataset from {args.dataset_path}")
+        dataset = load_custom_dataset(args.dataset_path)
+        if args.eval_split > 0:
+            dataset = dataset.train_test_split(test_size=args.eval_split, seed=args.seed)
+            train_dataset = dataset['train']
+            eval_dataset = dataset['test']
+            logger.info(f"Split dataset: {len(train_dataset)} train, {len(eval_dataset)} eval (eval_split={args.eval_split})")
+        else:
+            train_dataset = dataset
+            eval_dataset = None
+            logger.info(f"Using full dataset for training: {len(train_dataset)} examples")
     
     ##############
     # Training Config
@@ -379,6 +403,14 @@ def main():
         trainer.log_metrics("eval", metrics)
         trainer.save_metrics("eval", metrics)
         logger.info(f"Evaluation metrics: {metrics}")
+    
+    # Evaluate explicitly on provided test set if given (held-out, not used during training-time eval)
+    if test_dataset is not None:
+        logger.info("Evaluating model on provided test set...")
+        test_metrics = trainer.evaluate(eval_dataset=test_dataset)
+        trainer.log_metrics("test", test_metrics)
+        trainer.save_metrics("test", test_metrics)
+        logger.info(f"Test metrics: {test_metrics}")
     
     # Push to hub if requested
     if args.push_to_hub:

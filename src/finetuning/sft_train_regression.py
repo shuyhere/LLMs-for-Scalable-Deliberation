@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import Any
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
-
+import json
 import numpy as np
 import torch
 import torch.nn as nn
@@ -133,6 +133,12 @@ def parse_args() -> argparse.Namespace:
         help="Path to the training dataset (JSONL file)",
     )
     parser.add_argument(
+        "--test-file",
+        type=str,
+        default=None,
+        help="Optional path to JSONL test file to evaluate and save predictions at the end",
+    )
+    parser.add_argument(
         "--output-dir",
         type=str,
         required=True,
@@ -230,6 +236,18 @@ def parse_args() -> argparse.Namespace:
         default="tags",
         choices=["tags", "sep"],
         help="Input format: 'tags' for <QUESTION>...</QUESTION> format, 'sep' for <sep> separated format",
+    )
+    parser.add_argument(
+        "--wandb_project",
+        type=str,
+        default=None,
+        help="W&B project name",
+    )
+    parser.add_argument(
+        "--run_name",
+        type=str,
+        default=None,
+        help="Run name for logging",
     )
     
     return parser.parse_args()
@@ -333,6 +351,14 @@ def print_regression_report(trainer, test_dataset=None):
         print(f"    MSE: {test_results.get('eval_mse', 0):.6f}")
         print(f"    Pearson: {test_results.get('eval_pearson', 0):.4f}")
         print(f"    Spearman: {test_results.get('eval_spearman', 0):.4f}")
+
+        print("\n  Per-Dimension Metrics:")
+        dimensions = ["perspective", "informativeness", "neutrality", "policy"]
+        for dim in dimensions:
+            print(f"    {dim.capitalize()}:")
+            print(f"      MSE: {test_results.get(f'eval_{dim}_mse', 0):.6f}")
+            print(f"      Pearson: {test_results.get(f'eval_{dim}_pearson', 0):.4f}")
+            print(f"      Spearman: {test_results.get(f'eval_{dim}_spearman', 0):.4f}")
 
 
 def print_classification_report(trainer, test_dataset=None):
@@ -620,6 +646,9 @@ def main():
     model.base_model.resize_token_embeddings(len(tokenizer))
 
     # Training arguments
+    if args.wandb_project:
+        os.environ["WANDB_PROJECT"] = args.wandb_project
+
     training_args = TrainingArguments(
         output_dir=str(output_dir),
         
@@ -660,6 +689,8 @@ def main():
         remove_unused_columns=False,
         push_to_hub=False,
         save_total_limit=3,
+        report_to=["wandb"],
+        run_name=args.run_name,
     )
     
     # Create data collator
@@ -684,8 +715,45 @@ def main():
     trainer.save_model(str(output_dir / "final_model"))
     tokenizer.save_pretrained(str(output_dir / "final_model"))
     
-    # Print evaluation report
-    print_regression_report(trainer)
+    # Prepare optional external test set
+    test_dataset_proc = None
+    test_raw = None
+    if args.test_file is not None and os.path.isfile(args.test_file):
+        print("\n📦 Loading external test set for final evaluation and predictions...")
+        test_raw = load_dataset('json', data_files=args.test_file, split='train')
+        test_dataset_proc = test_raw.map(
+            preprocess_eval,
+            batched=True,
+            remove_columns=test_raw.column_names
+        )
+
+    # Print evaluation report (and on test set if provided)
+    print_regression_report(trainer, test_dataset=test_dataset_proc)
+
+    # Save predictions on external test set if provided
+    if test_dataset_proc is not None and test_raw is not None and len(test_dataset_proc) == len(test_raw):
+        print("\n📝 Saving per-sample predictions on external test set...")
+        preds_output = trainer.predict(test_dataset_proc)
+        preds = preds_output.predictions  # expected shape [N, 4] in 0-1
+        preds = np.clip(np.asarray(preds), 0.0, 1.0)
+
+        out_path = output_dir / "test_predictions.jsonl"
+        with open(out_path, 'w', encoding='utf-8') as f:
+            for i in range(len(test_raw)):
+                src = test_raw[i]
+                pred01 = preds[i].tolist()
+                pred15_round = [int(round(x * 4.0) + 1) for x in pred01]
+                row = {
+                    "triplet_key": src.get("triplet_key"),
+                    "question": src.get("question"),
+                    "answer_text": src.get("answer_text"),
+                    "displayed_text": src.get("displayed_text"),
+                    "rating_scores": src.get("rating_scores"),
+                    "pred_scores_01": pred01,
+                    "pred_scores_1_5_rounded": pred15_round,
+                }
+                f.write(json.dumps(row, ensure_ascii=False) + "\n")
+        print(f"Saved predictions to {out_path}")
     
     print(f"\n✅ Training completed! Model saved to {output_dir}/final_model")
     print("🎯 This model directly predicts 0-1 scale ratings.")

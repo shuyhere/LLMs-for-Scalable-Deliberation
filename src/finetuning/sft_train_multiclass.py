@@ -9,6 +9,7 @@ import argparse
 import os
 from pathlib import Path
 from typing import Dict, Any
+import json
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -68,6 +69,7 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Train 4-dim multiclass model with regression-style CLI")
     # Aligned with regression script
     p.add_argument("--dataset-path", type=str, required=True, help="Path to JSONL train file")
+    p.add_argument("--test-file", type=str, default=None, help="Optional path to JSONL test file to evaluate after training")
     p.add_argument("--output-dir", type=str, required=True, help="Output directory")
     p.add_argument("--model-name", type=str, default="allenai/longformer-base-4096")
     p.add_argument("--batch-size", type=int, default=16, help="Train batch size")
@@ -81,22 +83,35 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--input-format", type=str, default="tags", choices=["tags", "sep"], 
                    help="Input format: 'tags' for <QUESTION>...</QUESTION> format, 'sep' for <sep> separated format")
+    p.add_argument("--wandb_project", type=str, default=None, help="W&B project name")
+    p.add_argument("--run_name", type=str, default=None, help="Run name for logging")
     return p.parse_args()
 
 
 def compute_metrics(eval_pred) -> Dict[str, Any]:
     logits, labels = eval_pred
-    logits = np.asarray(logits)
-    labels = np.asarray(labels)
-    preds = logits.argmax(axis=2)  # [B, 4]
+    logits = np.asarray(logits)  # [B, 4, 5]
+    labels = np.asarray(labels)  # [B, 4]
+    preds = logits.argmax(axis=2)  # [B, 4] for accuracy/F1
 
     overall_acc = accuracy_score(labels.flatten(), preds.flatten())
     f1_macro = f1_score(labels.flatten(), preds.flatten(), average="macro")
     f1_weighted = f1_score(labels.flatten(), preds.flatten(), average="weighted")
 
-    # Correlations using argmax class (discrete 0..4), as requested
-    pred_scores = preds.astype(np.float64)
+    # Correlations using Expected Value over class probabilities (0..4)
+    # This avoids variance collapse when argmax is constant within a dimension.
+    # probs shape [B, 4, 5]
+    # ev shape [B, 4]
+    with np.errstate(over='ignore'):
+        # Stabilize softmax by subtracting max per dim
+        max_logits = logits.max(axis=2, keepdims=True)
+        exp_logits = np.exp(logits - max_logits)
+        probs = exp_logits / np.clip(exp_logits.sum(axis=2, keepdims=True), 1e-12, None)
+    class_values = np.arange(5, dtype=np.float64).reshape(1, 1, 5)
+    ev = (probs * class_values).sum(axis=2)  # [B, 4]
+
     true_scores = labels.astype(np.float64)
+    pred_scores = ev.astype(np.float64)
 
     def _pearson(a: np.ndarray, b: np.ndarray) -> float:
         a = a.reshape(-1)
@@ -261,6 +276,9 @@ def main():
         print(f"Resizing token embeddings from {model.base_model.config.vocab_size} to {len(tokenizer)}")
         model.base_model.resize_token_embeddings(len(tokenizer))
 
+    if args.wandb_project:
+        os.environ["WANDB_PROJECT"] = args.wandb_project
+
     training_args = TrainingArguments(
         output_dir=str(out_dir),
         num_train_epochs=args.epochs,
@@ -283,6 +301,7 @@ def main():
         logging_steps=1,
         save_total_limit=3,
         report_to=["wandb"],
+        run_name=args.run_name,
         seed=args.seed,
         data_seed=args.seed,
     )
@@ -307,6 +326,29 @@ def main():
     trainer.save_model(str(final_dir))
     tokenizer.save_pretrained(str(final_dir))
     print(f"Saved to {final_dir}")
+
+    # Optional: evaluate on provided external test set
+    if args.test_file is not None and os.path.isfile(args.test_file):
+        print("\n" + "="*80)
+        print("EVALUATING ON EXTERNAL TEST SET")
+        print("="*80)
+        test_ds_raw: Dataset = load_dataset("json", data_files=str(Path(args.test_file).resolve()), split="train")
+        remove_cols_test = [c for c in test_ds_raw.column_names if c not in ("question", "answer_text", "displayed_text", "rating_scores")]
+        test_ds = test_ds_raw.map(preprocess, batched=True, remove_columns=remove_cols_test)
+        test_results = trainer.evaluate(eval_dataset=test_ds)
+        print("\n📊 TEST SET RESULTS:")
+        print(f"  Accuracy: {test_results.get('eval_accuracy', 0):.4f}")
+        print(f"  F1-Macro: {test_results.get('eval_f1_macro', 0):.4f}")
+        print(f"  F1-Weighted: {test_results.get('eval_f1_weighted', 0):.4f}")
+        print(f"  Pearson: {test_results.get('eval_pearson', 0):.4f}")
+        print(f"  Spearman: {test_results.get('eval_spearman', 0):.4f}")
+        dims = ["perspective", "informativeness", "neutrality", "policy"]
+        for name in dims:
+            print(f"  {name.capitalize()}:")
+            print(f"    Accuracy: {test_results.get(f'eval_acc_{name}', 0):.4f}")
+            print(f"    F1-Macro: {test_results.get(f'eval_f1_{name}', 0):.4f}")
+            print(f"    Pearson: {test_results.get(f'eval_pearson_{name}', 0):.4f}")
+            print(f"    Spearman: {test_results.get(f'eval_spearman_{name}', 0):.4f}")
 
 
 if __name__ == "__main__":

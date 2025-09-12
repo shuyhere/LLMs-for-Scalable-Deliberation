@@ -12,7 +12,7 @@ TRAIN_BATCH_SIZE=4
 EVAL_BATCH_SIZE=4
 MAX_GRAD_NORM=10.0
 NUM_EPOCHS=30
-LEARNING_RATE=1e-4
+LEARNING_RATE=2e-5
 EVAL_STEPS=20
 LOGGING_STEPS=1
 SAVE_STEPS=100
@@ -46,10 +46,14 @@ DIMENSIONS=("perspective" "informativeness" "neutrality" "policy")
 submit_reward_model_job() {
     local dimension=$1
     local dataset_path="$DATASET_DIR/${dimension}_trl_dataset.jsonl"
+    local train_path="$TRAIN_DIR/${dimension}_trl_dataset.jsonl"
+    local test_path="$TEST_DIR/${dimension}_trl_dataset.jsonl"
     local output_path="$OUTPUT_DIR/${dimension}_reward_model"
     
     echo "Submitting reward model training job for dimension: $dimension"
     echo "Dataset: $dataset_path"
+    echo "Train override: $train_path"
+    echo "Test override: $test_path"
     echo "Output: $output_path"
     
     sbatch <<EOF
@@ -74,6 +78,8 @@ export TRANSFORMERS_NO_ADVISORY_WARNINGS=1
 python3 $PROJECT_DIR/src/finetuning/reward_modeling.py \
     --model_name_or_path $MODEL_NAME \
     --dataset_path $dataset_path \
+    --train_path $train_path \
+    --test_path $test_path \
     --eval_split $EVAL_SPLIT \
     --output_dir $output_path \
     --per_device_train_batch_size $TRAIN_BATCH_SIZE \
