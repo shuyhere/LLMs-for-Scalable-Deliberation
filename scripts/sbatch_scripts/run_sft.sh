@@ -4,14 +4,14 @@
 PROJECT_DIR="/ibex/project/c2328/LLMs-Scalable-Deliberation"
 
 # Common parameters
-DATA_FILE="$PROJECT_DIR/datasets/finetuning_dataset/summary_rating_extracted/train_aug.jsonl"
+DATA_FILE="$PROJECT_DIR/datasets/finetuning_dataset/summary_rating_extracted/train.jsonl"
 TEST_FILE="$PROJECT_DIR/datasets/finetuning_dataset/summary_rating_extracted/test.jsonl"
 MODEL_NAME="allenai/longformer-base-4096"
-OUTPUT_DIR="$PROJECT_DIR/outputs/sft_modeling_aug/$MODEL_NAME/"
+OUTPUT_DIR="$PROJECT_DIR/outputs/sft_modeling/$MODEL_NAME/"
 MAX_LENGTH=4096
 TRAIN_BATCH_SIZE=16
 EVAL_BATCH_SIZE=16
-NUM_EPOCHS=10
+NUM_EPOCHS=8
 LEARNING_RATE=2e-5
 WEIGHT_DECAY=0.01
 WARMUP_RATIO=0.2
@@ -25,7 +25,7 @@ GPUS_LINE="#SBATCH --gres=gpu:a100:1"  # Example GPU line
 PARTITION_LINE="#SBATCH --partition=a100" # Example partition line
 
 # Wandb
-WANDB_PROJECT="LLMs-Scalable-Deliberation-sft-training-longformer-base-4096-aug"
+WANDB_PROJECT="LLMs-Scalable-Deliberation-sft-training-longformer-base-4096"
 
 # Derive data tag
 DATA_TAG="orig"

@@ -26,11 +26,24 @@ PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
 
 # Dimensions mapping
 DIMENSIONS = {
-    'perspective': "To what extent is your perspective represented in this response?",
+    'representiveness': "To what extent is your perspective represented in this response?",
     'informativeness': "How informative is this summary?",
     'neutrality': "Do you think this summary presents a neutral and balanced view of the issue?",
-    'policy': "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?"
+    'policy_approval': "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?"
 }
+
+def get_dimension_display_order():
+    """Define the desired order for dimension display in visualizations"""
+    return ['Representiveness', 'Informativeness', 'Neutrality', 'Policy Approval']
+
+def get_dimension_display_names():
+    """Get display names for dimensions"""
+    return {
+        'representiveness': 'Representiveness',
+        'informativeness': 'Informativeness', 
+        'neutrality': 'Neutrality',
+        'policy_approval': 'Policy Approval'
+    }
 
 def load_raw_data():
     """Load raw summary data with metadata including topics"""
@@ -58,6 +71,21 @@ def get_clean_topic_name(topic):
         'Openqa-Influencers-as-a-job': 'Influencers as Job'
     }
     return topic_mapping.get(topic, topic)
+
+def get_topic_display_order():
+    """Define the desired order for topic display in visualizations"""
+    return [
+        'Tipping System',
+        'AI Changes Human Life', 
+        'Academic Funding',
+        'Influencers as Job',
+        'Electronic Products',
+        'Tariff Policy',
+        'Health Care Policy',
+        'Vaccination Policy',
+        'Refugee Policies',
+        'Online Identity Policies'
+    ]
 
 def load_annotation_data():
     """Load annotation data from all annotated instances"""
@@ -320,7 +348,13 @@ def calculate_topic_rating_agreement(topic_ratings):
 
 def create_topic_agreement_visualization(results):
     """Create visualization of topic-based rating agreement (only agreement-related plots)"""
-    topics = list(results.keys())
+    # Get topics in the specified order, only including those that exist in results
+    topic_order = get_topic_display_order()
+    topics = [topic for topic in topic_order if topic in results]
+    
+    # Get dimensions in the specified order with display names
+    dimension_order = get_dimension_display_order()
+    dimension_names = get_dimension_display_names()
     dimensions = list(DIMENSIONS.keys())
     
     # Create figure with custom subplot layout to make heatmap wider and all subplots square
@@ -331,13 +365,23 @@ def create_topic_agreement_visualization(results):
     
     # 1. Heatmap of ICC values across topics and dimensions (wider)
     ax1 = fig.add_subplot(gs[0, 0])
-    icc_matrix = np.zeros((len(topics), len(dimensions)))
+    icc_matrix = np.zeros((len(topics), len(dimension_order)))
     
     for i, topic in enumerate(topics):
-        for j, dimension in enumerate(dimensions):
-            icc_value = results[topic][dimension]['icc_2k']
-            # Keep negative values, only replace NaN with a very small value for display
-            icc_matrix[i, j] = icc_value if not np.isnan(icc_value) else -1.0
+        for j, dim_display in enumerate(dimension_order):
+            # Find the corresponding dimension key
+            dim_key = None
+            for key, display_name in dimension_names.items():
+                if display_name == dim_display:
+                    dim_key = key
+                    break
+            
+            if dim_key and dim_key in results[topic]:
+                icc_value = results[topic][dim_key]['icc_2k']
+                # Keep negative values, only replace NaN with a very small value for display
+                icc_matrix[i, j] = icc_value if not np.isnan(icc_value) else -1.0
+            else:
+                icc_matrix[i, j] = -1.0
     
     # Use a more subtle blue to red colormap, remove grid lines
     # Create a custom colormap with lower saturation
@@ -351,23 +395,33 @@ def create_topic_agreement_visualization(results):
     im1 = ax1.imshow(icc_matrix, cmap=cmap, vmin=-0.5, vmax=1.0, aspect='auto')
     
     # Remove grid lines and set cleaner ticks
-    ax1.set_xticks(range(len(dimensions)))
-    ax1.set_xticklabels(dimensions, rotation=45, ha='right', fontsize=11)
+    ax1.set_xticks(range(len(dimension_order)))
+    ax1.set_xticklabels(dimension_order, rotation=45, ha='right', fontsize=11)
     ax1.set_yticks(range(len(topics)))
     ax1.set_yticklabels(topics, fontsize=10)
     ax1.set_title('ICC(2,k) by Topic and Dimension', fontsize=14, fontweight='bold', pad=20)
     
     # Remove the grid lines by setting linewidth to 0
     ax1.grid(False)
-    ax1.set_xticks(np.arange(-0.5, len(dimensions), 1), minor=True)
+    ax1.set_xticks(np.arange(-0.5, len(dimension_order), 1), minor=True)
     ax1.set_yticks(np.arange(-0.5, len(topics), 1), minor=True)
     ax1.grid(which="minor", color="white", linestyle='-', linewidth=0)
     
     # Add text annotations for all values (including negative)
     for i in range(len(topics)):
-        for j in range(len(dimensions)):
+        for j in range(len(dimension_order)):
             icc_val = icc_matrix[i, j]
-            p_val = results[topics[i]][dimensions[j]]['icc_p_value']
+            # Find the corresponding dimension key for p-value lookup
+            dim_key = None
+            for key, display_name in dimension_names.items():
+                if display_name == dimension_order[j]:
+                    dim_key = key
+                    break
+            
+            if dim_key and dim_key in results[topics[i]]:
+                p_val = results[topics[i]][dim_key]['icc_p_value']
+            else:
+                p_val = np.nan
             
             # Show all values, not just positive ones
             if not np.isnan(icc_val) and icc_val != -1.0:  # -1.0 is our NaN placeholder
@@ -438,10 +492,20 @@ def create_topic_agreement_visualization(results):
     # 3. Average ICC by dimension (square)
     ax3 = fig.add_subplot(gs[0, 2])
     dim_avg_icc = []
-    for dimension in dimensions:
-        valid_iccs = [results[topic][dimension]['icc_2k'] for topic in topics 
-                     if not np.isnan(results[topic][dimension]['icc_2k'])]
-        avg_icc = np.mean(valid_iccs) if valid_iccs else -1.0  # Use -1 for no data
+    for dim_display in dimension_order:
+        # Find the corresponding dimension key
+        dim_key = None
+        for key, display_name in dimension_names.items():
+            if display_name == dim_display:
+                dim_key = key
+                break
+        
+        if dim_key:
+            valid_iccs = [results[topic][dim_key]['icc_2k'] for topic in topics 
+                         if dim_key in results[topic] and not np.isnan(results[topic][dim_key]['icc_2k'])]
+            avg_icc = np.mean(valid_iccs) if valid_iccs else -1.0  # Use -1 for no data
+        else:
+            avg_icc = -1.0
         dim_avg_icc.append(avg_icc)
     
     # Create color-coded bars based on ICC values for dimensions
@@ -456,9 +520,9 @@ def create_topic_agreement_visualization(results):
         else:
             dim_bar_colors.append('#F08080')  # Light red for negative
     
-    bars3 = ax3.bar(range(len(dimensions)), dim_avg_icc, color=dim_bar_colors, alpha=0.8, edgecolor='white', linewidth=1)
-    ax3.set_xticks(range(len(dimensions)))
-    ax3.set_xticklabels(dimensions, rotation=45, ha='right', fontsize=11)
+    bars3 = ax3.bar(range(len(dimension_order)), dim_avg_icc, color=dim_bar_colors, alpha=0.8, edgecolor='white', linewidth=1)
+    ax3.set_xticks(range(len(dimension_order)))
+    ax3.set_xticklabels(dimension_order, rotation=45, ha='right', fontsize=11)
     ax3.set_ylabel('Average ICC(2,k)', fontsize=12)
     ax3.set_title('Average Agreement by Dimension', fontsize=14, fontweight='bold')
     ax3.set_ylim(-0.5, 1.0)  # Allow negative values
@@ -481,7 +545,7 @@ def create_topic_agreement_visualization(results):
     plt.subplots_adjust(left=0.08, right=0.95, top=0.9, bottom=0.15)
     
     # Save plot
-    output_dir = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation'
+    output_dir = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation_topic_rating_agreement'
     output_dir.mkdir(parents=True, exist_ok=True)
     
     plt.savefig(output_dir / 'topic_rating_agreement.pdf', dpi=300, bbox_inches='tight')

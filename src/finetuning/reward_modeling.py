@@ -4,6 +4,7 @@ Reward Model Training Script - Based on TRL Official Example
 https://github.com/huggingface/trl/blob/main/examples/scripts/reward_modeling.py
 
 Usage:
+# Regular training
 python src/finetuning/reward_modeling.py \
     --model_name_or_path Qwen/Qwen3-4B-Instruct-2507 \
     --dataset_path datasets/rl_datasets/trl_format/perspective_trl_dataset.jsonl \
@@ -19,7 +20,26 @@ python src/finetuning/reward_modeling.py \
     --max_length 8192 \
     --seed 42 \
     --report_to wandb \
-    --run_name perspective_reward_model 
+    --run_name perspective_reward_model
+
+# Cross-validation training
+python src/finetuning/reward_modeling.py \
+    --model_name_or_path Qwen/Qwen3-4B-Instruct-2507 \
+    --dataset_path datasets/rl_datasets/trl_format/perspective_trl_dataset.jsonl \
+    --train_path datasets/rl_datasets/trl_format/perspective_trl_dataset/train.jsonl \
+    --test_path datasets/rl_datasets/trl_format/perspective_trl_dataset/test.jsonl \
+    --output_dir outputs/reward_models/perspective_cv \
+    --crossvalidation \
+    --cv_folds 5 \
+    --per_device_train_batch_size 4 \
+    --per_device_eval_batch_size 4 \
+    --max_grad_norm 10.0 \
+    --num_train_epochs 1 \
+    --learning_rate 2.0e-5 \
+    --max_length 8192 \
+    --seed 42 \
+    --report_to wandb \
+    --run_name perspective_reward_model_cv 
 """
 
 import os
@@ -27,6 +47,8 @@ import json
 import argparse
 from pathlib import Path
 from typing import Dict, List, Any
+import numpy as np
+from sklearn.model_selection import KFold
 
 import torch
 from accelerate import logging
@@ -84,6 +106,108 @@ def load_custom_dataset(dataset_path: str) -> Dataset:
     logger.info(f"Loaded {len(data)} examples from {dataset_path}")
     return Dataset.from_list(data)
 
+def run_crossvalidation(trainer, dataset, cv_folds: int, output_dir: str, args):
+    """Run cross-validation training and evaluation."""
+    logger.info(f"Starting {cv_folds}-fold cross-validation")
+    
+    # Convert dataset to list for easier indexing
+    data_list = [dataset[i] for i in range(len(dataset))]
+    data_indices = np.arange(len(data_list))
+    
+    # Initialize KFold
+    kf = KFold(n_splits=cv_folds, shuffle=True, random_state=args.seed)
+    
+    # Store results for each fold
+    fold_results = []
+    
+    for fold_idx, (train_indices, val_indices) in enumerate(kf.split(data_indices)):
+        logger.info(f"Training fold {fold_idx + 1}/{cv_folds}")
+        
+        # Create fold-specific datasets
+        train_data = [data_list[i] for i in train_indices]
+        val_data = [data_list[i] for i in val_indices]
+        
+        train_dataset = Dataset.from_list(train_data)
+        val_dataset = Dataset.from_list(val_data)
+        
+        # Create fold-specific output directory
+        fold_output_dir = os.path.join(output_dir, f"fold_{fold_idx + 1}")
+        os.makedirs(fold_output_dir, exist_ok=True)
+        
+        # Update trainer with fold-specific data
+        trainer.train_dataset = train_dataset
+        trainer.eval_dataset = val_dataset
+        
+        # Update training arguments for this fold
+        training_args = trainer.args
+        training_args.output_dir = fold_output_dir
+        training_args.run_name = f"{args.run_name}_fold_{fold_idx + 1}" if args.run_name else f"reward_model_fold_{fold_idx + 1}"
+        
+        # Train the model for this fold
+        logger.info(f"Training fold {fold_idx + 1} with {len(train_dataset)} train, {len(val_dataset)} val examples")
+        trainer.train()
+        
+        # Evaluate on validation set
+        logger.info(f"Evaluating fold {fold_idx + 1}")
+        val_metrics = trainer.evaluate()
+        
+        # Save fold results
+        fold_result = {
+            'fold': fold_idx + 1,
+            'train_size': len(train_dataset),
+            'val_size': len(val_dataset),
+            'metrics': val_metrics
+        }
+        fold_results.append(fold_result)
+        
+        # Save fold metrics
+        trainer.log_metrics(f"eval_fold_{fold_idx + 1}", val_metrics)
+        trainer.save_metrics(f"eval_fold_{fold_idx + 1}", val_metrics)
+        
+        logger.info(f"Fold {fold_idx + 1} metrics: {val_metrics}")
+        
+        # Save model for this fold
+        trainer.save_model()
+        logger.info(f"Saved fold {fold_idx + 1} model to {fold_output_dir}")
+    
+    # Calculate and save cross-validation summary
+    cv_summary = calculate_cv_summary(fold_results)
+    logger.info(f"Cross-validation summary: {cv_summary}")
+    
+    # Save CV summary
+    summary_path = os.path.join(output_dir, "cv_summary.json")
+    with open(summary_path, 'w') as f:
+        json.dump(cv_summary, f, indent=2)
+    
+    logger.info(f"Cross-validation completed. Summary saved to {summary_path}")
+    return cv_summary
+
+def calculate_cv_summary(fold_results: List[Dict]) -> Dict:
+    """Calculate cross-validation summary statistics."""
+    metrics = {}
+    
+    # Get all metric names from the first fold
+    if fold_results:
+        metric_names = list(fold_results[0]['metrics'].keys())
+        
+        for metric_name in metric_names:
+            values = [fold['metrics'][metric_name] for fold in fold_results]
+            metrics[metric_name] = {
+                'mean': np.mean(values),
+                'std': np.std(values),
+                'min': np.min(values),
+                'max': np.max(values),
+                'values': values
+            }
+    
+    summary = {
+        'num_folds': len(fold_results),
+        'metrics': metrics,
+        'fold_details': fold_results
+    }
+    
+    return summary
+
 
 def main():
     # Initialize accelerate state for logging
@@ -114,6 +238,10 @@ def main():
                        help="Name of the test split")
     parser.add_argument("--eval_split", type=float, default=0.1,
                        help="Fraction of data to use for evaluation")
+    parser.add_argument("--crossvalidation", action="store_true",
+                       help="Enable cross-validation mode")
+    parser.add_argument("--cv_folds", type=int, default=5,
+                       help="Number of folds for cross-validation (default: 5)")
     
     # Training arguments
     parser.add_argument("--output_dir", type=str, required=True,
@@ -204,6 +332,14 @@ def main():
     parser.add_argument("--bnb_4bit_use_double_quant", action="store_true",
                        help="Use double quantization for 4-bit")
     
+    # Best model saving arguments
+    parser.add_argument("--load_best_model_at_end", action="store_true",
+                       help="Load the best model at the end of training")
+    parser.add_argument("--metric_for_best_model", type=str, default="eval_accuracy",
+                       help="Metric to use for determining the best model")
+    parser.add_argument("--greater_is_better", action="store_true", default=True,
+                       help="Whether higher metric values are better")
+    
     args = parser.parse_args()
     
     # Set random seed
@@ -286,22 +422,33 @@ def main():
     # Load dataset
     ##############
     # Load train/eval datasets
+    ##############
     train_dataset = None
     eval_dataset = None
     test_dataset = None
+    full_dataset = None  # For cross-validation
+    
     if args.train_path is not None:
         # Train from explicit train_path; create training-time eval via eval_split from the same training data (SFT-like)
         logger.info(f"Loading train dataset from {args.train_path}")
         base_train = load_custom_dataset(args.train_path)
-        if args.eval_split > 0:
-            split = base_train.train_test_split(test_size=args.eval_split, seed=args.seed)
-            train_dataset = split['train']
-            eval_dataset = split['test']
-            logger.info(f"Split train: {len(train_dataset)} train, {len(eval_dataset)} eval (eval_split={args.eval_split})")
+        
+        if args.crossvalidation:
+            # For cross-validation, use the full dataset
+            full_dataset = base_train
+            train_dataset = base_train  # Also set train_dataset for trainer initialization
+            logger.info(f"Using full dataset for cross-validation: {len(full_dataset)} examples")
         else:
-            train_dataset = base_train
-            eval_dataset = None
-            logger.info(f"Using full train dataset without eval split: {len(train_dataset)} examples")
+            if args.eval_split > 0:
+                split = base_train.train_test_split(test_size=args.eval_split, seed=args.seed)
+                train_dataset = split['train']
+                eval_dataset = split['test']
+                logger.info(f"Split train: {len(train_dataset)} train, {len(eval_dataset)} eval (eval_split={args.eval_split})")
+            else:
+                train_dataset = base_train
+                eval_dataset = None
+                logger.info(f"Using full train dataset without eval split: {len(train_dataset)} examples")
+        
         if args.test_path is not None:
             logger.info(f"Loading held-out test dataset from {args.test_path}")
             test_dataset = load_custom_dataset(args.test_path)
@@ -309,15 +456,22 @@ def main():
         # Fallback: single dataset_path; create eval via eval_split from it if requested
         logger.info(f"Loading dataset from {args.dataset_path}")
         dataset = load_custom_dataset(args.dataset_path)
-        if args.eval_split > 0:
-            dataset = dataset.train_test_split(test_size=args.eval_split, seed=args.seed)
-            train_dataset = dataset['train']
-            eval_dataset = dataset['test']
-            logger.info(f"Split dataset: {len(train_dataset)} train, {len(eval_dataset)} eval (eval_split={args.eval_split})")
+        
+        if args.crossvalidation:
+            # For cross-validation, use the full dataset
+            full_dataset = dataset
+            train_dataset = dataset  # Also set train_dataset for trainer initialization
+            logger.info(f"Using full dataset for cross-validation: {len(full_dataset)} examples")
         else:
-            train_dataset = dataset
-            eval_dataset = None
-            logger.info(f"Using full dataset for training: {len(train_dataset)} examples")
+            if args.eval_split > 0:
+                dataset = dataset.train_test_split(test_size=args.eval_split, seed=args.seed)
+                train_dataset = dataset['train']
+                eval_dataset = dataset['test']
+                logger.info(f"Split dataset: {len(train_dataset)} train, {len(eval_dataset)} eval (eval_split={args.eval_split})")
+            else:
+                train_dataset = dataset
+                eval_dataset = None
+                logger.info(f"Using full dataset for training: {len(train_dataset)} examples")
     
     ##############
     # Training Config
@@ -354,6 +508,10 @@ def main():
         center_rewards_coefficient=0.0,
         disable_dropout=True,
         dataset_num_proc=1,
+        # Best model saving
+        load_best_model_at_end=args.load_best_model_at_end,
+        metric_for_best_model=args.metric_for_best_model,
+        greater_is_better=args.greater_is_better,
     )
     
     ##########
@@ -377,40 +535,94 @@ def main():
             logger.warning("PEFT not available. Skipping PEFT configuration.")
             peft_config = None
     
-    trainer = RewardTrainer(
-        model=model,
-        processing_class=tokenizer,
-        args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=eval_dataset,
-        peft_config=peft_config,
-    )
-    
     # Train the model
-    trainer.train()
-    
-    ############################
-    # Save model and evaluate
-    ############################
-    logger.info(f"Saving model to {args.output_dir}")
-    trainer.save_model(args.output_dir)
-    tokenizer.save_pretrained(args.output_dir)
-    
-    # Evaluate if eval dataset exists
-    if eval_dataset is not None and args.eval_strategy != "no":
-        logger.info("Evaluating model...")
-        metrics = trainer.evaluate()
-        trainer.log_metrics("eval", metrics)
-        trainer.save_metrics("eval", metrics)
-        logger.info(f"Evaluation metrics: {metrics}")
-    
-    # Evaluate explicitly on provided test set if given (held-out, not used during training-time eval)
-    if test_dataset is not None:
-        logger.info("Evaluating model on provided test set...")
-        test_metrics = trainer.evaluate(eval_dataset=test_dataset)
-        trainer.log_metrics("test", test_metrics)
-        trainer.save_metrics("test", test_metrics)
-        logger.info(f"Test metrics: {test_metrics}")
+    if args.crossvalidation:
+        # Run cross-validation - create trainer with train_dataset and disable eval during CV
+        logger.info("Running cross-validation training...")
+        
+        # Create a copy of training_args for cross-validation with eval disabled
+        cv_training_args = RewardConfig(
+            output_dir=training_args.output_dir,
+            per_device_train_batch_size=training_args.per_device_train_batch_size,
+            per_device_eval_batch_size=training_args.per_device_eval_batch_size,
+            num_train_epochs=training_args.num_train_epochs,
+            learning_rate=training_args.learning_rate,
+            weight_decay=training_args.weight_decay,
+            warmup_ratio=training_args.warmup_ratio,
+            lr_scheduler_type=training_args.lr_scheduler_type,
+            max_grad_norm=training_args.max_grad_norm,
+            max_length=training_args.max_length,
+            gradient_checkpointing=training_args.gradient_checkpointing,
+            eval_strategy="no",  # Disable eval during cross-validation setup
+            eval_steps=training_args.eval_steps,
+            save_steps=training_args.save_steps,
+            save_total_limit=training_args.save_total_limit,
+            logging_steps=training_args.logging_steps,
+            gradient_accumulation_steps=training_args.gradient_accumulation_steps,
+            seed=training_args.seed,
+            fp16=training_args.fp16,
+            bf16=training_args.bf16,
+            dataloader_num_workers=training_args.dataloader_num_workers,
+            remove_unused_columns=training_args.remove_unused_columns,
+            push_to_hub=training_args.push_to_hub,
+            hub_model_id=training_args.hub_model_id,
+            report_to=training_args.report_to,
+            run_name=training_args.run_name,
+            load_best_model_at_end=training_args.load_best_model_at_end,
+            metric_for_best_model=training_args.metric_for_best_model,
+            greater_is_better=training_args.greater_is_better,
+        )
+        
+        trainer = RewardTrainer(
+            model=model,
+            processing_class=tokenizer,
+            args=cv_training_args,
+            train_dataset=train_dataset,  # Use train_dataset instead of full_dataset
+            eval_dataset=None,
+            peft_config=peft_config,
+        )
+        cv_summary = run_crossvalidation(trainer, full_dataset, args.cv_folds, args.output_dir, args)
+        logger.info("Cross-validation training completed!")
+    else:
+        # Regular training - create trainer with actual datasets
+        trainer = RewardTrainer(
+            model=model,
+            processing_class=tokenizer,
+            args=training_args,
+            train_dataset=train_dataset,
+            eval_dataset=eval_dataset,
+            peft_config=peft_config,
+        )
+        # Regular training
+        trainer.train()
+        
+        ############################
+        # Save model and evaluate
+        ############################
+        logger.info(f"Saving model to {args.output_dir}")
+        trainer.save_model(args.output_dir)
+        tokenizer.save_pretrained(args.output_dir)
+        
+        # Evaluate if eval dataset exists
+        if eval_dataset is not None and args.eval_strategy != "no":
+            logger.info("Evaluating model...")
+            metrics = trainer.evaluate()
+            trainer.log_metrics("eval", metrics)
+            trainer.save_metrics("eval", metrics)
+            logger.info(f"Evaluation metrics: {metrics}")
+        
+        # Evaluate explicitly on provided test set if given (held-out, not used during training-time eval)
+        if test_dataset is not None:
+            logger.info("Evaluating model on provided test set...")
+            # Use the existing trainer's eval_dataset temporarily, then evaluate on test_dataset
+            original_eval_dataset = trainer.eval_dataset
+            trainer.eval_dataset = test_dataset
+            test_metrics = trainer.evaluate()
+            trainer.log_metrics("test", test_metrics)
+            trainer.save_metrics("test", test_metrics)
+            logger.info(f"Test metrics: {test_metrics}")
+            # Restore original eval_dataset
+            trainer.eval_dataset = original_eval_dataset
     
     # Push to hub if requested
     if args.push_to_hub:

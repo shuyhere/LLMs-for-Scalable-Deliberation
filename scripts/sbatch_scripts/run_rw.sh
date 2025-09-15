@@ -5,30 +5,31 @@ PROJECT_DIR="/ibex/project/c2328/LLMs-Scalable-Deliberation"
 
 # Common parameters
 DATASET_DIR="$PROJECT_DIR/datasets/rl_datasets/trl_format"
-OUTPUT_DIR="$PROJECT_DIR/outputs/reward_models"
-MODEL_NAME="Qwen/Qwen3-4B-Instruct-2507"
+OUTPUT_DIR="$PROJECT_DIR/outputs/reward_models_filtered"
+# MODEL_NAME="Qwen/Qwen3-4B"
+MODEL_NAME="/ibex/project/c2328/LLMs-Scalable-Deliberation/outputs/reward_models/informativeness_reward_model"
 MAX_LENGTH=8192
 TRAIN_BATCH_SIZE=4
 EVAL_BATCH_SIZE=4
 MAX_GRAD_NORM=10.0
-NUM_EPOCHS=30
-LEARNING_RATE=2e-5
-EVAL_STEPS=20
+NUM_EPOCHS=3
+LEARNING_RATE=4e-5
+EVAL_STEPS=10
 LOGGING_STEPS=1
 SAVE_STEPS=100
 SEED=42
 TIME="12:00:00"  
 MEMORY="64G"    
 CPUS=8          
-LOG_DIR="$PROJECT_DIR/logs/reward_models" 
+LOG_DIR="$PROJECT_DIR/logs/reward_models_filtered" 
 GPUS_LINE="#SBATCH --gres=gpu:a100:1"  # Example GPU line
 PARTITION_LINE="#SBATCH --partition=a100" # Example partition line
-EVAL_SPLIT=0.3
+EVAL_SPLIT=0.1
 WARMUP_RATIO=0.1
 LR_SCHEDULER_TYPE="cosine"
 GRAD_ACCUM_STEPS=4
 WEIGHT_DECAY=0.01
-WAND_PROJECT="reward-modeling"
+WAND_PROJECT="reward-modeling-Qwen3-4b-filtered-v0"
 RUN_NAME_PREFIX="rw_${MODEL_NAME##*/}_S${SEED}"
 
 # Create output and log directories
@@ -36,8 +37,8 @@ mkdir -p $OUTPUT_DIR
 mkdir -p $LOG_DIR
 
 # Define dimensions to train
-DIMENSIONS=("perspective" "informativeness" "neutrality" "policy")
-# DIMENSIONS=("informativeness")
+# DIMENSIONS=("perspective" "informativeness" "neutrality" "policy")
+DIMENSIONS=("informativeness")
 # DIMENSIONS=("neutrality")
 # DIMENSIONS=("policy")
 # DIMENSIONS=("perspective")
@@ -46,8 +47,8 @@ DIMENSIONS=("perspective" "informativeness" "neutrality" "policy")
 submit_reward_model_job() {
     local dimension=$1
     local dataset_path="$DATASET_DIR/${dimension}_trl_dataset.jsonl"
-    local train_path="$TRAIN_DIR/${dimension}_trl_dataset.jsonl"
-    local test_path="$TEST_DIR/${dimension}_trl_dataset.jsonl"
+    local train_path="$DATASET_DIR/${dimension}_trl_dataset/filtered_dataset.jsonl"
+    local test_path="$DATASET_DIR/${dimension}_trl_dataset/test.jsonl"
     local output_path="$OUTPUT_DIR/${dimension}_reward_model"
     
     echo "Submitting reward model training job for dimension: $dimension"
@@ -95,7 +96,7 @@ python3 $PROJECT_DIR/src/finetuning/reward_modeling.py \
     --eval_steps $EVAL_STEPS \
     --logging_steps $LOGGING_STEPS \
     --save_steps $SAVE_STEPS \
-    --save_total_limit 1 \
+    --save_total_limit 3 \
     --max_length $MAX_LENGTH \
     --bf16 \
     --seed $SEED \

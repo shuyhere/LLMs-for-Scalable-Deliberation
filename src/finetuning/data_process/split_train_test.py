@@ -58,7 +58,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Split a JSON/JSONL dataset into 70/30 train/test.")
     parser.add_argument("input", type=str, help="Path to input .json or .jsonl file")
     parser.add_argument("--train_ratio", type=float, default=0.7, help="Train split ratio (default: 0.7)")
-    parser.add_argument("--seed", type=int, default=42, help="Random seed for shuffling (default: 42)")
+    parser.add_argument("--seed", type=int, default=6666, help="Random seed for shuffling (default: 42)")
     parser.add_argument("--output_dir", type=str, default=None, help="Optional output directory. If not set, a sibling folder named after the input basename will be created next to the input file.")
     args = parser.parse_args()
 

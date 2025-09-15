@@ -5,10 +5,12 @@ from typing import Dict, List, Optional, Union
 try:
     from .openai_client import OpenAIClient
     from .zhizengzeng_client import ZhizengzengClient
+    from .vllm_client import VLLMClient
 except ImportError:
     # Fallback for direct execution
     from openai_client import OpenAIClient
     from zhizengzeng_client import ZhizengzengClient
+    from vllm_client import VLLMClient
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ZHI_API_KEY = os.getenv("ZHI_API_KEY", "").split(",") if os.getenv("ZHI_API_KEY") else []
@@ -46,7 +48,7 @@ class LanguageModel:
         
         # Zhizengzeng usage
         model = LanguageModel("qwen-plus")
-        response = model.get_response("你好，世界！")
+        response = model.get_response("Hello, world!")
     """
     
     def __init__(
@@ -82,13 +84,15 @@ class LanguageModel:
             **kwargs
         )
         
-        logger.info(f"LanguageModel initialized with {self.provider} provider for model: {model_name}")
+        logger.info("LanguageModel initialized with %s provider for model: %s", self.provider, model_name)
     
     def _detect_provider(self, model_name: str) -> str:
         """Detect provider based on model name."""
         model_lower = model_name.lower()
         
-        if self._is_zhizengzeng_model(model_lower):
+        if self._is_vllm_model(model_lower):
+            return "vllm"
+        elif self._is_zhizengzeng_model(model_lower):
             return "zhizengzeng"
         else:
             return "openai"
@@ -98,6 +102,13 @@ class LanguageModel:
         return any(keyword in model_name for keyword in [
             "gpt", "o1", "gpt-5", "gpt5"
         ]) or (model_name.count("o") > 0 and any(c.isdigit() for c in model_name[model_name.index("o")+1:]))
+    
+    def _is_vllm_model(self, model_name: str) -> bool:
+        """Check if model is vLLM (local model)."""
+        # Check for local model indicators
+        return any(keyword in model_name for keyword in [
+            "local", "trained", "finetuned", "checkpoint", "reward", "sft"
+        ]) or model_name.startswith("/") or os.path.exists(model_name)
     
     def _is_zhizengzeng_model(self, model_name: str) -> bool:
         """Check if model is Zhizengzeng."""
@@ -111,6 +122,8 @@ class LanguageModel:
             return self._create_openai_client(**kwargs)
         elif self.provider == "zhizengzeng":
             return self._create_zhizengzeng_client(**kwargs)
+        elif self.provider == "vllm":
+            return self._create_vllm_client(**kwargs)
         else:
             raise ValueError(f"Unknown provider: {self.provider}")
     
@@ -149,6 +162,26 @@ class LanguageModel:
             retry_backoff_base_sec=self.retry_backoff_base_sec,
         )
     
+    def _create_vllm_client(self, model_path=None, **kwargs):
+        """Create vLLM client."""
+        # For vLLM, model_name is the path, or use provided model_path
+        resolved_model_path = model_path or self.model_name
+        
+        # Extract verbose from kwargs to avoid duplicate argument
+        verbose = kwargs.pop('verbose', True)
+        
+        return VLLMClient(
+            model_name=self.model_name,
+            model_path=resolved_model_path,
+            temperature=self.temperature,
+            max_tokens=self.max_tokens,
+            top_p=self.top_p,
+            max_retries=self.max_retries,
+            retry_backoff_base_sec=self.retry_backoff_base_sec,
+            verbose=verbose,
+            **kwargs
+        )
+    
     # Public API methods - unified interface
     
     def get_response(self, prompt: str, temperature: Optional[float] = None, max_tokens: Optional[int] = None) -> Optional[str]:
@@ -160,24 +193,38 @@ class LanguageModel:
             elif self.provider == "zhizengzeng":
                 return self.client.get_response(prompt, temperature, max_tokens)
         except Exception as e:
-            logger.error(f"get_response failed: {e}")
+            logger.error("get_response failed: %s", e)
             return None
     
     def get_chat_response(self, messages: List[Dict[str, str]], temperature: Optional[float] = None, max_tokens: Optional[int] = None) -> Optional[str]:
         """Get a response from the language model using chat format."""
         try:
-            return self.client.chat_completion(messages, temperature, max_tokens)
+            if self.provider == "vllm":
+                # For vLLM, use get_chat_response directly
+                return self.client.get_chat_response(messages, temperature, max_tokens)
+            else:
+                # For other providers, use chat_completion
+                return self.client.chat_completion(messages, temperature, max_tokens)
         except Exception as e:
-            logger.error(f"get_chat_response failed: {e}")
+            logger.error("get_chat_response failed: %s", e)
             return None
     
     def chat_completion(self, system_prompt: str, input_text: str, temperature: Optional[float] = None, max_tokens: Optional[int] = None) -> Optional[str]:
         """Chat completion with system prompt and user input."""
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": input_text}
-        ]
-        return self.get_chat_response(messages, temperature, max_tokens)
+        try:
+            if self.provider == "vllm":
+                # For vLLM, use client's chat_completion method directly
+                return self.client.chat_completion(system_prompt, input_text, temperature, max_tokens)
+            else:
+                # For other providers, construct messages and use get_chat_response
+                messages = [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": input_text}
+                ]
+                return self.get_chat_response(messages, temperature, max_tokens)
+        except Exception as e:
+            logger.error("chat_completion failed: %s", e)
+            return None
     
     def response(self, instructions: str, input_text: str, temperature: Optional[float] = None, max_tokens: Optional[int] = None) -> Optional[str]:
         """Response method compatible with openai_api_models.py interface."""
@@ -189,7 +236,7 @@ class LanguageModel:
                 # Fallback to chat completion for other providers
                 return self.chat_completion(instructions, input_text, temperature, max_tokens)
         except Exception as e:
-            logger.error(f"response failed: {e}")
+            logger.error("response failed: %s", e)
             return None
     
     # Utility methods
@@ -210,9 +257,13 @@ class LanguageModel:
         """Check if using Zhizengzeng provider."""
         return self.provider == "zhizengzeng"
     
+    def is_vllm(self) -> bool:
+        """Check if using vLLM provider."""
+        return self.provider == "vllm"
+    
     def supports_reasoning(self) -> bool:
         """Check if current model supports reasoning control."""
-        return self.provider == "openai" and hasattr(self.client, '_is_gpt5_model') and self.client._is_gpt5_model()
+        return self.provider == "openai" and hasattr(self.client, '_is_gpt5_model') and self.client._is_gpt5_model()  # pylint: disable=protected-access
 
 
 # Backward compatibility functions

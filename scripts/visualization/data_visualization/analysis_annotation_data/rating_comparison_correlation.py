@@ -71,7 +71,7 @@ def load_annotation_data(base_path):
 def get_dimension_questions():
     """Get the corresponding questions for each dimension in both rating and comparison formats"""
     dimensions = {
-        'perspective': {
+        'representiveness': {
             'rating': "To what extent is your perspective represented in this response?",
             'comparison': "Which summary is more representative of your perspective?"
         },
@@ -83,12 +83,25 @@ def get_dimension_questions():
             'rating': "Do you think this summary presents a neutral and balanced view of the issue?",
             'comparison': "Which summary presents a more neutral and balanced view of the issue?"
         },
-        'policy': {
+        'policy_approval': {
             'rating': "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?",
             'comparison': "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?"
         }
     }
     return dimensions
+
+def get_dimension_display_names():
+    """Get display names for dimensions in desired order"""
+    return {
+        'representiveness': 'Representiveness',
+        'informativeness': 'Informativeness', 
+        'neutrality': 'Neutrality',
+        'policy_approval': 'Policy Approval'
+    }
+
+def get_dimension_order():
+    """Get dimension order for consistent plotting"""
+    return ['representiveness', 'informativeness', 'neutrality', 'policy_approval']
 
 def extract_rating_scores(ratings, question):
     """Extract rating scores (1-5) for a specific question"""
@@ -441,60 +454,94 @@ def compute_sample_level_metrics(output_path):
         })
     corr_df = pd.DataFrame(corr_rows)
 
-    # Visualize scatter per dimension
-    for dim in dims.keys():
+    # Create combined 2x2 subplot figure for all dimensions
+    dim_order = get_dimension_order()
+    display_names = get_dimension_display_names()
+    
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    axes = axes.flatten()
+    
+    for i, dim in enumerate(dim_order):
+        ax = axes[i]
         sub = sample_metrics[(sample_metrics['dimension'] == dim)].dropna(subset=['avg_rating', 'win_rate']).copy()
+        
         if sub.empty:
+            ax.text(0.5, 0.5, 'No data', ha='center', va='center', transform=ax.transAxes)
+            ax.set_title(f'{display_names[dim]}', fontsize=14, fontweight='bold')
             continue
-        fig, ax = plt.subplots(figsize=(6, 5))
-        ax.scatter(sub['avg_rating'], sub['win_rate'], s=16, alpha=0.8)
-        # trend line
+            
+        # Calculate density for color mapping
+        from scipy.stats import gaussian_kde
+        try:
+            # Create density estimation
+            xy = np.vstack([sub['avg_rating'], sub['win_rate']])
+            density = gaussian_kde(xy)(xy)
+            # Normalize density for color mapping
+            density_norm = (density - density.min()) / (density.max() - density.min())
+        except Exception:
+            # Fallback to uniform color if density calculation fails
+            density_norm = np.ones(len(sub))
+        
+        # Scatter plot with density-based colors
+        scatter = ax.scatter(sub['avg_rating'], sub['win_rate'], 
+                           c=density_norm, cmap='viridis', s=20, alpha=0.7)
+        
+        # Add colorbar for density
+        cbar = plt.colorbar(scatter, ax=ax, shrink=0.8)
+        cbar.set_label('Density', fontsize=10)
+        
+        # Trend line
         if len(sub) >= 3 and sub['avg_rating'].nunique() > 1:
             try:
                 coef = np.polyfit(sub['avg_rating'], sub['win_rate'], 1)
                 xs = np.linspace(sub['avg_rating'].min(), sub['avg_rating'].max(), 50)
                 ys = coef[0] * xs + coef[1]
-                ax.plot(xs, ys, color='red', linestyle='--', linewidth=1)
+                ax.plot(xs, ys, color='red', linestyle='--', linewidth=2, alpha=0.8)
             except Exception:
                 pass
-        # annotate correlation on plot
+        
+        # Annotate correlation on plot
         csub = corr_df[corr_df['dimension'] == dim]
         if not csub.empty:
             r1 = csub.iloc[0]['pearson_r']; p1 = csub.iloc[0]['pearson_p']
             r2 = csub.iloc[0]['spearman_r']; p2 = csub.iloc[0]['spearman_p']
             annot = f"Pearson r={r1:.3f} (p={p1:.2e})\nSpearman r={r2:.3f} (p={p2:.2e})"
             ax.text(0.03, 0.97, annot, ha='left', va='top', transform=ax.transAxes, fontsize=9,
-                    bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7, edgecolor='none'))
-        ax.set_xlabel('Average rating')
-        ax.set_ylabel('Win rate')
-        ax.set_title(f'Sample-level: win rate vs avg rating — {dim}')
+                    bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8, edgecolor='gray'))
+        
+        ax.set_xlabel('Average Rating', fontsize=12)
+        ax.set_ylabel('Win Rate', fontsize=12)
+        ax.set_title(f'{display_names[dim]}', fontsize=14, fontweight='bold')
         ax.set_ylim(0, 1)
-        plt.tight_layout()
-        fig.savefig(output_path / f'sample_level_corr_winrate_vs_rating_{dim}.pdf', dpi=300, bbox_inches='tight')
-        plt.close(fig)
-
-    # Save CSVs
-    sample_metrics.to_csv(output_path / 'sample_level_avg_rating_winrate.csv', index=False)
-    corr_df.to_csv(output_path / 'sample_level_corr_winrate_vs_rating.csv', index=False)
+        ax.grid(True, alpha=0.3)
+        ax.tick_params(labelsize=10)
+    
+    plt.suptitle('Win Rate vs Average Rating by Dimension', fontsize=16, fontweight='bold')
+    plt.tight_layout()
+    fig.savefig(output_path / 'sample_level_corr_winrate_vs_rating_combined.pdf', dpi=300, bbox_inches='tight')
+    plt.close(fig)
 
     # Brief print
-    print("\nSample-level metrics and correlations saved:")
-    print(f"  Metrics: {output_path / 'sample_level_avg_rating_winrate.csv'}")
-    print(f"  Correlations: {output_path / 'sample_level_corr_winrate_vs_rating.csv'}")
+    print("\nSample-level visualization saved:")
+    print(f"  Combined plot: {output_path / 'sample_level_corr_winrate_vs_rating_combined.pdf'}")
+    
+    return corr_df
 
 
-def create_sample_level_pearson_corr_heatmap(corr_csv_path, output_path):
+def create_sample_level_pearson_corr_heatmap(corr_df, output_path):
     """Create a heatmap of Pearson correlations (sample-level) across dimensions."""
-    try:
-        corr_df = pd.read_csv(corr_csv_path)
-    except Exception:
+    if corr_df is None or corr_df.empty:
         return
     # Keep dimensions order
-    dims = list(get_dimension_questions().keys())
+    dims = get_dimension_order()
     # Include overall if present
     ordered_dims = [d for d in dims if d in set(corr_df['dimension'])]
     if 'overall' in set(corr_df['dimension']):
         ordered_dims.append('overall')
+    
+    # Get display names
+    display_names = get_dimension_display_names()
+    
     # Build matrix (rows: dims, single column: Pearson)
     values = []
     for d in ordered_dims:
@@ -506,7 +553,7 @@ def create_sample_level_pearson_corr_heatmap(corr_csv_path, output_path):
     mat = np.array(values)
     fig, ax = plt.subplots(1, 1, figsize=(5, max(3, 0.6 * len(ordered_dims) + 1)))
     sns.heatmap(mat, annot=True, fmt='.3f', cmap='RdBu_r', center=0, vmin=-1, vmax=1,
-                xticklabels=['Pearson r'], yticklabels=ordered_dims, ax=ax)
+                xticklabels=['Pearson r'], yticklabels=[display_names.get(d, d) for d in ordered_dims], ax=ax)
     ax.set_title('Sample-level Pearson correlation\n(avg rating vs win rate)')
     plt.tight_layout()
     fig.savefig(output_path / 'sample_level_pearson_corr_heatmap.pdf', dpi=300, bbox_inches='tight')
@@ -516,7 +563,7 @@ def main():
     """Main analysis function"""
     # Paths
     annotation_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full'
-    output_path = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation'
+    output_path = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation_rating_vs_comparison'
     
     # Create output directory
     output_path.mkdir(parents=True, exist_ok=True)
@@ -559,20 +606,17 @@ def main():
             **stats
         })
     correlation_df = pd.DataFrame(correlation_data)
-    correlation_df.to_csv(output_path / 'rating_comparison_correlations.csv', index=False)
     
-    # Save overall averages (avg rating and A-win rate)
-    print("\nSaving overall averages (avg rating and A-win rate)...")
+    # Compute overall averages (avg rating and A-win rate)
+    print("\nComputing overall averages (avg rating and A-win rate)...")
     overall_df = compute_overall_avg_rating_and_winrate(ratings, comparisons)
-    overall_csv = output_path / 'rating_comparison_overall_avg_rating_winrate.csv'
-    overall_df.to_csv(overall_csv, index=False)
-    print(f"Saved overall averages to: {overall_csv}")
+    print("Overall averages computed.")
 
     # Compute per-sample metrics and correlations, then visualize
     print("\nComputing sample-level avg rating, win rate, and correlations...")
-    compute_sample_level_metrics(output_path)
+    corr_df = compute_sample_level_metrics(output_path)
     # Heatmap for Pearson correlations across dimensions
-    create_sample_level_pearson_corr_heatmap(output_path / 'sample_level_corr_winrate_vs_rating.csv', output_path)
+    create_sample_level_pearson_corr_heatmap(corr_df, output_path)
     
     print("\nAnalysis complete!")
     print(f"All results saved to: {output_path}")

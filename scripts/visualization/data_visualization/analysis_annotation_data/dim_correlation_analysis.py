@@ -24,7 +24,7 @@ PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
 
 # Four evaluation dimensions
 DIMENSIONS = {
-    "Perspective": {
+    "Representiveness": {
         "rating": "To what extent is your perspective represented in this response?",
         "comparison": "Which summary is more representative of your perspective?"
     },
@@ -36,7 +36,7 @@ DIMENSIONS = {
         "rating": "Do you think this summary presents a neutral and balanced view of the issue?",
         "comparison": "Which summary presents a more neutral and balanced view of the issue?"
     },
-    "Policy": {
+    "Policy Approval": {
         "rating": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?",
         "comparison": "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?"
     }
@@ -281,7 +281,7 @@ def create_correlation_heatmaps(rating_corr, rating_p, rating_n,
     """Create correlation heatmaps for both rating and comparison data"""
     
     # Set up the figure
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
     
     # Create annotations with correlation values and significance
     def create_annotations(corr_matrix, p_matrix, n_matrix):
@@ -334,145 +334,19 @@ def create_correlation_heatmaps(rating_corr, rating_p, rating_n,
     
     # Add footnote with proper spacing
     fig.text(0.5, 0.05, '* p<0.05, ** p<0.01, *** p<0.001', 
-             ha='center', fontsize=10, style='italic')
+             ha='center', fontsize=10)
     
     # Save plot
     plt.savefig(output_path / 'dimensional_correlations.pdf',
                 dpi=300, bbox_inches='tight', facecolor='white')
     plt.close()
     
-def generate_correlation_report(rating_corr, rating_p, rating_n,
-                               comp_corr, comp_p, comp_n, dimensions):
-    """Generate detailed correlation analysis report"""
-    report = []
-    
-    report.append("=" * 100)
-    report.append("DIMENSIONAL CORRELATION ANALYSIS REPORT")
-    report.append("=" * 100)
-    
-    # Rating correlations analysis
-    report.append("\n📊 RATING DIMENSIONS CORRELATION (Spearman)")
-    report.append("  " + "=" * 80)
-    
-    for i, dim1 in enumerate(dimensions):
-        for j, dim2 in enumerate(dimensions):
-            if i < j:  # Only upper triangle to avoid duplicates
-                corr = rating_corr[i, j]
-                p_val = rating_p[i, j]
-                n = int(rating_n[i, j])
-                
-                if not np.isnan(corr):
-                    # Significance
-                    if p_val < 0.001:
-                        sig_text = "highly significant (p < 0.001)"
-                    elif p_val < 0.01:
-                        sig_text = "significant (p < 0.01)"
-                    elif p_val < 0.05:
-                        sig_text = "significant (p < 0.05)"
-                    else:
-                        sig_text = "not significant (p >= 0.05)"
-                    
-                    # Strength
-                    abs_corr = abs(corr)
-                    if abs_corr < 0.1:
-                        strength = "negligible"
-                    elif abs_corr < 0.3:
-                        strength = "weak"
-                    elif abs_corr < 0.5:
-                        strength = "moderate"
-                    elif abs_corr < 0.7:
-                        strength = "strong"
-                    else:
-                        strength = "very strong"
-                    
-                    direction = "positive" if corr > 0 else "negative"
-                    
-                    report.append(f"\n  {dim1} ↔ {dim2}:")
-                    report.append(f"    Correlation: {corr:.3f} ({strength} {direction})")
-                    report.append(f"    p-value: {p_val:.3e} ({sig_text})")
-                    report.append(f"    Sample size: {n} users")
-    
-    # Comparison correlations analysis
-    report.append("\n\n📊 COMPARISON DIMENSIONS CORRELATION (Phi Coefficient)")
-    report.append("  " + "=" * 80)
-    
-    for i, dim1 in enumerate(dimensions):
-        for j, dim2 in enumerate(dimensions):
-            if i < j:  # Only upper triangle to avoid duplicates
-                corr = comp_corr[i, j]
-                p_val = comp_p[i, j]
-                n = int(comp_n[i, j])
-                
-                if not np.isnan(corr):
-                    # Significance
-                    if p_val < 0.001:
-                        sig_text = "highly significant (p < 0.001)"
-                    elif p_val < 0.01:
-                        sig_text = "significant (p < 0.01)"
-                    elif p_val < 0.05:
-                        sig_text = "significant (p < 0.05)"
-                    else:
-                        sig_text = "not significant (p >= 0.05)"
-                    
-                    # Strength
-                    abs_corr = abs(corr)
-                    if abs_corr < 0.1:
-                        strength = "negligible"
-                    elif abs_corr < 0.3:
-                        strength = "weak"
-                    elif abs_corr < 0.5:
-                        strength = "moderate"
-                    elif abs_corr < 0.7:
-                        strength = "strong"
-                    else:
-                        strength = "very strong"
-                    
-                    direction = "positive" if corr > 0 else "negative"
-                    
-                    report.append(f"\n  {dim1} ↔ {dim2}:")
-                    report.append(f"    Correlation: {corr:.3f} ({strength} {direction})")
-                    report.append(f"    p-value: {p_val:.3e} ({sig_text})")
-                    report.append(f"    Sample size: {n} users")
-    
-    # Summary statistics
-    report.append("\n\n📈 SUMMARY STATISTICS")
-    report.append("  " + "=" * 80)
-    
-    # Rating correlations summary
-    rating_valid = rating_corr[~np.isnan(rating_corr) & (rating_corr != 1.0)]
-    if len(rating_valid) > 0:
-        report.append(f"\n  Rating Correlations:")
-        report.append(f"    Mean correlation: {np.mean(rating_valid):.3f}")
-        report.append(f"    Median correlation: {np.median(rating_valid):.3f}")
-        report.append(f"    Range: [{np.min(rating_valid):.3f}, {np.max(rating_valid):.3f}]")
-        
-        # Count significant correlations
-        rating_p_valid = rating_p[~np.isnan(rating_p) & (rating_corr != 1.0)]
-        sig_count = np.sum(rating_p_valid < 0.05)
-        total_count = len(rating_p_valid)
-        report.append(f"    Significant correlations: {sig_count}/{total_count}")
-    
-    # Comparison correlations summary
-    comp_valid = comp_corr[~np.isnan(comp_corr) & (comp_corr != 1.0)]
-    if len(comp_valid) > 0:
-        report.append(f"\n  Comparison Correlations:")
-        report.append(f"    Mean correlation: {np.mean(comp_valid):.3f}")
-        report.append(f"    Median correlation: {np.median(comp_valid):.3f}")
-        report.append(f"    Range: [{np.min(comp_valid):.3f}, {np.max(comp_valid):.3f}]")
-        
-        # Count significant correlations
-        comp_p_valid = comp_p[~np.isnan(comp_p) & (comp_corr != 1.0)]
-        sig_count = np.sum(comp_p_valid < 0.05)
-        total_count = len(comp_p_valid)
-        report.append(f"    Significant correlations: {sig_count}/{total_count}")
-    
-    return "\n".join(report)
 
 def main():
     """Main analysis function"""
     # Paths
     annotation_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full'
-    output_path = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation'
+    output_path = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation_dim_correlation'
     
     # Create output directory
     output_path.mkdir(parents=True, exist_ok=True)
@@ -512,29 +386,8 @@ def main():
     create_correlation_heatmaps(rating_corr, rating_p, rating_n,
                                comp_corr, comp_p, comp_n, dimensions, output_path)
     
-    print("Generating report...")
-    report = generate_correlation_report(rating_corr, rating_p, rating_n,
-                                       comp_corr, comp_p, comp_n, dimensions)
-    
-    # Save report
-    report_file = output_path / 'dimensional_correlation_report.txt'
-    with open(report_file, 'w', encoding='utf-8') as f:
-        f.write(report)
-    print(f"Report saved to: {report_file}")
-    
-    # Save correlation matrices as CSV
-    print("Saving correlation data...")
-    
-    # Rating correlations
-    rating_df = pd.DataFrame(rating_corr, index=dimensions, columns=dimensions)
-    rating_df.to_csv(output_path / 'rating_dimensional_correlations.csv')
-    
-    # Comparison correlations
-    comp_df = pd.DataFrame(comp_corr, index=dimensions, columns=dimensions)
-    comp_df.to_csv(output_path / 'comparison_dimensional_correlations.csv')
-    
     print("\nAnalysis complete!")
-    print(f"All results saved to: {output_path}")
+    print(f"Visualization saved to: {output_path}")
 
 if __name__ == "__main__":
     main()
