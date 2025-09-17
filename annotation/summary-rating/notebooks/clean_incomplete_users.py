@@ -48,8 +48,8 @@ def remove_users_from_data(users):
     user_set = set(users)  # 转换为集合以提高查找效率
     
     # 设置路径
-    task_assignment_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full/task_assignment.json'
-    annotation_data_dir = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full'
+    task_assignment_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/task_assignment.json'
+    annotation_data_dir = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment'
     annotation_data_path = os.path.join(annotation_data_dir, "annotated_instances.csv")
     
     # 用户确认

@@ -10,7 +10,7 @@ import os
 
 def check_user_directories():
     """检查用户目录结构，找出只有assigned_user_data.json的用户"""
-    annotation_dir = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full'
+    annotation_dir = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment'
     
     assigned_only_users = []
     
@@ -57,7 +57,7 @@ def check_user_completeness():
     
     # 2. 加载标注数据并检查完成情况
     print(f"\n2. 检查CSV中的用户完成情况...")
-    annotation_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full/annotated_instances.csv'
+    annotation_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
     df = pd.read_csv(annotation_path)
     
     print(f"总标注记录数: {len(df)}")
@@ -97,31 +97,8 @@ def check_user_completeness():
                     user_issues.append(f"question类型无文本回答")
                     
             elif 'rating' in instance_id:
-                # triplet_n_rating: 应该在5个量表列有值
-                rating_columns = [
-                    'To what extent is your perspective represented in this response?:::scale_1',
-                    'To what extent is your perspective represented in this response?:::scale_2', 
-                    'To what extent is your perspective represented in this response?:::scale_3',
-                    'To what extent is your perspective represented in this response?:::scale_4',
-                    'To what extent is your perspective represented in this response?:::scale_5',
-                    'How informative is this summary?:::scale_1',
-                    'How informative is this summary?:::scale_2',
-                    'How informative is this summary?:::scale_3', 
-                    'How informative is this summary?:::scale_4',
-                    'How informative is this summary?:::scale_5',
-                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_1',
-                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_2',
-                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_3',
-                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_4', 
-                    'Do you think this summary presents a neutral and balanced view of the issue?:::scale_5',
-                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_1',
-                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_2',
-                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_3',
-                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_4',
-                    'Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?:::scale_5'
-                ]
-                
-                # 检查每个问题是否至少有一个量表值
+                # 新版：列名为“问题本体 + ::: + 具体选项”，不再使用 scale_1..5
+                # 动态匹配该行在每个问题下是否至少选择了一个选项
                 questions = [
                     'To what extent is your perspective represented in this response?',
                     'How informative is this summary?',
@@ -131,9 +108,10 @@ def check_user_completeness():
                 
                 missing_questions = []
                 for question in questions:
-                    question_cols = [col for col in rating_columns if question in col]
-                    has_answer = any(not pd.isna(row.get(col, '')) and str(row.get(col, '')).strip() != '' 
-                                   for col in question_cols)
+                    # 该问题对应的所有列：以问题开头（后接可有空格）
+                    question_cols = [c for c in df.columns if str(c).startswith(question)]
+                    has_answer = any(not pd.isna(row.get(col, '')) and str(row.get(col, '')).strip() != ''
+                                     for col in question_cols)
                     if not has_answer:
                         missing_questions.append(question[:50] + "...")
                 
@@ -141,19 +119,7 @@ def check_user_completeness():
                     user_issues.append(f"rating类型缺少回答: {len(missing_questions)}个问题")
                     
             elif 'comparison' in instance_id:
-                # triplet_n_comparison: 应该在4个比较列有值
-                comparison_columns = [
-                    'Which summary is more representative of your perspective?:::scale_1',
-                    'Which summary is more representative of your perspective?:::scale_2',
-                    'Which summary is more informative?:::scale_1', 
-                    'Which summary is more informative?:::scale_2',
-                    'Which summary presents a more neutral and balanced view of the issue?:::scale_1',
-                    'Which summary presents a more neutral and balanced view of the issue?:::scale_2',
-                    'Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?:::scale_1',
-                    'Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?:::scale_2'
-                ]
-                
-                # 检查每个比较问题是否有回答
+                # 新版：比较问题也改为“问题本体 + ::: + 具体选项”（五选项）
                 questions = [
                     'Which summary is more representative of your perspective?',
                     'Which summary is more informative?', 
@@ -163,9 +129,9 @@ def check_user_completeness():
                 
                 missing_questions = []
                 for question in questions:
-                    question_cols = [col for col in comparison_columns if question in col]
-                    has_answer = any(not pd.isna(row.get(col, '')) and str(row.get(col, '')).strip() != '' 
-                                   for col in question_cols)
+                    question_cols = [c for c in df.columns if str(c).startswith(question)]
+                    has_answer = any(not pd.isna(row.get(col, '')) and str(row.get(col, '')).strip() != ''
+                                     for col in question_cols)
                     if not has_answer:
                         missing_questions.append(question[:50] + "...")
                 

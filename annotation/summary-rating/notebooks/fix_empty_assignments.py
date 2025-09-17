@@ -13,7 +13,7 @@ def fix_empty_assignments():
     print("="*50)
     
     # 设置路径
-    task_assignment_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full/task_assignment.json'
+    task_assignment_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/task_assignment.json'
     
     if not os.path.exists(task_assignment_path):
         print(f"错误: 任务分配文件不存在: {task_assignment_path}")

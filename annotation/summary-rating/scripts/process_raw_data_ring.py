@@ -373,7 +373,7 @@ def analyze_data_structure(df):
 def main():
     parser = argparse.ArgumentParser(description='Process raw summary data for human study annotation')
     parser.add_argument('--input', '-i', 
-                       default='../data_files/raw/summaries_V0903_for_humanstudy_detail.csv',
+                       default='../data_files/raw/summaries_V0915_for_humanstudy_simple.csv',
                        help='Input CSV file path')
     parser.add_argument('--output-dir', '-o',
                        default='../data_files/processed/',

@@ -9,14 +9,14 @@ import numpy as np
 
 def load_annotation_data():
     """加载标注结果数据"""
-    annotation_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full/annotated_instances.csv'
+    annotation_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
     df = pd.read_csv(annotation_path)
     print(f"Loaded annotation data: {len(df)} records")
     return df
 
 def load_triplet_data():
     """加载原始三元组数据"""
-    triplet_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/data_files/processed/sum_humanstudy_triplet_full_ring.csv'
+    triplet_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/data_files/processed/sum_humanstudy_triplet_full_ring_augmented.csv'
     df = pd.read_csv(triplet_path)
     print(f"Loaded triplet data: {len(df)} records")
     return df

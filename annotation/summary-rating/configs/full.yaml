@@ -8,7 +8,7 @@
     # Potato will write the annotation file for all annotations to this
     # directory, as well as per-annotator output files and state information
     # necessary to restart annotation.
-    "output_annotation_dir": "annotation_output/full/",
+    "output_annotation_dir": "annotation_output/test/",
 
     # The output format for the all-annotator data. Allowed formats are:
     # * jsonl
@@ -114,92 +114,83 @@
             #"sequential_key_binding": True,
       },
 
-      # Second page: Rating tasks (from pilot_rating.yaml)
       {
-        "annotation_type": "likert",
+            "annotation_type": "radio",
+            "name": "To what extent is your perspective represented in this response?", 
+            "description": "To what extent is your perspective represented in this response? (Please select only one option)",
+            "labels": [
+            "Not represented — summary ignores comment",
+            "Slightly represented — little relevant content",
+            "Partially represented — main idea but gaps",
+            "Mostly represented — most info, minor nuance missing",
+            "Fully represented — all info included"
+          ],
+            "label_requirement": { "required": True },
+            # If true, numbers [1-len(labels)] will be bound to each
+            # label. Check box annotations with more than 10 are not supported
+            # with this simple keybinding and will need to use the full item
+            # specification to bind all labels to keys.
+            "sequential_key_binding": True,            
+      },       
+
+      {
+            "annotation_type": "radio",
+            "name": "How informative is this summary?", 
+            "description": "How informative is this summary? (Please select only one option)",
+            "labels": [
+              "Not informative — almost no content",
+              "Slightly informative — few basic points",
+              "Moderately informative — some important details",
+              "Very informative — most details included",
+              "Extremely informative — highly detailed and comprehensive"
+            ],
+            "label_requirement": { "required": True },
+            # If true, numbers [1-len(labels)] will be bound to each
+            # label. Check box annotations with more than 10 are not supported
+            # with this simple keybinding and will need to use the full item
+            # specification to bind all labels to keys.
+            "sequential_key_binding": True,            
+      }, 
+
+      {
+            "annotation_type": "radio",
+            "name": "Do you think this summary presents a neutral and balanced view of the issue?", 
+            "description": "Do you think this summary presents a neutral and balanced view of the issue? (Please select only one option)",
+            "labels": [
+              "Very non-neutral — strongly one-sided",
+              "Somewhat non-neutral — noticeable tilt",
+              "Moderately neutral — mix of neutrality and tilt",
+              "Fairly neutral — mostly impartial",
+              "Completely neutral — fully impartial"
+            ],
+            "label_requirement": { "required": True },
+            # If true, numbers [1-len(labels)] will be bound to each
+            # label. Check box annotations with more than 10 are not supported
+            # with this simple keybinding and will need to use the full item
+            # specification to bind all labels to keys.
+            "sequential_key_binding": True,            
+      }, 
+      {
+        "annotation_type": "radio",
 
         # This name gets used in reporting the annotation results
-        "name": "To what extent is your perspective represented in this response?",
+        "name": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue? (Please select only one option)",
 
         # This text is shown to the user and can be a longer statement
-        "description": "To what extent is your perspective represented in this response?",
+        "description": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue? (Please select only one option)",
 
         # The min and max labels are text shown at each end of the scale
-        "min_label": "Not at all",
-        "max_label": "Fully represented",
+        "labels": [
+          "Strongly disapprove",
+          "Disapprove",
+          "Neutral",
+          "Approve",
+          "Strongly approve"
+        ],
         # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
         "label_requirement": { "required": True },
         # How many scale points to show
-        "size": 5,
-
-        # If true, keys [1-size] will be bound to scale responses. Likert
-        # scales larger than 10 are not supported with this simple
-        # keybinding and will need to use the full item specification to
-        # bind all scale points to keys.
-        #"sequential_key_binding": True,
-      },
-      {
-        "annotation_type": "likert",
-
-        # This name gets used in reporting the annotation results
-        "name": "How informative is this summary?",
-
-        # This text is shown to the user and can be a longer statement
-        "description": "How informative is this summary?",
-
-        # The min and max labels are text shown at each end of the scale
-        "min_label": "Not at all",
-        "max_label": "Very informative",
-        # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
-        "label_requirement": { "required": True },
-        # How many scale points to show
-        "size": 5,
-
-        # If true, keys [1-size] will be bound to scale responses. Likert
-        # scales larger than 10 are not supported with this simple
-        # keybinding and will need to use the full item specification to
-        # bind all scale points to keys.
-        #"sequential_key_binding": True,
-      },
-      {
-        "annotation_type": "likert",
-
-        # This name gets used in reporting the annotation results
-        "name": "Do you think this summary presents a neutral and balanced view of the issue?",
-
-        # This text is shown to the user and can be a longer statement
-        "description": "Do you think this summary presents a neutral and balanced view of the issue?",
-
-        # The min and max labels are text shown at each end of the scale
-        "min_label": "Not at all",
-        "max_label": "Very balanced",
-        # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
-        "label_requirement": { "required": True },
-        # How many scale points to show
-        "size": 5,
-
-        # If true, keys [1-size] will be bound to scale responses. Likert
-        # scales larger than 10 are not supported with this simple
-        # keybinding and will need to use the full item specification to
-        # bind all scale points to keys.
-        #"sequential_key_binding": True,
-      },
-      {
-        "annotation_type": "likert",
-
-        # This name gets used in reporting the annotation results
-        "name": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?",
-
-        # This text is shown to the user and can be a longer statement
-        "description": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?",
-
-        # The min and max labels are text shown at each end of the scale
-        "min_label": "Not at all",
-        "max_label": "Completely",
-        # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
-        "label_requirement": { "required": True },
-        # How many scale points to show
-        "size": 5,
+        "sequential_key_binding": True,
 
         # If true, keys [1-size] will be bound to scale responses. Likert
         # scales larger than 10 are not supported with this simple
@@ -210,21 +201,26 @@
 
       # Third page: Comparison tasks (from pilot_pair.yaml)
       {
-        "annotation_type": "likert",
+        "annotation_type": "radio",
 
         # This name gets used in reporting the annotation results
-        "name": "Which summary is more representative of your perspective?",
+        "name": "Which summary is more representative of your perspective? (Please select only one option)",
 
         # This text is shown to the user and can be a longer statement
-        "description": "Which summary is more representative of your perspective?",
+        "description": "Which summary is more representative of your perspective? (Please select only one option)",
 
         # The min and max labels are text shown at each end of the scale
-        "min_label": "Summary A",
-        "max_label": "Summary B",
+        "labels": [
+          "A much more representative",
+          "A slightly more representative",
+          "Both about the same",
+          "B slightly more representative",
+          "B much more representative"
+        ],
         # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
         "label_requirement": { "required": True },
         # How many scale points to show
-        "size": 2,
+        "sequential_key_binding": True,
 
         # If true, keys [1-size] will be bound to scale responses. Likert
         # scales larger than 10 are not supported with this simple
@@ -233,21 +229,26 @@
         #"sequential_key_binding": True,
       },
       {
-        "annotation_type": "likert",
+        "annotation_type": "radio",
 
         # This name gets used in reporting the annotation results
-        "name": "Which summary is more informative?",
+        "name": "Which summary is more informative? (Please select only one option)",
 
         # This text is shown to the user and can be a longer statement
-        "description": "Which summary is more informative?",
+        "description": "Which summary is more informative? (Please select only one option)",
 
         # The min and max labels are text shown at each end of the scale
-        "min_label": "Summary A",
-        "max_label": "Summary B",
+        "labels": [
+          "A much more informative",
+          "A slightly more informative",
+          "Both about the same",
+          "B slightly more informative",
+          "B much more informative"
+        ],
         # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
         "label_requirement": { "required": True },
         # How many scale points to show
-        "size": 2,
+        "sequential_key_binding": True,
 
         # If true, keys [1-size] will be bound to scale responses. Likert
         # scales larger than 10 are not supported with this simple
@@ -256,21 +257,26 @@
         #"sequential_key_binding": True,
       },
       {
-        "annotation_type": "likert",
+        "annotation_type": "radio",
 
         # This name gets used in reporting the annotation results
-        "name": "Which summary presents a more neutral and balanced view of the issue?",
+        "name": "Which summary presents a more neutral and balanced view of the issue? (Please select only one option)",
 
         # This text is shown to the user and can be a longer statement
-        "description": "Which summary presents a more neutral and balanced view of the issue?",
+        "description": "Which summary presents a more neutral and balanced view of the issue? (Please select only one option)",
 
         # The min and max labels are text shown at each end of the scale
-        "min_label": "Summary A",
-        "max_label": "Summary B",
+        "labels": [
+          "A much more neutral and balanced",
+          "A slightly more neutral and balanced",
+          "Both about the same",
+          "B slightly more neutral and balanced",
+          "B much more neutral and balanced"
+        ],
         # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
         "label_requirement": { "required": True },
         # How many scale points to show
-        "size": 2,
+        "sequential_key_binding": True,
 
         # If true, keys [1-size] will be bound to scale responses. Likert
         # scales larger than 10 are not supported with this simple
@@ -279,21 +285,26 @@
         #"sequential_key_binding": True,
       },
       {
-        "annotation_type": "likert",
+        "annotation_type": "radio",
 
         # This name gets used in reporting the annotation results
-        "name": "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?",
+        "name": "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue? (Please select only one option)",
 
         # This text is shown to the user and can be a longer statement
-        "description": "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?",
+        "description": "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue? (Please select only one option)",
 
         # The min and max labels are text shown at each end of the scale
-        "min_label": "Summary A",
-        "max_label": "Summary B",
+        "labels": [
+          "A much more preferred",
+          "A slightly more preferred",
+          "Both about the same",
+          "B slightly more preferred",
+          "B much more preferred"
+        ],
         # adding requirements for labels, when "required" is True, the annotators will be asked to finish the current instance to proceed
         "label_requirement": { "required": True },
         # How many scale points to show
-        "size": 2,
+        "sequential_key_binding": True,
 
         # If true, keys [1-size] will be bound to scale responses. Likert
         # scales larger than 10 are not supported with this simple
