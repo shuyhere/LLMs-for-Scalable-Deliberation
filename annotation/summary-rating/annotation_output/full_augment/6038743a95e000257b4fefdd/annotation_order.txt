@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_290_question
+triplet_290_rating
+triplet_290_comparison
+Summary-Rating-end.html

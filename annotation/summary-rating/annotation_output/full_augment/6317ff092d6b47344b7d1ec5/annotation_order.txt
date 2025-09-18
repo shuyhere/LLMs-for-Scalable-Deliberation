@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_650_question
+triplet_650_rating
+triplet_650_comparison
+Summary-Rating-end.html

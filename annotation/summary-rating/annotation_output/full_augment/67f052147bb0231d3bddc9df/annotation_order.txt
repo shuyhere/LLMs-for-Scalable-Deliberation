@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_767_question
+triplet_767_rating
+triplet_767_comparison
+Summary-Rating-end.html

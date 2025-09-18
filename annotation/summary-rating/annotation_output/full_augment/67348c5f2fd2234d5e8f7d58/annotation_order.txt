@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_2580_question
+triplet_2580_rating
+triplet_2580_comparison
+Summary-Rating-end.html

@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_1986_question
+triplet_1986_rating
+triplet_1986_comparison
+Summary-Rating-end.html

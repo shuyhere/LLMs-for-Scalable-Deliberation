@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_2498_question
+triplet_2498_rating
+triplet_2498_comparison
+Summary-Rating-end.html

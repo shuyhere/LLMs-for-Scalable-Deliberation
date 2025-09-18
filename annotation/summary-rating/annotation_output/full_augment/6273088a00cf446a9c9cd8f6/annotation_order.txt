@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_1920_question
+triplet_1920_rating
+triplet_1920_comparison
+Summary-Rating-end.html

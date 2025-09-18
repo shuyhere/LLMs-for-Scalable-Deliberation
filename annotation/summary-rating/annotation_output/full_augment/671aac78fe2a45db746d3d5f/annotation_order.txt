@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_3215_question
+triplet_3215_rating
+triplet_3215_comparison
+Summary-Rating-end.html

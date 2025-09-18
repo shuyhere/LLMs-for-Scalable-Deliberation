@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_2740_question
+triplet_2740_rating
+triplet_2740_comparison
+Summary-Rating-end.html

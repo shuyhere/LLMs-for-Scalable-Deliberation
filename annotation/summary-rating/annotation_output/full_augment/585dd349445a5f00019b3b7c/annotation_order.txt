@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_1967_question
+triplet_1967_rating
+triplet_1967_comparison
+Summary-Rating-end.html
