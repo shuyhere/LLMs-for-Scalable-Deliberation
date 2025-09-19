@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_3789_question
+triplet_3789_rating
+triplet_3789_comparison
+Summary-Rating-end.html

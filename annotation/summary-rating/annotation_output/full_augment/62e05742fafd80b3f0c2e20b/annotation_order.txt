@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_2399_question
+triplet_2399_rating
+triplet_2399_comparison
+Summary-Rating-end.html
