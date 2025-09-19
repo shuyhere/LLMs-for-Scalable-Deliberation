@@ -225,3 +225,5 @@ __marimo__/
 src/finetuning/wandb/*
 
 src/finetuning/dcgm/
+
+/datasets/*

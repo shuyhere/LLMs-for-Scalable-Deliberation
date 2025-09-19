@@ -57,3 +57,9 @@ wordcloud analysis:
 
 
 # SFT
+
+data processing:
+
+`python /src/finetuning/data_process/build_supervised_from_full_augment.py`
+
+`python src/finetuning/data_process/build_comment_summary_ratings.py`

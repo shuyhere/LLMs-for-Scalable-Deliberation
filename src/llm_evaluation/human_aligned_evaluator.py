@@ -89,22 +89,38 @@ class HumanAlignedEvaluator:
             response_clean = response_clean.strip()
             
             result = json.loads(response_clean)
-            
-            # Validate all required fields are present
-            required_fields = ['perspective_representation', 'informativeness', 
-                             'neutrality_balance', 'policy_approval']
+
+            # Support both old and new field names
+            field_map = {
+                'Representiveness': 'perspective_representation',
+                'Informativeness': 'informativeness',
+                'Neutrality': 'neutrality_balance',
+                'Policy Approval': 'policy_approval',
+            }
+            normalized: Dict[str, int] = {}
+            # Prefer new names if present
+            for new_key, canonical in field_map.items():
+                if new_key in result:
+                    normalized[canonical] = int(result[new_key])
+            # Fallback to old canonical keys
+            for canonical in ['perspective_representation', 'informativeness', 'neutrality_balance', 'policy_approval']:
+                if canonical in result and canonical not in normalized:
+                    normalized[canonical] = int(result[canonical])
+
+            # Validate all required fields are present and in [1,5]
+            required_fields = ['perspective_representation', 'informativeness', 'neutrality_balance', 'policy_approval']
             for field in required_fields:
-                if field not in result:
+                if field not in normalized:
                     raise ValueError(f"Missing required field: {field}")
-                if not isinstance(result[field], int) or result[field] < 1 or result[field] > 5:
-                    raise ValueError(f"Invalid value for {field}: {result[field]} (must be 1-5)")
-            
+                if not isinstance(normalized[field], int) or normalized[field] < 1 or normalized[field] > 5:
+                    raise ValueError(f"Invalid value for {field}: {normalized[field]} (must be 1-5)")
+
             if self.debug:
                 logger.debug(f"Parsed ratings successfully")
-            
+
             return {
                 "status": "success",
-                "ratings": result,
+                "ratings": normalized,
                 "model": self.model,
                 "timestamp": datetime.now().isoformat()
             }
@@ -169,22 +185,35 @@ class HumanAlignedEvaluator:
             response_clean = response_clean.strip()
             
             result = json.loads(response_clean)
-            
-            # Validate all required fields are present
-            required_fields = ['perspective_representation', 'informativeness', 
-                             'neutrality_balance', 'policy_approval']
+
+            # Support both old and new field names; comparison is now 1-5
+            field_map = {
+                'Representiveness': 'perspective_representation',
+                'Informativeness': 'informativeness',
+                'Neutrality': 'neutrality_balance',
+                'Policy Approval': 'policy_approval',
+            }
+            normalized: Dict[str, int] = {}
+            for new_key, canonical in field_map.items():
+                if new_key in result:
+                    normalized[canonical] = int(result[new_key])
+            for canonical in ['perspective_representation', 'informativeness', 'neutrality_balance', 'policy_approval']:
+                if canonical in result and canonical not in normalized:
+                    normalized[canonical] = int(result[canonical])
+
+            required_fields = ['perspective_representation', 'informativeness', 'neutrality_balance', 'policy_approval']
             for field in required_fields:
-                if field not in result:
+                if field not in normalized:
                     raise ValueError(f"Missing required field: {field}")
-                if result[field] not in [1, 2]:
-                    raise ValueError(f"Invalid value for {field}: {result[field]} (must be 1 or 2)")
-            
+                if not isinstance(normalized[field], int) or normalized[field] < 1 or normalized[field] > 5:
+                    raise ValueError(f"Invalid value for {field}: {normalized[field]} (must be 1-5)")
+
             if self.debug:
                 logger.debug(f"Parsed comparisons successfully")
-            
+
             return {
                 "status": "success",
-                "comparisons": result,
+                "comparisons": normalized,
                 "model": self.model,
                 "timestamp": datetime.now().isoformat()
             }

@@ -14,7 +14,7 @@ import shutil
 
 def load_incomplete_users():
     """从文件中加载不完整用户列表"""
-    user_file_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/notebooks/incomplete_users.txt'
+    user_file_path = './annotation/summary-rating/notebooks/incomplete_users.txt'
     
     if not os.path.exists(user_file_path):
         print(f"错误: 找不到用户列表文件 {user_file_path}")
@@ -48,8 +48,8 @@ def remove_users_from_data(users):
     user_set = set(users)  # 转换为集合以提高查找效率
     
     # 设置路径
-    task_assignment_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/task_assignment.json'
-    annotation_data_dir = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment'
+    task_assignment_path = './annotation/summary-rating/annotation_output/full_augment/task_assignment.json'
+    annotation_data_dir = './annotation/summary-rating/annotation_output/full_augment'
     annotation_data_path = os.path.join(annotation_data_dir, "annotated_instances.csv")
     
     # 用户确认

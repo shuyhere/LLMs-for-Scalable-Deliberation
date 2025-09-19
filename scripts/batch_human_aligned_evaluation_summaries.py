@@ -17,7 +17,7 @@ sys.path.append(str(project_root))
 from src.llm_evaluation.human_aligned_evaluator import HumanAlignedEvaluator
 from src.utils.data_processing import HumanAnnotationDataProcessor
 from config.human_llm_correlation import (
-    PROJECT_ROOT, DEFAULT_ANNOTATION_PATH, DEFAULT_OUTPUT_PATH,
+    PROJECT_ROOT, DEFAULT_OUTPUT_PATH,
     DEFAULT_MODEL, DEFAULT_TEMPERATURE, DEFAULT_SAMPLE_SIZE, DEFAULT_DEBUG
 )
 
@@ -82,12 +82,16 @@ def run_demo_mode(evaluator, annotation_path, output_path):
             
             # Generate and show the prompt
             from src.utils.prompts.evaluation import HumanAnnotationPrompt
+            # Try to pass assigned_user_data.json to load exact A/B when available
+            assigned_path = str(annotation_path / metadata.get('user_id', 'unknown') / 'assigned_user_data.json') if metadata.get('user_id') else ""
             prompt = HumanAnnotationPrompt(
                 summary_a=summary_a,
                 summary_b=summary_b,
                 question=question,
                 annotator_answer=annotator_answer,
-                task_type="comparison"
+                task_type="comparison",
+                assigned_user_path=assigned_path,
+                comparison_entry_id=test_comparison.get('id', '')
             )
             user_input = prompt.get_comparison_prompt()
             print("\nCOMPARISON PROMPT:")
@@ -200,12 +204,12 @@ def run_incremental_correlation_experiment(evaluator, annotation_path, output_pa
                 data_source = {
                     'annotation_id': ann['id'],
                     'annotation_type': 'rating',
-                    'relative_path': f"annotation/summary-rating/annotation_output/full/{ann.get('user_id', 'unknown')}/annotated_instances.jsonl",
+                    'relative_path': f"annotation/summary-rating/annotation_output/full_augment/{ann.get('user_id', 'unknown')}/annotated_instances.jsonl",
                     'absolute_path': str(annotation_path / ann.get('user_id', 'unknown') / 'annotated_instances.jsonl'),
                     'user_id': ann.get('user_id', 'unknown'),
                     'timestamp': ann.get('timestamp', 'unknown')
                 }
-                
+
                 result = {
                     'unique_id': unique_id,
                     'annotation_id': ann['id'],
@@ -248,8 +252,9 @@ def run_incremental_correlation_experiment(evaluator, annotation_path, output_pa
                 continue
             
             metadata = ann['metadata']
-            summary_a = metadata.get('summary_a_text', '')
-            summary_b = metadata.get('summary_b_text', '')
+            # Prefer summary_a_text/summary_b_text; older keys fallback
+            summary_a = metadata.get('summary_a_text', '') or metadata.get('summary_a', '')
+            summary_b = metadata.get('summary_b_text', '') or metadata.get('summary_b', '')
             question = metadata.get('question', '')
             annotator_answer = ann.get('annotator_answer', '')
             
@@ -266,7 +271,7 @@ def run_incremental_correlation_experiment(evaluator, annotation_path, output_pa
                 data_source = {
                     'annotation_id': ann['id'],
                     'annotation_type': 'comparison',
-                    'relative_path': f"annotation/summary-rating/annotation_output/full/{ann.get('user_id', 'unknown')}/annotated_instances.jsonl",
+                    'relative_path': f"annotation/summary-rating/annotation_output/full_augment/{ann.get('user_id', 'unknown')}/annotated_instances.jsonl",
                     'absolute_path': str(annotation_path / ann.get('user_id', 'unknown') / 'annotated_instances.jsonl'),
                     'user_id': ann.get('user_id', 'unknown'),
                     'timestamp': ann.get('timestamp', 'unknown')
@@ -789,8 +794,8 @@ def check_and_process_all_data(evaluator, annotation_path, output_path, checkpoi
                 continue
             
             metadata = ann['metadata']
-            summary_a = metadata.get('summary_a', '')
-            summary_b = metadata.get('summary_b', '')
+            summary_a = metadata.get('summary_a_text', '') or metadata.get('summary_a', '')
+            summary_b = metadata.get('summary_b_text', '') or metadata.get('summary_b', '')
             question = metadata.get('question', '')
             annotator_answer = ann.get('annotator_answer', '')
             
@@ -900,8 +905,8 @@ def main():
     
     args = parser.parse_args()
     
-    # Configuration
-    annotation_path = DEFAULT_ANNOTATION_PATH
+    # Configuration: switch to full_augment
+    annotation_path = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment')
     output_path = Path(args.output_dir)
     
     # Override sample size if debug mode or demo mode
