@@ -10,7 +10,7 @@ import os
 
 def check_user_directories():
     """检查用户目录结构，找出只有assigned_user_data.json的用户"""
-    annotation_dir = './annotation/summary-rating/annotation_output/full_augment'
+    annotation_dir = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment'
     
     assigned_only_users = []
     
@@ -57,7 +57,7 @@ def check_user_completeness():
     
     # 2. 加载标注数据并检查完成情况
     print(f"\n2. 检查CSV中的用户完成情况...")
-    annotation_path = './annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
+    annotation_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
     df = pd.read_csv(annotation_path)
     
     print(f"总标注记录数: {len(df)}")
@@ -180,7 +180,7 @@ def save_incomplete_users(incomplete_users):
         print("没有不完整用户需要保存")
         return None
         
-    user_file_path = './annotation/summary-rating/notebooks/incomplete_users.txt'
+    user_file_path = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/notebooks/incomplete_users.txt'
     
     with open(user_file_path, 'w') as f:
         for user in incomplete_users:
