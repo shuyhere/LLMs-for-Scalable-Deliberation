@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_3920_question
+triplet_3920_rating
+triplet_3920_comparison
+Summary-Rating-end.html

@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_3980_question
+triplet_3980_rating
+triplet_3980_comparison
+Summary-Rating-end.html

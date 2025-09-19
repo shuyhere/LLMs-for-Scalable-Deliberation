@@ -102,6 +102,21 @@ def _scale_rank(question: str, option_text: str) -> int:
             return idx
     return 999
 
+def _comparison_rank(option_text: str) -> int:
+    """比较题固定顺序：A much → A slightly → Both → B slightly → B much。"""
+    low = (option_text or "").lower()
+    if "a is much" in low:
+        return 0
+    if "a is slightly" in low:
+        return 1
+    if "both are about the same" in low or "both about the same" in low:
+        return 2
+    if "b is slightly" in low:
+        return 3
+    if "b is much" in low:
+        return 4
+    return 999
+
 def load_data():
     """加载标注数据（优先 full_augment，若不存在则回退到 full）"""
     path_augment = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
@@ -159,14 +174,18 @@ def plot_binary_distributions(df, binary_cols):
                 option_counts[option] = int(df[col].notna().sum())
         
         if option_counts:
-            response_counts = pd.Series(option_counts).sort_values(ascending=False)
+            # 固定顺序而非按数量排序
+            items = list(option_counts.items())
+            items_sorted = sorted(items, key=lambda t: (_comparison_rank(t[0]), t[0]))
+            ordered_options = [opt for opt, _ in items_sorted]
+            ordered_values = [option_counts[opt] for opt in ordered_options]
             
             # 绘制柱状图
-            bars = ax.bar(range(len(response_counts)), response_counts.values, 
-                         color=plt.cm.Set2(np.linspace(0, 1, len(response_counts))), alpha=0.7, edgecolor='black')
+            bars = ax.bar(range(len(ordered_values)), ordered_values, 
+                         color=plt.cm.Set2(np.linspace(0, 1, len(ordered_values))), alpha=0.7, edgecolor='black')
             
-            ax.set_xticks(range(len(response_counts)))
-            ax.set_xticklabels(response_counts.index, rotation=45, ha='right')
+            ax.set_xticks(range(len(ordered_options)))
+            ax.set_xticklabels(ordered_options, rotation=45, ha='right')
             ax.set_ylabel('Count')
             
             # 简化标题
