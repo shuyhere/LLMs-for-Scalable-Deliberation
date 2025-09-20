@@ -130,9 +130,16 @@ class ZhizengzengClient:
                     response = self.client.chat.completions.create(**create_kwargs)
                 
                 # Validate response
+                logger.debug(f"API Response type: {type(response)}")
+                logger.debug(f"API Response attributes: {dir(response) if response else 'None'}")
+                if response:
+                    logger.debug(f"API Response: {response}")
+                
                 if not response or not hasattr(response, 'choices') or not response.choices:
+                    logger.error(f"Invalid API response: response={response}, has_choices={hasattr(response, 'choices') if response else False}, choices={getattr(response, 'choices', None) if response else None}")
                     raise ValueError("Invalid API response: missing choices")
                 if not hasattr(response.choices[0], 'message') or not hasattr(response.choices[0].message, 'content'):
+                    logger.error(f"Invalid API response: message={getattr(response.choices[0], 'message', None) if response.choices else None}")
                     raise ValueError("Invalid API response: missing message content")
                 
                 return response.choices[0].message.content

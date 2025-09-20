@@ -4,19 +4,20 @@
 PROJECT_DIR="/ibex/project/c2328/LLMs-Scalable-Deliberation"
 
 # Data parameters
-DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings.jsonl"
+# DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings.jsonl"
+DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings/train.jsonl"
 MODEL_NAME="microsoft/deberta-v3-base"
-OUTPUT_DIR="$PROJECT_DIR/checkpoints/deberta_regression_base_v1"
+OUTPUT_DIR="$PROJECT_DIR/checkpoints/deberta_regression_base_v3"
 
 # Training parameters
 MAX_LENGTH=4096
 TRAIN_BATCH_SIZE=8
 EVAL_BATCH_SIZE=8
 NUM_EPOCHS=30
-LEARNING_RATE=3e-5
+LEARNING_RATE=4e-5
 WEIGHT_DECAY=0.01
-WARMUP_RATIO=0.1
-EVAL_RATIO=0.16
+WARMUP_RATIO=0.15
+EVAL_RATIO=0.20
 SEED=42
 EVAL_EVERY_STEPS=25
 
@@ -25,15 +26,15 @@ EVAL_EVERY_STEPS=25
 TIME="12:00:00"  
 MEMORY="32G"    
 CPUS=8          
-LOG_DIR="$PROJECT_DIR/logs/multioutput_regression_v2"
+LOG_DIR="$PROJECT_DIR/logs/multioutput_regression_v3"
 GPUS_LINE="#SBATCH --gres=gpu:a100:1"
 
 # Wandb parameters
 WANDB_PROJECT="llm_comment_summary_regression_deberta_base"
-WANDB_RUN_NAME="new_regression_deberta-v3-base_v2"
+WANDB_RUN_NAME="new_regression_deberta-v3-base_v3"
 
 # Advanced training parameters
-GRADIENT_CLIP=2.0
+GRADIENT_CLIP=1.0
 LABEL_SMOOTHING=0.0
 DROPOUT=0.1
 LR_SCHEDULER="linear"
