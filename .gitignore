@@ -227,3 +227,5 @@ src/finetuning/wandb/*
 src/finetuning/dcgm/
 
 /datasets/*
+
+/checkpoints/*
