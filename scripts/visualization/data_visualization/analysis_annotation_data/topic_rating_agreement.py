@@ -22,7 +22,7 @@ plt.rcParams['axes.unicode_minus'] = False
 sns.set_style("whitegrid")
 
 # Project root directory
-PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent.parent
 
 # Dimensions mapping
 DIMENSIONS = {

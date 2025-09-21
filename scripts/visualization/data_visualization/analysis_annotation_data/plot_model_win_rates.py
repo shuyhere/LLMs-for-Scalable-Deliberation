@@ -17,7 +17,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent.parent
 ANNOTATED_DIR = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full_augment'
 TRIPLET_CSV = PROJECT_ROOT / 'annotation/summary-rating/data_files/processed/sum_humanstudy_triplet_full_ring_augmented.csv'
 OUTPUT_DIR = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation_winrate'

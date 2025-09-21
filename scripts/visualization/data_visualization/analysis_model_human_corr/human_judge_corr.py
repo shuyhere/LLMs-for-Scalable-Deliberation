@@ -646,7 +646,7 @@ def main():
     """Main function to run the correlation analysis."""
     parser = argparse.ArgumentParser(description="Process human-LLM correlation JSON files")
     parser.add_argument("--data_dir", 
-                       default="/ibex/project/c2328/LLMs-Scalable-Deliberation/results/eval_llm_human_correlation",
+                       default="../results/eval_llm_human_correlation",
                        help="Directory containing correlation JSON files")
     parser.add_argument("--output_dir", 
                        default="./results/dataset_visulization/analysis_model_human_corr",

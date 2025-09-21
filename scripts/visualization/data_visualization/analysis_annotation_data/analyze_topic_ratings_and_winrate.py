@@ -26,7 +26,7 @@ from scipy import stats
 import re
 
 
-PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent.parent
 ANNOTATED_DIR = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full_augment'
 TRIPLET_CSV = PROJECT_ROOT / 'annotation/summary-rating/data_files/processed/sum_humanstudy_triplet_full_ring_augmented.csv'
 RAW_SUMMARIES_CSV = PROJECT_ROOT / 'annotation/summary-rating/data_files/raw/summaries_V0915_for_humanstudy_simple.csv'

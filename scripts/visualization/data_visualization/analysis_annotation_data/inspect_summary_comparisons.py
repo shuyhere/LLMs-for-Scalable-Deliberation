@@ -21,7 +21,7 @@ import pandas as pd
 import numpy as np
 
 
-PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent.parent
 ANNOTATED_CSV = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full/annotated_instances.csv'
 TRIPLET_CSV = PROJECT_ROOT / 'annotation/summary-rating/data_files/processed/sum_humanstudy_triplet_full_ring.csv'
 RAW_SUMMARIES_CSV = PROJECT_ROOT / 'annotation/summary-rating/data_files/raw/summaries_V0903_for_humanstudy_simple.csv'

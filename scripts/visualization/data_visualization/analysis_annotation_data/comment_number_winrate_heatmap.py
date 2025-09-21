@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent.parent
 ANNOTATED_DIR = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full_augment'
 OUTPUT_DIR = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation/comments_winrate_heatmap'
 

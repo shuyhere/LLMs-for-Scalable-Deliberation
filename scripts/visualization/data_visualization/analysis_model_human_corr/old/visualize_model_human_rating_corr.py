@@ -9,10 +9,10 @@ from scipy.stats import pearsonr
 
 
 RESULTS_DIR = Path(
-    "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/eval_llm_human_correlation"
+    "../../../../results/eval_llm_human_correlation"
 )
 OUTPUT_DIR = Path(
-    "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/dataset_visulization/analysis_model_human_corr/figures"
+    "../../../../results/dataset_visulization/analysis_model_human_corr/figures"
 )
 
 

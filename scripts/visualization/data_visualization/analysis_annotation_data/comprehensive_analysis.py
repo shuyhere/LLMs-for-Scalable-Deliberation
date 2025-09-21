@@ -26,7 +26,7 @@ UNIFIED_COLORS = {
 }
 
 # Project root directory
-PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent.parent
 
 # Model name mapping to unify display with Human Judge Corr
 MODEL_NAME_MAPPING = {

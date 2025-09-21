@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 """
-Model Accuracy vs Human Evaluation Analysis
+Model Accuracy vs Human Evaluation Analysis - Updated for full_augment format
 Evaluates model accuracy compared to human ratings and comparisons across four dimensions.
 """
 
 import json
-import pandas as pd
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
-from collections import defaultdict
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -20,9 +18,9 @@ plt.rcParams['axes.unicode_minus'] = False
 sns.set_style("whitegrid")
 
 # Project root directory
-PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
+PROJECT_ROOT = Path(__file__).parent.parent.parent.parent.parent
 
-# Four evaluation dimensions with standardized names
+# Four evaluation dimensions with standardized names (matching evaluation results format)
 DIMENSIONS = {
     'perspective_representation': 'Representiveness',
     'informativeness': 'Informativeness', 
@@ -48,15 +46,52 @@ MODEL_NAME_MAPPING = {
     'gpt-5-nano': 'GPT-5-Nano',
     'gpt-4o-mini': 'GPT-4o-Mini',
     'gemini-2.5-pro': 'Gemini-2.5-Pro',
-    'gemini-2.5-flash': 'Gemini-2.5-Flash',
-    'gemini-2.5-flash-lite': 'Gemini-2.5-Flash-Lite',
-    'grok-4-latest': 'Grok-4-Latest',
-    'deepseek-chat': 'DeepSeek-Chat',
-    'deepseek-reasoner': 'DeepSeek-Reasoner'
+    'deepseek-chat': 'DeepSeek-V3.1(chat)'
 }
 
-def load_model_data():
-    """Load data from all non-checkpoint model files"""
+def load_annotation_data():
+    """Load annotation data from full_augment format"""
+    annotation_dir = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full_augment'
+    
+    all_annotations = {
+        'ratings': [],
+        'comparisons': []
+    }
+    
+    for user_dir in annotation_dir.iterdir():
+        if user_dir.is_dir():
+            jsonl_file = user_dir / "annotated_instances.jsonl"
+            assign_file = user_dir / "assigned_user_data.json"
+            
+            # Load assigned data for metadata
+            assigned_data = {}
+            if assign_file.exists():
+                with open(assign_file, 'r', encoding='utf-8') as f:
+                    assigned_data = json.load(f)
+            
+            if jsonl_file.exists():
+                with open(jsonl_file, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        try:
+                            data = json.loads(line)
+                            data['user_id'] = user_dir.name
+                            
+                            # Add metadata from assigned data
+                            if data['id'] in assigned_data:
+                                data.update(assigned_data[data['id']])
+                            
+                            if 'comparison' in data['id'] and 'label_annotations' in data:
+                                all_annotations['comparisons'].append(data)
+                            elif 'rating' in data['id'] and 'label_annotations' in data:
+                                all_annotations['ratings'].append(data)
+                                
+                        except json.JSONDecodeError:
+                            continue
+    
+    return all_annotations
+
+def load_model_predictions():
+    """Load model predictions from evaluation results"""
     data_dir = PROJECT_ROOT / 'results/eval_llm_human_correlation'
     model_data = {}
     
@@ -79,6 +114,67 @@ def load_model_data():
     
     return model_data
 
+def extract_rating_value(row, dimension):
+    """Extract rating value from annotation row"""
+    rating_questions = {
+        'perspective': "To what extent is your perspective represented in this response?",
+        'informativeness': "How informative is this summary?",
+        'neutrality': "Do you think this summary presents a neutral and balanced view of the issue?",
+        'policy': "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue? "
+    }
+    
+    question = rating_questions.get(dimension)
+    if not question or 'label_annotations' not in row:
+        return np.nan
+    
+    if question in row['label_annotations']:
+        scales = row['label_annotations'][question]
+        if isinstance(scales, dict):
+            for value in scales.values():
+                if value and str(value).isdigit():
+                    return int(value)
+        elif scales and str(scales).isdigit():
+            return int(scales)
+    
+    return np.nan
+
+def extract_comparison_choice(row, dimension):
+    """Extract comparison choice from annotation row"""
+    comparison_questions = {
+        'perspective': "Which summary is more representative of your perspective? ",
+        'informativeness': "Which summary is more informative? ",
+        'neutrality': "Which summary presents a more neutral and balanced view of the issue? ",
+        'policy': "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?"
+    }
+    
+    question = comparison_questions.get(dimension)
+    if not question or 'label_annotations' not in row:
+        return np.nan
+    
+    if question in row['label_annotations']:
+        scales = row['label_annotations'][question]
+        if isinstance(scales, dict):
+            for value in scales.values():
+                if value and str(value).isdigit():
+                    choice = int(value)
+                    # Map 1-5 scale to A wins (1), neutral (0.5), B wins (0)
+                    if choice in [1, 2]:
+                        return 1.0  # A wins
+                    elif choice == 3:
+                        return 0.5  # Neutral
+                    elif choice in [4, 5]:
+                        return 0.0  # B wins
+        elif scales and str(scales).isdigit():
+            choice = int(scales)
+            if choice in [1, 2]:
+                return 1.0
+            elif choice == 3:
+                return 0.5
+            elif choice in [4, 5]:
+                return 0.0
+    
+    return np.nan
+
 def calculate_rating_accuracy(human_ratings, model_ratings):
     """Calculate accuracy for rating tasks (exact match)"""
     if not human_ratings or not model_ratings:
@@ -96,7 +192,7 @@ def calculate_rating_accuracy(human_ratings, model_ratings):
     return correct / total if total > 0 else np.nan
 
 def calculate_comparison_accuracy(human_comparisons, model_comparisons):
-    """Calculate accuracy for comparison tasks (exact match)"""
+    """Calculate accuracy for comparison tasks (three-category: good/neutral/bad)"""
     if not human_comparisons or not model_comparisons:
         return np.nan
     
@@ -106,7 +202,24 @@ def calculate_comparison_accuracy(human_comparisons, model_comparisons):
     for dimension in DIMENSIONS.keys():
         if dimension in human_comparisons and dimension in model_comparisons:
             total += 1
-            if human_comparisons[dimension] == model_comparisons[dimension]:
+            human_val = human_comparisons[dimension]
+            model_val = model_comparisons[dimension]
+            
+            # Convert to three categories: good (1,2), neutral (3), bad (4,5)
+            def to_category(val):
+                if val in [1, 2]:
+                    return 'good'
+                elif val == 3:
+                    return 'neutral'
+                elif val in [4, 5]:
+                    return 'bad'
+                else:
+                    return None
+            
+            human_cat = to_category(human_val)
+            model_cat = to_category(model_val)
+            
+            if human_cat and model_cat and human_cat == model_cat:
                 correct += 1
     
     return correct / total if total > 0 else np.nan
@@ -126,26 +239,70 @@ def calculate_dimension_wise_accuracy(human_data, model_data, task_type):
         if (human_key in human_data and model_key in model_data and
             dimension in human_data[human_key] and dimension in model_data[model_key]):
             
-            if human_data[human_key][dimension] == model_data[model_key][dimension]:
-                dimension_acc[dimension] = 1.0
+            if task_type == 'rating':
+                # For rating: exact match
+                if human_data[human_key][dimension] == model_data[model_key][dimension]:
+                    dimension_acc[dimension] = 1.0
+                else:
+                    dimension_acc[dimension] = 0.0
             else:
-                dimension_acc[dimension] = 0.0
+                # For comparison: three-category match (good/neutral/bad)
+                human_val = human_data[human_key][dimension]
+                model_val = model_data[model_key][dimension]
+                
+                def to_category(val):
+                    if val in [1, 2]:
+                        return 'good'
+                    elif val == 3:
+                        return 'neutral'
+                    elif val in [4, 5]:
+                        return 'bad'
+                    else:
+                        return None
+                
+                human_cat = to_category(human_val)
+                model_cat = to_category(model_val)
+                
+                if human_cat and model_cat and human_cat == model_cat:
+                    dimension_acc[dimension] = 1.0
+                else:
+                    dimension_acc[dimension] = 0.0
         else:
             dimension_acc[dimension] = np.nan
     
     return dimension_acc
 
-def analyze_model_accuracy(model_data):
-    """Analyze accuracy for all models"""
+def compute_model_accuracy(annotations, model_predictions):
+    """Compute model accuracy compared to human annotations"""
+    
     results = {
         'rating_overall': {},
+        'rating_by_dimension': {dim: {} for dim in DIMENSIONS.keys()},
         'comparison_overall': {},
-        'rating_by_dimension': defaultdict(dict),
-        'comparison_by_dimension': defaultdict(dict)
+        'comparison_by_dimension': {dim: {} for dim in DIMENSIONS.keys()}
     }
     
-    for model_name, data in model_data.items():
+    if not model_predictions:
+        print("No model predictions found. Please ensure evaluation results are available.")
+        return results
+    
+    for model_name, data in model_predictions.items():
         print(f"Analyzing {model_name}...")
+        
+        # Debug: Check available dimensions in data
+        if 'rating_results' in data and data['rating_results']:
+            sample_rating = data['rating_results'][0]
+            if 'human_ratings' in sample_rating:
+                print(f"  Available rating dimensions: {list(sample_rating['human_ratings'].keys())}")
+            if 'llm_result' in sample_rating and 'ratings' in sample_rating['llm_result']:
+                print(f"  Available model rating dimensions: {list(sample_rating['llm_result']['ratings'].keys())}")
+        
+        if 'comparison_results' in data and data['comparison_results']:
+            sample_comparison = data['comparison_results'][0]
+            if 'human_comparisons' in sample_comparison:
+                print(f"  Available comparison dimensions: {list(sample_comparison['human_comparisons'].keys())}")
+            if 'llm_result' in sample_comparison and 'comparisons' in sample_comparison['llm_result']:
+                print(f"  Available model comparison dimensions: {list(sample_comparison['llm_result']['comparisons'].keys())}")
         
         # Rating accuracy
         rating_accuracies = []
@@ -194,8 +351,17 @@ def analyze_model_accuracy(model_data):
 def create_accuracy_visualization(results):
     """Create visualization of model accuracy vs human evaluation"""
     
+    # Check if we have any data
+    if not results['rating_overall'] and not results['comparison_overall']:
+        print("No data available for visualization. Please ensure model predictions are loaded.")
+        return
+    
     # Prepare data for plotting with standardized model names in specified order
-    available_models = list(results['rating_overall'].keys())
+    available_models = list(set(list(results['rating_overall'].keys()) + list(results['comparison_overall'].keys())))
+    
+    if not available_models:
+        print("No models found in results.")
+        return
     
     # Order models according to MODEL_NAME_MAPPING order
     models = []
@@ -223,7 +389,7 @@ def create_accuracy_visualization(results):
     
     for i, model in enumerate(models):
         for j, dimension in enumerate(dimensions):
-            rating_dim_matrix[i, j] = results['rating_by_dimension'][dimension][model]
+            rating_dim_matrix[i, j] = results['rating_by_dimension'][dimension].get(model, np.nan)
     
     im1 = ax1.imshow(rating_dim_matrix, cmap='Blues', aspect='auto', vmin=0, vmax=1)
     ax1.set_xticks(range(len(dimension_names)))
@@ -249,14 +415,14 @@ def create_accuracy_visualization(results):
     
     for i, model in enumerate(models):
         for j, dimension in enumerate(dimensions):
-            comparison_dim_matrix[i, j] = results['comparison_by_dimension'][dimension][model]
+            comparison_dim_matrix[i, j] = results['comparison_by_dimension'][dimension].get(model, np.nan)
     
     im2 = ax2.imshow(comparison_dim_matrix, cmap='Blues', aspect='auto', vmin=0, vmax=1)
     ax2.set_xticks(range(len(dimension_names)))
     ax2.set_xticklabels(dimension_names, rotation=0, ha='center', fontsize=12)
     ax2.set_yticks(range(len(models)))
     ax2.set_yticklabels(model_display_names, fontsize=11)
-    ax2.set_title('Comparison Accuracy by Dimension', fontsize=14, fontweight='bold')
+    ax2.set_title('Comparison Accuracy by Dimension (3-category: Good/Neutral/Bad)', fontsize=14, fontweight='bold')
     
     # Add text annotations
     for i in range(len(models)):
@@ -277,35 +443,32 @@ def create_accuracy_visualization(results):
     output_dir = PROJECT_ROOT / 'results/analysis_model_human_corr/figures'
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    plt.savefig(output_dir / 'model_accuracy_vs_human.pdf', dpi=300, bbox_inches='tight')
+    plt.savefig(output_dir / 'model_accuracy_vs_human_updated.pdf', dpi=300, bbox_inches='tight')
     plt.close()
     
-    print(f"Model accuracy visualization saved to: {output_dir / 'model_accuracy_vs_human.pdf'}")
+    print(f"Model accuracy visualization saved to: {output_dir / 'model_accuracy_vs_human_updated.pdf'}")
 
 def main():
     """Main analysis function"""
     print("Starting Model Accuracy vs Human Evaluation Analysis...")
     print("=" * 70)
     
-    # Load model data
-    print("Loading model data...")
-    model_data = load_model_data()
+    # Load model predictions from evaluation results
+    print("Loading model predictions...")
+    model_predictions = load_model_predictions()
     
-    if not model_data:
-        print("Error: No model data found!")
+    if not model_predictions:
+        print("No model prediction files found. Please ensure evaluation results are available.")
         return
     
-    print(f"Loaded data for {len(model_data)} models")
-    
-    # Analyze accuracy
-    print("\nAnalyzing model accuracy...")
-    results = analyze_model_accuracy(model_data)
+    # Compute accuracy
+    print("Computing model accuracy...")
+    results = compute_model_accuracy({}, model_predictions)  # annotations not needed for this analysis
     
     # Create visualization
-    print("\nCreating accuracy visualization...")
+    print("Creating visualization...")
     create_accuracy_visualization(results)
     
-    print("\n" + "=" * 70)
     print("Analysis complete!")
 
 if __name__ == "__main__":
