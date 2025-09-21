@@ -29,7 +29,7 @@ DIMENSIONS = {
     'representiveness': "To what extent is your perspective represented in this response?",
     'informativeness': "How informative is this summary?",
     'neutrality': "Do you think this summary presents a neutral and balanced view of the issue?",
-    'policy_approval': "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?"
+    'policy_approval': "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue? "
 }
 
 def get_dimension_display_order():
@@ -47,7 +47,7 @@ def get_dimension_display_names():
 
 def load_raw_data():
     """Load raw summary data with metadata including topics"""
-    raw_data_path = PROJECT_ROOT / 'annotation/summary-rating/data_files/raw/summaries_V0903_for_humanstudy_simple.csv'
+    raw_data_path = PROJECT_ROOT / 'annotation/summary-rating/data_files/raw/summaries_V0915_for_humanstudy_simple.csv'
     if raw_data_path.exists():
         df = pd.read_csv(raw_data_path)
         print(f"Loaded {len(df)} raw summary records")
@@ -89,7 +89,7 @@ def get_topic_display_order():
 
 def load_annotation_data():
     """Load annotation data from all annotated instances"""
-    annotation_base_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full'
+    annotation_base_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full_augment'
     
     all_annotations = {
         'ratings': []
@@ -117,7 +117,7 @@ def load_annotation_data():
                             
                             # Add metadata from assigned data
                             if data['id'] in assigned_data:
-                                data['metadata'] = assigned_data[data['id']]
+                                data.update(assigned_data[data['id']])
                             
                             # Only collect rating annotations
                             if 'rating' in data['id'] and 'label_annotations' in data:
@@ -152,12 +152,9 @@ def prepare_rating_data_by_topic(annotations, raw_df):
     print("Debug: Starting data extraction...")
     
     for rating in annotations['ratings']:
-        if 'metadata' not in rating:
-            continue
-            
-        # Get summary ID and topic information
-        raw_id = rating['metadata'].get('raw_id', '')
-        question = rating['metadata'].get('question', '')
+        # Get summary ID and topic information from assigned data
+        raw_id = rating.get('raw_id', '')
+        question = rating.get('question', '')
         
         if not raw_id or not question:
             continue
@@ -203,20 +200,34 @@ def prepare_rating_data_by_topic(annotations, raw_df):
                 if total_processed <= 3:  # Debug first few
                     print(f"  Found {dimension}: {scales}")
                 
-                # Extract rating value from scale_* format
-                for scale_key, value in scales.items():
-                    if value and str(value).isdigit():
-                        rating_value = int(value)
-                        topic_ratings[topic][summary_id][dimension].append({
-                            'user_id': user_id,
-                            'rating': rating_value
-                        })
-                        successful_extractions += 1
-                        found_any_dimension = True
-                        
-                        if total_processed <= 3:  # Debug first few
-                            print(f"    Extracted rating: {rating_value}")
-                        break
+                # Extract rating value from nested structure
+                if isinstance(scales, dict):
+                    # Look for numeric values in the dictionary values
+                    for scale_key, value in scales.items():
+                        if value and str(value).isdigit():
+                            rating_value = int(value)
+                            topic_ratings[topic][summary_id][dimension].append({
+                                'user_id': user_id,
+                                'rating': rating_value
+                            })
+                            successful_extractions += 1
+                            found_any_dimension = True
+                            
+                            if total_processed <= 3:  # Debug first few
+                                print(f"    Extracted rating: {rating_value}")
+                            break
+                elif scales and str(scales).isdigit():
+                    # Fallback for direct value
+                    rating_value = int(scales)
+                    topic_ratings[topic][summary_id][dimension].append({
+                        'user_id': user_id,
+                        'rating': rating_value
+                    })
+                    successful_extractions += 1
+                    found_any_dimension = True
+                    
+                    if total_processed <= 3:  # Debug first few
+                        print(f"    Extracted rating: {rating_value}")
         
         if not found_any_dimension and total_processed <= 10:
             print(f"Debug {total_processed}: No matching dimensions found for user {user_id}")
@@ -297,24 +308,23 @@ def calculate_topic_rating_agreement(topic_ratings):
             
             for summary_id, dim_data in topic_ratings[topic].items():
                 if dimension in dim_data and len(dim_data[dimension]) >= 2:  # Need at least 2 raters
-                    ratings = [r['rating'] for r in dim_data[dimension]]
-                    all_ratings.append(ratings)
                     summary_ids.append(summary_id)
+                    ratings_for_summary = [r['rating'] for r in dim_data[dimension]]
+                    all_ratings.append(ratings_for_summary)
             
-            if not all_ratings:
+            if len(all_ratings) < 2:
+                print(f"    Insufficient data: {len(all_ratings)} summaries with multiple ratings")
                 results[topic][dimension] = {
                     'icc_2k': np.nan,
-                    'icc_p_value': np.nan,
+                    'p_value': np.nan,
+                    'n_summaries': len(all_ratings),
+                    'n_raters': 0,
                     'mean_rating': np.nan,
-                    'std_rating': np.nan,
-                    'n_summaries': 0,
-                    'n_ratings': 0,
-                    'avg_raters_per_summary': 0
+                    'std_rating': np.nan
                 }
-                print(f"    No data available")
                 continue
             
-            # Create ratings matrix
+            # Create ratings matrix (summaries x raters)
             max_raters = max(len(ratings) for ratings in all_ratings)
             ratings_matrix = np.full((len(all_ratings), max_raters), np.nan)
             
@@ -323,276 +333,252 @@ def calculate_topic_rating_agreement(topic_ratings):
                     ratings_matrix[i, j] = rating
             
             # Calculate ICC(2,k)
-            icc_2k, icc_p = calculate_icc_2k(ratings_matrix)
+            icc_2k, p_value = calculate_icc_2k(ratings_matrix)
             
             # Calculate descriptive statistics
             all_rating_values = [rating for ratings in all_ratings for rating in ratings]
             mean_rating = np.mean(all_rating_values)
             std_rating = np.std(all_rating_values)
-            avg_raters_per_summary = np.mean([len(ratings) for ratings in all_ratings])
+            
+            print(f"    ICC(2,k): {icc_2k:.3f}, p-value: {p_value:.3f}")
+            print(f"    Summaries: {len(all_ratings)}, Max raters: {max_raters}")
+            print(f"    Mean rating: {mean_rating:.2f} ± {std_rating:.2f}")
             
             results[topic][dimension] = {
                 'icc_2k': icc_2k,
-                'icc_p_value': icc_p,
-                'mean_rating': mean_rating,
-                'std_rating': std_rating,
+                'p_value': p_value,
                 'n_summaries': len(all_ratings),
-                'n_ratings': len(all_rating_values),
-                'avg_raters_per_summary': avg_raters_per_summary
+                'n_raters': max_raters,
+                'mean_rating': mean_rating,
+                'std_rating': std_rating
             }
-            
-            print(f"    ICC(2,k): {icc_2k:.3f} (p={icc_p:.3f})")
-            print(f"    {len(all_ratings)} summaries, {len(all_rating_values)} ratings")
     
     return results
 
-def create_topic_agreement_visualization(results):
-    """Create visualization of topic-based rating agreement (only agreement-related plots)"""
-    # Get topics in the specified order, only including those that exist in results
-    topic_order = get_topic_display_order()
-    topics = [topic for topic in topic_order if topic in results]
-    
-    # Get dimensions in the specified order with display names
-    dimension_order = get_dimension_display_order()
-    dimension_names = get_dimension_display_names()
+def create_agreement_heatmap(results, output_path):
+    """Create heatmap of ICC(2,k) values across topics and dimensions"""
+    # Prepare data for heatmap
+    topics = list(results.keys())
     dimensions = list(DIMENSIONS.keys())
     
-    # Create figure with custom subplot layout to make heatmap wider and all subplots square
-    fig = plt.figure(figsize=(20, 6))
-    
-    # Use gridspec to control subplot sizes
-    gs = fig.add_gridspec(1, 4, width_ratios=[2, 1, 1, 0.05], hspace=0.3, wspace=0.3)
-    
-    # 1. Heatmap of ICC values across topics and dimensions (wider)
-    ax1 = fig.add_subplot(gs[0, 0])
-    icc_matrix = np.zeros((len(topics), len(dimension_order)))
+    # Create ICC matrix
+    icc_matrix = np.full((len(topics), len(dimensions)), np.nan)
+    p_matrix = np.full((len(topics), len(dimensions)), np.nan)
     
     for i, topic in enumerate(topics):
-        for j, dim_display in enumerate(dimension_order):
-            # Find the corresponding dimension key
-            dim_key = None
-            for key, display_name in dimension_names.items():
-                if display_name == dim_display:
-                    dim_key = key
-                    break
-            
-            if dim_key and dim_key in results[topic]:
-                icc_value = results[topic][dim_key]['icc_2k']
-                # Keep negative values, only replace NaN with a very small value for display
-                icc_matrix[i, j] = icc_value if not np.isnan(icc_value) else -1.0
-            else:
-                icc_matrix[i, j] = -1.0
+        for j, dimension in enumerate(dimensions):
+            if topic in results and dimension in results[topic]:
+                icc_matrix[i, j] = results[topic][dimension]['icc_2k']
+                p_matrix[i, j] = results[topic][dimension]['p_value']
     
-    # Use a more subtle blue to red colormap, remove grid lines
-    # Create a custom colormap with lower saturation
-    import matplotlib.colors as mcolors
+    # Create figure with two subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
     
-    # Create a softer blue-to-red colormap (cold to hot: blue for low, red for high)
-    colors = ['#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#fee090', '#fdae61', '#f46d43', '#d73027']
-    n_bins = 256
-    cmap = mcolors.LinearSegmentedColormap.from_list('soft_BlueRed', colors, N=n_bins)
+    # ICC heatmap
+    sns.heatmap(icc_matrix, 
+                xticklabels=[get_dimension_display_names()[d] for d in dimensions],
+                yticklabels=topics,
+                annot=True, 
+                fmt='.3f', 
+                cmap='RdYlBu_r',
+                center=0.5, 
+                vmin=0, 
+                vmax=1,
+                ax=ax1,
+                cbar_kws={'label': 'ICC(2,k)'})
+    ax1.set_title('Inter-Annotator Agreement (ICC(2,k))\nby Topic and Dimension', fontsize=14, fontweight='bold')
+    ax1.set_xlabel('Dimension', fontsize=12)
+    ax1.set_ylabel('Topic', fontsize=12)
     
-    im1 = ax1.imshow(icc_matrix, cmap=cmap, vmin=-0.5, vmax=1.0, aspect='auto')
+    # P-value heatmap
+    sns.heatmap(p_matrix, 
+                xticklabels=[get_dimension_display_names()[d] for d in dimensions],
+                yticklabels=topics,
+                annot=True, 
+                fmt='.3f', 
+                cmap='Reds_r',
+                vmin=0, 
+                vmax=0.05,
+                ax=ax2,
+                cbar_kws={'label': 'p-value'})
+    ax2.set_title('Statistical Significance (p-value)\nby Topic and Dimension', fontsize=14, fontweight='bold')
+    ax2.set_xlabel('Dimension', fontsize=12)
+    ax2.set_ylabel('Topic', fontsize=12)
     
-    # Remove grid lines and set cleaner ticks
-    ax1.set_xticks(range(len(dimension_order)))
-    ax1.set_xticklabels(dimension_order, rotation=45, ha='right', fontsize=11)
-    ax1.set_yticks(range(len(topics)))
-    ax1.set_yticklabels(topics, fontsize=10)
-    ax1.set_title('ICC(2,k) by Topic and Dimension', fontsize=14, fontweight='bold', pad=20)
+    plt.tight_layout()
+    plt.savefig(output_path / 'topic_rating_agreement_heatmap.pdf', dpi=300, bbox_inches='tight')
+    plt.close()
+
+def create_agreement_summary_plot(results, output_path):
+    """Create summary plot showing ICC(2,k) distribution across topics and dimensions"""
+    # Collect all ICC values
+    all_icc_values = []
+    all_p_values = []
+    topic_dimension_pairs = []
     
-    # Remove the grid lines by setting linewidth to 0
-    ax1.grid(False)
-    ax1.set_xticks(np.arange(-0.5, len(dimension_order), 1), minor=True)
-    ax1.set_yticks(np.arange(-0.5, len(topics), 1), minor=True)
-    ax1.grid(which="minor", color="white", linestyle='-', linewidth=0)
+    for topic in results:
+        for dimension in results[topic]:
+            icc_val = results[topic][dimension]['icc_2k']
+            p_val = results[topic][dimension]['p_value']
+            if not np.isnan(icc_val):
+                all_icc_values.append(icc_val)
+                all_p_values.append(p_val)
+                topic_dimension_pairs.append(f"{topic}\n{get_dimension_display_names()[dimension]}")
     
-    # Add text annotations for all values (including negative)
-    for i in range(len(topics)):
-        for j in range(len(dimension_order)):
-            icc_val = icc_matrix[i, j]
-            # Find the corresponding dimension key for p-value lookup
-            dim_key = None
-            for key, display_name in dimension_names.items():
-                if display_name == dimension_order[j]:
-                    dim_key = key
-                    break
-            
-            if dim_key and dim_key in results[topics[i]]:
-                p_val = results[topics[i]][dim_key]['icc_p_value']
-            else:
-                p_val = np.nan
-            
-            # Show all values, not just positive ones
-            if not np.isnan(icc_val) and icc_val != -1.0:  # -1.0 is our NaN placeholder
-                # Add significance stars
-                stars = ""
-                if not np.isnan(p_val):
-                    if p_val < 0.001:
-                        stars = "***"
-                    elif p_val < 0.01:
-                        stars = "**"
-                    elif p_val < 0.05:
-                        stars = "*"
-                
-                # Choose text color based on value (white for dark backgrounds, black for light)
-                color = 'white' if icc_val < 0.0 else 'black'
-                ax1.text(j, i, f'{icc_val:.2f}\n{stars}', ha='center', va='center', 
-                        color=color, fontweight='bold', fontsize=9)
-            elif icc_val == -1.0:  # NaN case
-                ax1.text(j, i, 'N/A', ha='center', va='center', 
-                        color='gray', fontweight='bold', fontsize=9)
+    if not all_icc_values:
+        print("No valid ICC values found for summary plot")
+        return
     
-    # Add colorbar
-    cbar1 = plt.colorbar(im1, ax=ax1, shrink=0.8)
-    cbar1.set_label('ICC(2,k) Value', rotation=270, labelpad=15)
+    # Create figure
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
     
-    # 2. Average ICC by topic (square)
-    ax2 = fig.add_subplot(gs[0, 1])
-    topic_avg_icc = []
-    for topic in topics:
-        valid_iccs = [results[topic][dim]['icc_2k'] for dim in dimensions 
-                     if not np.isnan(results[topic][dim]['icc_2k'])]
-        avg_icc = np.mean(valid_iccs) if valid_iccs else -1.0  # Use -1 for no data
-        topic_avg_icc.append(avg_icc)
+    # ICC distribution
+    ax1.hist(all_icc_values, bins=20, alpha=0.7, color='skyblue', edgecolor='black')
+    ax1.axvline(np.mean(all_icc_values), color='red', linestyle='--', linewidth=2, label=f'Mean: {np.mean(all_icc_values):.3f}')
+    ax1.set_xlabel('ICC(2,k) Value', fontsize=12)
+    ax1.set_ylabel('Frequency', fontsize=12)
+    ax1.set_title('Distribution of Inter-Annotator Agreement (ICC(2,k))', fontsize=14, fontweight='bold')
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
     
-    # Create color-coded bars based on ICC values
-    bar_colors = []
-    for value in topic_avg_icc:
-        if value >= 0.4:
-            bar_colors.append('#2E8B57')  # Green for fair+
-        elif value >= 0.2:
-            bar_colors.append('#FF8C00')  # Orange for poor
-        elif value >= 0:
-            bar_colors.append('#87CEEB')  # Light blue for very poor
-        else:
-            bar_colors.append('#F08080')  # Light red for negative
+    # P-value distribution
+    ax2.hist(all_p_values, bins=20, alpha=0.7, color='lightcoral', edgecolor='black')
+    ax2.axvline(0.05, color='red', linestyle='--', linewidth=2, label='p = 0.05')
+    ax2.set_xlabel('p-value', fontsize=12)
+    ax2.set_ylabel('Frequency', fontsize=12)
+    ax2.set_title('Distribution of Statistical Significance (p-values)', fontsize=14, fontweight='bold')
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
     
-    bars2 = ax2.bar(range(len(topics)), topic_avg_icc, color=bar_colors, alpha=0.8, edgecolor='white', linewidth=1)
-    ax2.set_xticks(range(len(topics)))
-    ax2.set_xticklabels(topics, rotation=45, ha='right', fontsize=10)
-    ax2.set_ylabel('Average ICC(2,k)', fontsize=12)
-    ax2.set_title('Average Agreement by Topic', fontsize=14, fontweight='bold')
-    ax2.set_ylim(-0.5, 1.0)  # Allow negative values
+    plt.tight_layout()
+    plt.savefig(output_path / 'topic_rating_agreement_summary.pdf', dpi=300, bbox_inches='tight')
+    plt.close()
+
+def generate_agreement_report(results, output_path):
+    """Generate detailed report of agreement analysis"""
+    report_lines = []
     
-    # Remove grid and add subtle reference lines
-    ax2.grid(False)
-    ax2.axhline(y=0, color='black', linestyle='-', alpha=0.3, linewidth=0.8)
-    ax2.axhline(y=0.4, color='gray', linestyle='--', alpha=0.4, linewidth=0.8)
-    ax2.spines['top'].set_visible(False)
-    ax2.spines['right'].set_visible(False)
+    report_lines.append("=" * 80)
+    report_lines.append("TOPIC-BASED RATING INTER-ANNOTATOR AGREEMENT ANALYSIS")
+    report_lines.append("=" * 80)
+    report_lines.append("")
+    report_lines.append("This analysis evaluates the consistency of annotator ratings")
+    report_lines.append("across different topics and dimensions using ICC(2,k).")
+    report_lines.append("")
     
-    # Add values on bars (including negative values)
-    for bar, value in zip(bars2, topic_avg_icc):
-        if value != -1.0:  # Don't show -1 (no data indicator)
-            y_offset = 0.02 if value >= 0 else -0.05  # Adjust position for negative values
-            ax2.text(bar.get_x() + bar.get_width()/2, bar.get_height() + y_offset,
-                    f'{value:.2f}', ha='center', fontweight='bold')
+    # Overall summary
+    all_icc_values = []
+    significant_count = 0
+    total_analyses = 0
     
-    # 3. Average ICC by dimension (square)
-    ax3 = fig.add_subplot(gs[0, 2])
-    dim_avg_icc = []
-    for dim_display in dimension_order:
-        # Find the corresponding dimension key
-        dim_key = None
-        for key, display_name in dimension_names.items():
-            if display_name == dim_display:
-                dim_key = key
-                break
+    for topic in results:
+        for dimension in results[topic]:
+            icc_val = results[topic][dimension]['icc_2k']
+            p_val = results[topic][dimension]['p_value']
+            if not np.isnan(icc_val):
+                all_icc_values.append(icc_val)
+                total_analyses += 1
+                if p_val < 0.05:
+                    significant_count += 1
+    
+    if all_icc_values:
+        report_lines.append("OVERALL SUMMARY")
+        report_lines.append("-" * 40)
+        report_lines.append(f"Total analyses: {total_analyses}")
+        report_lines.append(f"Significant agreements (p < 0.05): {significant_count} ({significant_count/total_analyses*100:.1f}%)")
+        report_lines.append(f"Mean ICC(2,k): {np.mean(all_icc_values):.3f}")
+        report_lines.append(f"Median ICC(2,k): {np.median(all_icc_values):.3f}")
+        report_lines.append(f"ICC(2,k) range: {np.min(all_icc_values):.3f} - {np.max(all_icc_values):.3f}")
+        report_lines.append("")
+    
+    # Detailed results by topic
+    for topic in sorted(results.keys()):
+        report_lines.append(f"TOPIC: {topic}")
+        report_lines.append("-" * 40)
         
-        if dim_key:
-            valid_iccs = [results[topic][dim_key]['icc_2k'] for topic in topics 
-                         if dim_key in results[topic] and not np.isnan(results[topic][dim_key]['icc_2k'])]
-            avg_icc = np.mean(valid_iccs) if valid_iccs else -1.0  # Use -1 for no data
+        for dimension in DIMENSIONS.keys():
+            if topic in results and dimension in results[topic]:
+                data = results[topic][dimension]
+                icc_val = data['icc_2k']
+                p_val = data['p_value']
+                n_summaries = data['n_summaries']
+                n_raters = data['n_raters']
+                mean_rating = data['mean_rating']
+                std_rating = data['std_rating']
+                
+                if np.isnan(icc_val):
+                    report_lines.append(f"  {get_dimension_display_names()[dimension]}: No data")
         else:
-            avg_icc = -1.0
-        dim_avg_icc.append(avg_icc)
+                    significance = "Significant" if p_val < 0.05 else "Not significant"
+                    agreement_level = "Excellent" if icc_val >= 0.75 else "Good" if icc_val >= 0.60 else "Moderate" if icc_val >= 0.40 else "Poor"
+                    
+                    report_lines.append(f"  {get_dimension_display_names()[dimension]}:")
+                    report_lines.append(f"    ICC(2,k): {icc_val:.3f} ({agreement_level})")
+                    report_lines.append(f"    p-value: {p_val:.3f} ({significance})")
+                    report_lines.append(f"    Summaries: {n_summaries}, Max raters: {n_raters}")
+                    report_lines.append(f"    Mean rating: {mean_rating:.2f} ± {std_rating:.2f}")
+        
+        report_lines.append("")
     
-    # Create color-coded bars based on ICC values for dimensions
-    dim_bar_colors = []
-    for value in dim_avg_icc:
-        if value >= 0.4:
-            dim_bar_colors.append('#2E8B57')  # Green for fair+
-        elif value >= 0.2:
-            dim_bar_colors.append('#FF8C00')  # Orange for poor
-        elif value >= 0:
-            dim_bar_colors.append('#87CEEB')  # Light blue for very poor
-        else:
-            dim_bar_colors.append('#F08080')  # Light red for negative
+    # Interpretation guide
+    report_lines.append("INTERPRETATION GUIDE")
+    report_lines.append("-" * 40)
+    report_lines.append("ICC(2,k) Interpretation:")
+    report_lines.append("  < 0.40: Poor agreement")
+    report_lines.append("  0.40-0.59: Moderate agreement")
+    report_lines.append("  0.60-0.74: Good agreement")
+    report_lines.append("  ≥ 0.75: Excellent agreement")
+    report_lines.append("")
+    report_lines.append("p-value: Statistical significance of the agreement")
+    report_lines.append("  p < 0.05: Agreement is statistically significant")
+    report_lines.append("  p ≥ 0.05: Agreement is not statistically significant")
     
-    bars3 = ax3.bar(range(len(dimension_order)), dim_avg_icc, color=dim_bar_colors, alpha=0.8, edgecolor='white', linewidth=1)
-    ax3.set_xticks(range(len(dimension_order)))
-    ax3.set_xticklabels(dimension_order, rotation=45, ha='right', fontsize=11)
-    ax3.set_ylabel('Average ICC(2,k)', fontsize=12)
-    ax3.set_title('Average Agreement by Dimension', fontsize=14, fontweight='bold')
-    ax3.set_ylim(-0.5, 1.0)  # Allow negative values
+    # Save report
+    report_text = "\n".join(report_lines)
+    with open(output_path / 'topic_rating_agreement_report.txt', 'w', encoding='utf-8') as f:
+        f.write(report_text)
     
-    # Remove grid and add subtle reference lines
-    ax3.grid(False)
-    ax3.axhline(y=0, color='black', linestyle='-', alpha=0.3, linewidth=0.8)
-    ax3.axhline(y=0.4, color='gray', linestyle='--', alpha=0.4, linewidth=0.8)
-    ax3.spines['top'].set_visible(False)
-    ax3.spines['right'].set_visible(False)
-    
-    # Add values on bars (including negative values)
-    for bar, value in zip(bars3, dim_avg_icc):
-        if value != -1.0:  # Don't show -1 (no data indicator)
-            y_offset = 0.02 if value >= 0 else -0.05  # Adjust position for negative values
-            ax3.text(bar.get_x() + bar.get_width()/2, bar.get_height() + y_offset,
-                    f'{value:.2f}', ha='center', fontweight='bold')
-    
-    # Adjust layout manually since we're using gridspec
-    plt.subplots_adjust(left=0.08, right=0.95, top=0.9, bottom=0.15)
-    
-    # Save plot
-    output_dir = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation_topic_rating_agreement'
-    output_dir.mkdir(parents=True, exist_ok=True)
-    
-    plt.savefig(output_dir / 'topic_rating_agreement.pdf', dpi=300, bbox_inches='tight')
-    plt.savefig(output_dir / 'topic_rating_agreement.png', dpi=300, bbox_inches='tight')
-    
-    print(f"\nTopic rating agreement plots saved to {output_dir}")
-    
-    return fig
+    print("Agreement analysis report saved to: topic_rating_agreement_report.txt")
 
 def main():
     """Main analysis function"""
-    print("Starting Topic-based Rating Inter-Annotator Agreement Analysis...")
-    print("=" * 70)
+    # Setup paths
+    output_path = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation_topic_agreement'
+    output_path.mkdir(parents=True, exist_ok=True)
     
-    # Load data
-    print("Loading raw data for topic information...")
+    print("Loading data...")
+    
+    # Load raw data for topic information
     raw_df = load_raw_data()
     
-    print("Loading annotation data...")
+    # Load annotation data
     annotations = load_annotation_data()
     
-    if not annotations['ratings']:
-        print("Error: No rating annotation data found!")
-        return
+    print(f"Loaded {len(annotations['ratings'])} rating annotations")
     
-    # Prepare data organized by topic
+    # Prepare rating data by topic
     print("\nPreparing rating data by topic...")
     topic_ratings = prepare_rating_data_by_topic(annotations, raw_df)
     
     if not topic_ratings:
-        print("Error: No topic-organized rating data found!")
+        print("No topic rating data found. Exiting.")
         return
     
-    print(f"Found data for {len(topic_ratings)} topics")
-    
-    # Calculate agreement metrics for each topic
-    print("\n" + "=" * 70)
-    print("CALCULATING RATING AGREEMENT BY TOPIC...")
+    # Calculate agreement for each topic and dimension
+    print("\nCalculating inter-annotator agreement...")
     results = calculate_topic_rating_agreement(topic_ratings)
     
     # Create visualizations
-    print("\n" + "=" * 70)
-    print("Creating topic-based agreement visualizations...")
-    create_topic_agreement_visualization(results)
+    print("\nCreating visualizations...")
+    create_agreement_heatmap(results, output_path)
+    create_agreement_summary_plot(results, output_path)
     
-    print("\n" + "=" * 70)
-    print("Analysis complete! Check the results directory for outputs.")
+    # Generate report
+    print("\nGenerating report...")
+    generate_agreement_report(results, output_path)
+    
+    print(f"\nAnalysis complete!")
+    print(f"Results saved to: {output_path}")
 
 if __name__ == "__main__":
     main()

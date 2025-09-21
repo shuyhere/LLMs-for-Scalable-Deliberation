@@ -353,8 +353,8 @@ class DebertaEvaluator:
             outputs = self.model(**inputs)
             predictions = outputs["logits"].cpu().numpy()[0]  # (4,)
         
-        # Denormalize predictions back to original scale
-        denorm_predictions = [self._denormalize_score(pred) for pred in predictions]
+        # Use predictions as-is (no denormalization needed)
+        denorm_predictions = predictions
         
         # Create results dictionary
         results = {
@@ -363,10 +363,6 @@ class DebertaEvaluator:
             "summary": summary,
             "predictions": {
                 key: float(denorm_predictions[i]) 
-                for i, key in enumerate(self.target_keys)
-            },
-            "normalized_predictions": {
-                key: float(predictions[i])
                 for i, key in enumerate(self.target_keys)
             }
         }
@@ -525,7 +521,7 @@ def main():
     print("\n=== DEBERTA-BASED EVALUATION (DebertaEvaluator) ===")
     
     # Example usage of DebertaEvaluator (requires trained model)
-    model_path = "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base/checkpoint-6200"
+    model_path = "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_v3"
     
     if Path(model_path).exists():
         try:

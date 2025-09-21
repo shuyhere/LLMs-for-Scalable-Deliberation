@@ -12,7 +12,7 @@ RESULTS_DIR = Path(
     "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/eval_llm_human_correlation"
 )
 OUTPUT_DIR = Path(
-    "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/analysis_model_human_corr/figures"
+    "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/dataset_visulization/analysis_model_human_corr/figures"
 )
 
 
@@ -41,9 +41,22 @@ def collect_pairs_per_dimension(entries: List[dict]) -> Dict[str, Tuple[List[flo
     dim_to_pairs: Dict[str, Tuple[List[float], List[float]]] = {
         dim: ([], []) for dim in RATING_DIMS
     }
+    
+    total_entries = len(entries)
+    successful_entries = 0
+    skipped_entries = 0
+    
     for item in entries:
         human = item.get("human_ratings", {})
-        llm = item.get("llm_result", {}).get("ratings", {})
+        llm_result = item.get("llm_result", {})
+        
+        # Check if LLM result is successful
+        if llm_result.get("status") != "success":
+            skipped_entries += 1
+            continue
+            
+        successful_entries += 1
+        llm = llm_result.get("ratings", {})
         for dim in RATING_DIMS:
             if dim in human and dim in llm and human[dim] is not None and llm[dim] is not None:
                 try:
@@ -53,6 +66,11 @@ def collect_pairs_per_dimension(entries: List[dict]) -> Dict[str, Tuple[List[flo
                     continue
                 dim_to_pairs[dim][0].append(h)
                 dim_to_pairs[dim][1].append(m)
+    
+    print(f"Processed {total_entries} entries: {successful_entries} successful, {skipped_entries} skipped")
+    for dim in RATING_DIMS:
+        print(f"  {dim}: {len(dim_to_pairs[dim][0])} pairs")
+    
     return dim_to_pairs
 
 
@@ -71,12 +89,21 @@ def compute_pearson_correlations(dim_to_pairs: Dict[str, Tuple[List[float], List
     return corr
 
 
-def infer_model_name(file_path: Path) -> str:
-    """Infer model name from file name like human_llm_correlation_<model>.json."""
+def infer_model_name(file_path: Path, entries: List[dict] = None) -> str:
+    """Infer model name from file name or from data metadata."""
     stem = file_path.stem
-    # Expect pattern: human_llm_correlation_<model>
+    # First try to get from filename pattern: human_llm_correlation_<model>.json
     if stem.startswith("human_llm_correlation_"):
         return stem.replace("human_llm_correlation_", "")
+    
+    # If that fails, try to get from data metadata
+    if entries and len(entries) > 0:
+        first_entry = entries[0]
+        if "model_name" in first_entry:
+            return first_entry["model_name"]
+        if "llm_result" in first_entry and "model" in first_entry["llm_result"]:
+            return first_entry["llm_result"]["model"]
+    
     return stem
 
 
@@ -141,12 +168,12 @@ def main() -> None:
 
         dim_pairs = collect_pairs_per_dimension(entries)
         corr = compute_pearson_correlations(dim_pairs)
-        model_name = infer_model_name(fp)
+        model_name = infer_model_name(fp, entries)
         out = plot_model_correlations(model_name, corr, OUTPUT_DIR)
         print(f"Saved: {out}")
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     # Allow running as a module or script
     main()
 

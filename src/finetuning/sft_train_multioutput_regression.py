@@ -194,7 +194,8 @@ class CommentSummaryRatingsDataset(Dataset):
 class MultiOutputRegressor(nn.Module):
     """Improved model architecture with residual connections and better regularization"""
     def __init__(self, base_model_name: str, num_dims: int = 4, dropout_rate: float = 0.1, 
-                 use_tanh: bool = False):
+                 use_tanh: bool = False, use_sigmoid: bool = False, use_relu: bool = False,
+                 use_leaky_relu: bool = False, use_elu: bool = False):
         super().__init__()
         self.encoder = AutoModel.from_pretrained(base_model_name)
         hidden = self.encoder.config.hidden_size
@@ -203,11 +204,36 @@ class MultiOutputRegressor(nn.Module):
         self.hidden = nn.Linear(hidden, hidden // 2)
         self.activation = nn.GELU()
         self.head = nn.Linear(hidden // 2, num_dims)
+        
+        # Check for parameter conflicts
+        activation_count = sum([use_tanh, use_sigmoid, use_relu, use_leaky_relu, use_elu])
+        if activation_count > 1:
+            raise ValueError("Cannot use multiple activation functions at the same time. Choose only one.")
+        
         self.use_tanh = use_tanh
+        self.use_sigmoid = use_sigmoid
+        self.use_relu = use_relu
+        self.use_leaky_relu = use_leaky_relu
+        self.use_elu = use_elu
+        
         if use_tanh:
             self.output_activation = nn.Tanh()  # Output in [-1, 1]
+        elif use_sigmoid:
+            self.output_activation = nn.Sigmoid()  # Output in [0, 1]
+        elif use_relu:
+            self.output_activation = nn.ReLU()  # Output in [0, +inf)
+        elif use_leaky_relu:
+            self.output_activation = nn.LeakyReLU(negative_slope=0.01)  # Output in (-inf, +inf)
+        elif use_elu:
+            self.output_activation = nn.ELU()  # Output in [-1, +inf)
+        else:
+            self.output_activation = None  # No activation, raw logits
+        
         self.num_dims = num_dims
         self.loss_fct = nn.MSELoss()
+        
+        # Add config attribute for compatibility with Transformers Trainer
+        self.config = self.encoder.config
 
     def forward(self, input_ids=None, attention_mask=None, labels=None, **kwargs):
         # Remove any unexpected kwargs
@@ -220,8 +246,8 @@ class MultiOutputRegressor(nn.Module):
         hidden = self.dropout(hidden)
         logits = self.head(hidden)  # (B, num_dims)
         
-        if self.use_tanh:
-            predictions = self.output_activation(logits)  # Constrain to [-1, 1]
+        if self.output_activation is not None:
+            predictions = self.output_activation(logits)
         else:
             # No constraint, let the model learn the range
             predictions = logits
@@ -402,6 +428,10 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
     all_preds = np.array(all_preds)  # (N, 4)
     all_labels = np.array(all_labels)  # (N, 4)
     
+    # Debug: Print prediction and label ranges
+    print(f"Prediction range: min={all_preds.min():.4f}, max={all_preds.max():.4f}, mean={all_preds.mean():.4f}")
+    print(f"Label range: min={all_labels.min():.4f}, max={all_labels.max():.4f}, mean={all_labels.mean():.4f}")
+    
     # Calculate ordering accuracy for each dimension
     ordering_accs = {}
     
@@ -437,8 +467,8 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
                         if pred1_score < pred2_score:
                             correct_pairs += 1
                     else:  # label1 == label2, predictions should be close
-                        # Allow some tolerance for equal labels
-                        if abs(pred1_score - pred2_score) < 0.1:
+                        # Allow some tolerance for equal labels (reduced from 0.1 to 0.05)
+                        if abs(pred1_score - pred2_score) < 0.05:
                             correct_pairs += 1
                     
                     total_pairs += 1
@@ -758,7 +788,11 @@ def main():
     parser.add_argument("--eval-every-steps", type=int, default=50, help="Run evaluation every N steps via callback")
     parser.add_argument("--warmup-ratio", type=float, default=0.1, help="Warmup ratio for learning rate")
     parser.add_argument("--weight-decay", type=float, default=0.01, help="Weight decay for AdamW")
-    parser.add_argument("--use-tanh", action="store_true", help="Use sigmoid activation for output")
+    parser.add_argument("--use-tanh", action="store_true", help="Use tanh activation for output (range [-1, 1])")
+    parser.add_argument("--use-sigmoid", action="store_true", help="Use sigmoid activation for output (range [0, 1])")
+    parser.add_argument("--use-relu", action="store_true", help="Use ReLU activation for output (range [0, +inf))")
+    parser.add_argument("--use-leaky-relu", action="store_true", help="Use LeakyReLU activation for output (range (-inf, +inf))")
+    parser.add_argument("--use-elu", action="store_true", help="Use ELU activation for output (range [-1, +inf))")
     parser.add_argument("--dropout", type=float, default=0.1, help="Dropout rate")
     parser.add_argument("--label-smoothing", type=float, default=0.0, help="Label smoothing factor")
     parser.add_argument("--gradient-clip", type=float, default=1.0, help="Gradient clipping norm")
@@ -814,7 +848,11 @@ def main():
     model = MultiOutputRegressor(
         args.model,
         dropout_rate=args.dropout,
-        use_tanh=args.use_tanh
+        use_tanh=args.use_tanh,
+        use_sigmoid=args.use_sigmoid,
+        use_relu=args.use_relu,
+        use_leaky_relu=args.use_leaky_relu,
+        use_elu=args.use_elu
     )
     print(f"Model parameters: {sum(p.numel() for p in model.parameters()):,}")
 
@@ -856,7 +894,6 @@ def main():
         adam_epsilon=1e-8,
         max_grad_norm=args.gradient_clip,
         lr_scheduler_type=args.lr_scheduler,
-        label_smoothing_factor=args.label_smoothing,
         # WANDB specific configurations
         logging_dir=f"{args.out}/logs",
         logging_strategy="steps",

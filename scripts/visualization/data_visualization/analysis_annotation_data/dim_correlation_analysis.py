@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Dimensional correlation analysis between four evaluation dimensions.
-Analyzes pairwise correlations within rating annotations (1-5) and comparison annotations (1/2),
+Analyzes pairwise correlations within rating annotations (1-5) and comparison annotations (1-5),
 using appropriate correlation methods for each data type.
 """
 
@@ -26,25 +26,25 @@ PROJECT_ROOT = Path('/ibex/project/c2328/LLMs-Scalable-Deliberation')
 DIMENSIONS = {
     "Representiveness": {
         "rating": "To what extent is your perspective represented in this response?",
-        "comparison": "Which summary is more representative of your perspective?"
+        "comparison": "Which summary is more representative of your perspective? "
     },
     "Informativeness": {
         "rating": "How informative is this summary?",
-        "comparison": "Which summary is more informative?"
+        "comparison": "Which summary is more informative? "
     },
     "Neutrality": {
         "rating": "Do you think this summary presents a neutral and balanced view of the issue?",
-        "comparison": "Which summary presents a more neutral and balanced view of the issue?"
+        "comparison": "Which summary presents a more neutral and balanced view of the issue? "
     },
     "Policy Approval": {
-        "rating": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?",
+        "rating": "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue? ",
         "comparison": "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?"
     }
 }
 
 def load_raw_data():
     """Load raw summary data with metadata"""
-    raw_data_path = PROJECT_ROOT / 'annotation/summary-rating/data_files/raw/summaries_V0903_for_humanstudy_simple.csv'
+    raw_data_path = PROJECT_ROOT / 'annotation/summary-rating/data_files/raw/summaries_V0915_for_humanstudy_simple.csv'
     if raw_data_path.exists():
         df = pd.read_csv(raw_data_path)
         print(f"Loaded {len(df)} raw summary records")
@@ -54,7 +54,7 @@ def load_raw_data():
         return None
 
 def load_annotation_data(base_path):
-    """Load all annotation data"""
+    """Load all annotation data from full_augment format"""
     base_path = Path(base_path)
     all_annotations = {
         'comparisons': [],
@@ -144,11 +144,19 @@ def prepare_rating_data(annotations):
     """
     user_ratings = defaultdict(dict)
     
-    for rating in annotations['ratings']:
-        if 'metadata' not in rating or 'raw_id' not in rating['metadata']:
-            continue
-            
-        user_id = rating['user_id']
+    print(f"Processing {len(annotations['ratings'])} rating annotations...")
+    
+    for i, rating in enumerate(annotations['ratings']):
+        if i < 3:  # Debug first few
+            print(f"Rating {i}: {rating.get('id', 'no_id')}")
+            print(f"  Has label_annotations: {'label_annotations' in rating}")
+            if 'label_annotations' in rating:
+                print(f"  Label annotations keys: {list(rating['label_annotations'].keys())}")
+                # Show sample data structure
+                for key, value in rating['label_annotations'].items():
+                    print(f"    {key}: {value}")
+        
+        user_id = rating.get('user_id', 'unknown')
         if 'label_annotations' not in rating:
             continue
             
@@ -156,26 +164,41 @@ def prepare_rating_data(annotations):
             rating_question = questions['rating']
             if rating_question in rating['label_annotations']:
                 scales = rating['label_annotations'][rating_question]
-                # Extract rating value from scale_* format
-                for scale_key, value in scales.items():
-                    if scale_key.startswith('scale_') and value and str(value).isdigit():
-                        user_ratings[user_id][dimension] = int(value)
-                        break
+                # Extract rating value from nested structure
+                if isinstance(scales, dict):
+                    # Look for numeric values in the dictionary values
+                    for scale_key, value in scales.items():
+                        if value and str(value).isdigit():
+                            user_ratings[user_id][dimension] = int(value)
+                            break
+                else:
+                    # Fallback for direct value
+                    if scales and str(scales).isdigit():
+                        user_ratings[user_id][dimension] = int(scales)
     
+    print(f"Found ratings from {len(user_ratings)} users")
     return user_ratings
 
 def prepare_comparison_data(annotations):
     """
     Prepare comparison data for dimensional correlation analysis.
-    Returns: user_comparisons[user_id][dimension] = choice (1 or 2)
+    Returns: user_comparisons[user_id][dimension] = choice (1-5)
     """
     user_comparisons = defaultdict(dict)
     
-    for comp in annotations['comparisons']:
-        if 'metadata' not in comp:
-            continue
-            
-        user_id = comp['user_id']
+    print(f"Processing {len(annotations['comparisons'])} comparison annotations...")
+    
+    for i, comp in enumerate(annotations['comparisons']):
+        if i < 3:  # Debug first few
+            print(f"Comparison {i}: {comp.get('id', 'no_id')}")
+            print(f"  Has label_annotations: {'label_annotations' in comp}")
+            if 'label_annotations' in comp:
+                print(f"  Label annotations keys: {list(comp['label_annotations'].keys())}")
+                # Show sample data structure
+                for key, value in comp['label_annotations'].items():
+                    print(f"    {key}: {value}")
+        
+        user_id = comp.get('user_id', 'unknown')
         if 'label_annotations' not in comp:
             continue
             
@@ -183,12 +206,19 @@ def prepare_comparison_data(annotations):
             comp_question = questions['comparison']
             if comp_question in comp['label_annotations']:
                 scales = comp['label_annotations'][comp_question]
-                # Extract comparison choice from scale_* format
-                for scale_key, value in scales.items():
-                    if scale_key.startswith('scale_') and value and str(value).isdigit():
-                        user_comparisons[user_id][dimension] = int(value)
-                        break
+                # Extract comparison choice from nested structure
+                if isinstance(scales, dict):
+                    # Look for numeric values in the dictionary values
+                    for scale_key, value in scales.items():
+                        if value and str(value).isdigit():
+                            user_comparisons[user_id][dimension] = int(value)
+                            break
+                else:
+                    # Fallback for direct value
+                    if scales and str(scales).isdigit():
+                        user_comparisons[user_id][dimension] = int(scales)
     
+    print(f"Found comparisons from {len(user_comparisons)} users")
     return user_comparisons
 
 def calculate_rating_correlations(user_ratings):
@@ -235,8 +265,8 @@ def calculate_rating_correlations(user_ratings):
 
 def calculate_comparison_correlations(user_comparisons):
     """
-    Calculate pairwise correlations between comparison dimensions (1/2 binary).
-    Uses Phi coefficient (Pearson correlation for binary data).
+    Calculate pairwise correlations between comparison dimensions (1-5 scale).
+    Uses Spearman correlation for ordinal data.
     """
     dimensions = list(DIMENSIONS.keys())
     n_dims = len(dimensions)
@@ -259,13 +289,13 @@ def calculate_comparison_correlations(user_comparisons):
             
             for user_id, user_data in user_comparisons.items():
                 if dim1 in user_data and dim2 in user_data:
-                    # Convert 1/2 to 0/1 for correlation calculation
-                    comps1.append(user_data[dim1] - 1)  # 1->0, 2->1
-                    comps2.append(user_data[dim2] - 1)  # 1->0, 2->1
+                    # Keep 1-5 scale for ordinal correlation
+                    comps1.append(user_data[dim1])
+                    comps2.append(user_data[dim2])
             
             if len(comps1) > 2:  # Need at least 3 data points
-                # Use Pearson correlation for binary data (Phi coefficient)
-                corr, p_val = scipy_stats.pearsonr(comps1, comps2)
+                # Use Spearman correlation for ordinal data
+                corr, p_val = scipy_stats.spearmanr(comps1, comps2)
                 corr_matrix[i, j] = corr
                 p_matrix[i, j] = p_val
                 n_matrix[i, j] = len(comps1)
@@ -325,8 +355,8 @@ def create_correlation_heatmaps(rating_corr, rating_p, rating_n,
     sns.heatmap(comp_corr, annot=comp_annot, fmt='', cmap='RdBu_r',
                 center=0, vmin=-1, vmax=1, square=True,
                 xticklabels=dimensions, yticklabels=dimensions,
-                cbar_kws={'label': 'Phi Coefficient'}, ax=ax2)
-    ax2.set_title('Comparison Dimensions Correlation\n(Phi coefficient, binary)', 
+                cbar_kws={'label': 'Spearman Correlation'}, ax=ax2)
+    ax2.set_title('Comparison Dimensions Correlation\n(Spearman, 1-5 scale)', 
                   fontsize=14, fontweight='bold', pad=20)
     
     # Adjust layout to leave space for footnote
@@ -345,7 +375,7 @@ def create_correlation_heatmaps(rating_corr, rating_p, rating_n,
 def main():
     """Main analysis function"""
     # Paths
-    annotation_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full'
+    annotation_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full_augment'
     output_path = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation_dim_correlation'
     
     # Create output directory

@@ -275,18 +275,30 @@ class HumanJudgeCorrelationProcessor:
                             if dim in human_cmp and dim in llm_cmp:
                                 h = human_cmp[dim]
                                 m = llm_cmp[dim]
-                                if h in (1, 2) and m in (1, 2):
+                                # Comparison task uses 1-5 scale, not 1-2
+                                if h in (1, 2, 3, 4, 5) and m in (1, 2, 3, 4, 5):
                                     dim_to_pairs[dim][0].append(h)
                                     dim_to_pairs[dim][1].append(m)
 
                     for dim, (h_list, m_list) in dim_to_pairs.items():
-                        phi = self._compute_phi(h_list, m_list)
+                        # For comparison task with 1-5 scale, use Spearman correlation instead of Phi
+                        if len(h_list) >= 2:
+                            try:
+                                sr, sp = spearmanr(h_list, m_list)
+                                sr = float(sr) if sr is not None else float('nan')
+                                sp = float(sp) if sp is not None else float('nan')
+                            except Exception:
+                                sr, sp = float('nan'), float('nan')
+                        else:
+                            sr, sp = float('nan'), float('nan')
+                        
                         metric_name = f"comparison_{dim}"
-                        # Try to find if we already appended an entry for this metric; if so, update/add 'phi'
+                        # Try to find if we already appended an entry for this metric; if so, update/add 'spearman_r'
                         updated = False
                         for row in correlation_data:
                             if row['model'] == model_name and row['metric'] == metric_name:
-                                row['phi'] = phi
+                                row['spearman_r'] = sr
+                                row['spearman_p'] = sp
                                 row['n_samples'] = len(h_list)
                                 updated = True
                                 break
@@ -294,11 +306,11 @@ class HumanJudgeCorrelationProcessor:
                             correlation_data.append({
                                 'model': model_name,
                                 'metric': metric_name,
-                                'phi': phi,
+                                'phi': None,  # Not applicable for 1-5 scale
                                 'pearson_r': None,
                                 'pearson_p': None,
-                                'spearman_r': None,
-                                'spearman_p': None,
+                                'spearman_r': sr,
+                                'spearman_p': sp,
                                 'cohen_kappa': None,
                                 'mae': None,
                                 'n_samples': len(h_list),
@@ -410,15 +422,13 @@ class HumanJudgeCorrelationProcessor:
                 print(f"Plot saved to: {out_path}")
             plt.show()
 
-        # Comparison: show Phi coefficient (binary)
+        # Comparison: show Spearman correlation (1-5 scale)
         comparison_df = df[df['task_type'] == 'comparison']
         if not comparison_df.empty:
-            # Ensure we have 'phi' column; otherwise computations did not run
-            if 'phi' not in comparison_df.columns:
-                print("Warning: 'phi' not found in comparison data. Re-run with recomputation.")
+            # Use Spearman correlation for comparison task with 1-5 scale
             fig_c, ax_c = plt.subplots(1, 1, figsize=(12, 8))
             pivot_data = comparison_df.pivot_table(
-                values='phi',
+                values='spearman_r',
                 index='model_display',
                 columns='dimension_display',
                 aggfunc='mean'
@@ -433,7 +443,7 @@ class HumanJudgeCorrelationProcessor:
                 cbar.ax.tick_params(labelsize=16)
             except Exception:
                 pass
-            ax_c.set_title('Comparison Task - Phi coefficient', fontsize=16, fontweight='bold')
+            ax_c.set_title('Comparison Task - Spearman correlation', fontsize=16, fontweight='bold')
             ax_c.set_xlabel('')
             ax_c.set_ylabel('')
             ax_c.tick_params(axis='x', rotation=0, labelsize=14)
@@ -443,7 +453,7 @@ class HumanJudgeCorrelationProcessor:
             plt.tight_layout()
             if save_path:
                 base = Path(save_path).with_suffix('')
-                out_path = str(base.parent / 'comparison_phi_summary.pdf')
+                out_path = str(base.parent / 'comparison_spearman_summary.pdf')
                 plt.savefig(out_path, format='pdf', bbox_inches='tight', dpi=300)
                 print(f"Plot saved to: {out_path}")
             plt.show()
@@ -474,8 +484,8 @@ class HumanJudgeCorrelationProcessor:
                 continue
                 
             if task_type == 'comparison':
-                # Override to Phi-only for comparison
-                metric_list = [('phi', 'Phi coefficient')]
+                # Override to Spearman-only for comparison (1-5 scale)
+                metric_list = [('spearman_r', 'Spearman correlation')]
             else:
                 metric_list = metrics
             for metric, metric_display in metric_list:
@@ -636,10 +646,10 @@ def main():
     """Main function to run the correlation analysis."""
     parser = argparse.ArgumentParser(description="Process human-LLM correlation JSON files")
     parser.add_argument("--data_dir", 
-                       default="/ibex/project/c2328/LLMs-Scalable-Deliberation/results/eval_llm_human_correlation_backup",
+                       default="/ibex/project/c2328/LLMs-Scalable-Deliberation/results/eval_llm_human_correlation",
                        help="Directory containing correlation JSON files")
     parser.add_argument("--output_dir", 
-                       default="./results/correlation_analysis_output",
+                       default="./results/dataset_visulization/analysis_model_human_corr",
                        help="Directory to save analysis results")
     parser.add_argument('--model_order', nargs='*', default=None,
                         help='Explicit model display order (use display names or raw names)')

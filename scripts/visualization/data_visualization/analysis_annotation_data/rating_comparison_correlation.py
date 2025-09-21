@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
 """
 Analysis of correlation between rating and comparison annotations.
-Compares rating scores (1-5) with binary comparison outcomes (0/1)
-using # The code you provided is a comment in Python. It starts with a hashtag symbol (#) which
-# indicates a single-line comment in Python. Comments are used to explain the code or provide
-# additional information for anyone reading the code. In this case, the comment mentions
-# "point-biserial correlation" which suggests that the code may be related to calculating or
-# discussing point-biserial correlation in Python. However, the code itself is not performing
-# any specific action as it is just a comment.
-point-biserial correlation and other relevant metrics.
+Compares rating scores (1-5) with comparison outcomes (1-5 scale mapped to binary)
+using point-biserial correlation and other relevant metrics.
 """
 
 import json
@@ -56,7 +50,7 @@ def load_annotation_data(base_path):
                             
                             # Add metadata from assigned data
                             if data['id'] in assigned_data:
-                                data['metadata'] = assigned_data[data['id']]
+                                data.update(assigned_data[data['id']])
                             
                             # Only collect rating and comparison annotations
                             if 'comparison' in data['id'] and 'label_annotations' in data:
@@ -73,18 +67,18 @@ def get_dimension_questions():
     dimensions = {
         'representiveness': {
             'rating': "To what extent is your perspective represented in this response?",
-            'comparison': "Which summary is more representative of your perspective?"
+            'comparison': "Which summary is more representative of your perspective? "
         },
         'informativeness': {
             'rating': "How informative is this summary?",
-            'comparison': "Which summary is more informative?"
+            'comparison': "Which summary is more informative? "
         },
         'neutrality': {
             'rating': "Do you think this summary presents a neutral and balanced view of the issue?",
-            'comparison': "Which summary presents a more neutral and balanced view of the issue?"
+            'comparison': "Which summary presents a more neutral and balanced view of the issue? "
         },
         'policy_approval': {
-            'rating': "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue?",
+            'rating': "Would you approve of this summary being used by the policy makers to make decisions relevant to the issue? ",
             'comparison': "Which summary would you prefer of being used by the policy makers to make decisions relevant to the issue?"
         }
     }
@@ -109,32 +103,41 @@ def extract_rating_scores(ratings, question):
     for rating in ratings:
         if 'label_annotations' in rating and question in rating['label_annotations']:
             scales = rating['label_annotations'][question]
-            for scale, value in scales.items():
-                if value and str(value).isdigit():
-                    scores.append(int(value))
+            # Handle nested structure: {"Option Text": "Value"}
+            if isinstance(scales, dict):
+                for scale, value in scales.items():
+                    if value and str(value).isdigit():
+                        scores.append(int(value))
+                        break
+            elif scales and str(scales).isdigit():
+                scores.append(int(scales))
     return np.array(scores)
 
 def extract_comparison_outcomes(comparisons, question):
-    """Extract binary outcomes (0/1) from comparison annotations"""
+    """Extract binary outcomes (0/1) from comparison annotations using 1-5 scale"""
     outcomes = []
     for comp in comparisons:
         if 'label_annotations' in comp and question in comp['label_annotations']:
             scales = comp['label_annotations'][question]
-            # Convert comparison choice to binary outcome
-            # If scale_1 is chosen (1), outcome is 1; if scale_2 is chosen (2), outcome is 0
-            if 'scale_1' in scales and scales['scale_1'] == '1':
-                outcomes.append(1)
-            elif 'scale_2' in scales and scales['scale_2'] == '2':
-                outcomes.append(0)
-            else:
-                # Check for any other response format
+            # Handle nested structure: {"Option Text": "Value"}
+            if isinstance(scales, dict):
                 for scale, value in scales.items():
-                    if value == '1':
-                        outcomes.append(1)
+                    if value and str(value).isdigit():
+                        val = int(value)
+                        # Map 1-5 scale: 1,2 -> 1 (A wins), 4,5 -> 0 (B wins), 3 -> neutral (skip)
+                        if val == 1 or val == 2:
+                            outcomes.append(1)
+                        elif val == 4 or val == 5:
+                            outcomes.append(0)
+                        # Skip val == 3 (neutral)
                         break
-                    elif value == '2':
-                        outcomes.append(0)
-                        break
+            elif scales and str(scales).isdigit():
+                val = int(scales)
+                if val == 1 or val == 2:
+                    outcomes.append(1)
+                elif val == 4 or val == 5:
+                    outcomes.append(0)
+                # Skip val == 3 (neutral)
     return np.array(outcomes)
 
 def calculate_correlations(ratings, comparisons):
@@ -147,24 +150,74 @@ def calculate_correlations(ratings, comparisons):
         rating_scores = extract_rating_scores(ratings, questions['rating'])
         comparison_outcomes = extract_comparison_outcomes(comparisons, questions['comparison'])
         
+        print(f"\n{dim_name} dimension:")
+        print(f"  Rating scores: {len(rating_scores)}")
+        print(f"  Comparison outcomes: {len(comparison_outcomes)}")
+        
         if len(rating_scores) > 0 and len(comparison_outcomes) > 0:
-            # Calculate point-biserial correlation
-            rpb, p_value = stats.pointbiserialr(rating_scores, comparison_outcomes)
-            
-            # Calculate Spearman correlation as an alternative measure
-            rho, spearman_p = stats.spearmanr(rating_scores, comparison_outcomes)
-            
+            # For point-biserial correlation, we need to match the arrays
+            # Take the minimum length to ensure compatibility
+            min_len = min(len(rating_scores), len(comparison_outcomes))
+            if min_len > 0:
+                rating_subset = rating_scores[:min_len]
+                comparison_subset = comparison_outcomes[:min_len]
+                
+                # Calculate point-biserial correlation
+                try:
+                    rpb, p_value = stats.pointbiserialr(rating_subset, comparison_subset)
+                except Exception as e:
+                    print(f"  Point-biserial correlation failed: {e}")
+                    rpb, p_value = np.nan, np.nan
+                
+                # Calculate Spearman correlation as an alternative measure
+                try:
+                    rho, spearman_p = stats.spearmanr(rating_subset, comparison_subset)
+                except Exception as e:
+                    print(f"  Spearman correlation failed: {e}")
+                    rho, spearman_p = np.nan, np.nan
+                
+                correlations[dim_name] = {
+                    'point_biserial_corr': rpb,
+                    'point_biserial_p': p_value,
+                    'spearman_corr': rho,
+                    'spearman_p': spearman_p,
+                    'n_ratings': len(rating_scores),
+                    'n_comparisons': len(comparison_outcomes),
+                    'n_matched': min_len,
+                    'rating_mean': np.mean(rating_scores),
+                    'rating_std': np.std(rating_scores),
+                    'comparison_mean': np.mean(comparison_outcomes),
+                    'comparison_std': np.std(comparison_outcomes)
+                }
+            else:
+                print(f"  No valid data for correlation")
+                correlations[dim_name] = {
+                    'point_biserial_corr': np.nan,
+                    'point_biserial_p': np.nan,
+                    'spearman_corr': np.nan,
+                    'spearman_p': np.nan,
+                    'n_ratings': len(rating_scores),
+                    'n_comparisons': len(comparison_outcomes),
+                    'n_matched': 0,
+                    'rating_mean': np.nan,
+                    'rating_std': np.nan,
+                    'comparison_mean': np.nan,
+                    'comparison_std': np.nan
+                }
+        else:
+            print(f"  No data for {dim_name}")
             correlations[dim_name] = {
-                'point_biserial_corr': rpb,
-                'point_biserial_p': p_value,
-                'spearman_corr': rho,
-                'spearman_p': spearman_p,
+                'point_biserial_corr': np.nan,
+                'point_biserial_p': np.nan,
+                'spearman_corr': np.nan,
+                'spearman_p': np.nan,
                 'n_ratings': len(rating_scores),
                 'n_comparisons': len(comparison_outcomes),
-                'rating_mean': np.mean(rating_scores),
-                'rating_std': np.std(rating_scores),
-                'comparison_mean': np.mean(comparison_outcomes),
-                'comparison_std': np.std(comparison_outcomes)
+                'n_matched': 0,
+                'rating_mean': np.nan,
+                'rating_std': np.nan,
+                'comparison_mean': np.nan,
+                'comparison_std': np.nan
             }
     
     return correlations
@@ -338,22 +391,43 @@ def _extract_triplet_base(instance_id):
 
 
 def _rating_value_from_row(row, rating_q):
-    for i in range(1, 6):
-        col = f"{rating_q}:::scale_{i}"
-        if col in row and pd.notna(row[col]) and str(row[col]).strip() != "":
-            return float(i)
+    """Extract rating value from nested label_annotations structure"""
+    label_annotations = row.get('label_annotations', {})
+    if rating_q in label_annotations:
+        scales = label_annotations[rating_q]
+        if isinstance(scales, dict):
+            for scale, value in scales.items():
+                if value and str(value).isdigit():
+                    return float(value)
+        elif scales and str(scales).isdigit():
+            return float(scales)
     return np.nan
 
 
 def _comparison_choice_a_from_row(row, comp_q):
-    col_a = f"{comp_q}:::scale_1"
-    col_b = f"{comp_q}:::scale_2"
-    val_a = row.get(col_a, np.nan)
-    val_b = row.get(col_b, np.nan)
-    if pd.notna(val_a) and str(val_a).strip() != "":
-        return 1.0
-    if pd.notna(val_b) and str(val_b).strip() != "":
-        return 0.0
+    """Extract comparison choice from nested label_annotations structure"""
+    label_annotations = row.get('label_annotations', {})
+    if comp_q in label_annotations:
+        scales = label_annotations[comp_q]
+        if isinstance(scales, dict):
+            for scale, value in scales.items():
+                if value and str(value).isdigit():
+                    val = int(value)
+                    # Map 1-5 scale: 1,2 -> 1.0 (A wins), 4,5 -> 0.0 (B wins), 3 -> 0.5 (neutral)
+                    if val == 1 or val == 2:
+                        return 1.0
+                    elif val == 3:
+                        return 0.5
+                    elif val == 4 or val == 5:
+                        return 0.0
+        elif scales and str(scales).isdigit():
+            val = int(scales)
+            if val == 1 or val == 2:
+                return 1.0
+            elif val == 3:
+                return 0.5
+            elif val == 4 or val == 5:
+                return 0.0
     return np.nan
 
 
@@ -361,27 +435,36 @@ def compute_sample_level_metrics(output_path):
     """Compute per-sample (summary) avg rating and win rate for 4 dimensions, then corr and viz."""
     dims = get_dimension_questions()
 
-    # Load flat annotations and triplet metadata
-    ann_csv = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full/annotated_instances.csv'
-    trip_csv = PROJECT_ROOT / 'annotation/summary-rating/data_files/processed/sum_humanstudy_triplet_full_ring.csv'
-    ann = pd.read_csv(ann_csv)
-    trip = pd.read_csv(trip_csv)
-
+    # Load annotation data from new format
+    annotation_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full_augment'
+    annotations = load_annotation_data(annotation_path)
+    
+    # Convert to DataFrame for easier processing
+    all_data = []
+    for ann_type in ['ratings', 'comparisons']:
+        for item in annotations[ann_type]:
+            item['type'] = ann_type
+            all_data.append(item)
+    
+    ann_df = pd.DataFrame(all_data)
+    
     # Prepare frames
-    ann = ann.copy()
-    ann['triplet_base'] = ann['instance_id'].apply(_extract_triplet_base)
-    rating_rows = ann[ann['instance_id'].str.contains('_rating', na=False)].copy()
-    comp_rows = ann[ann['instance_id'].str.contains('_comparison', na=False)].copy()
+    ann_df = ann_df.copy()
+    ann_df['triplet_base'] = ann_df['id'].apply(_extract_triplet_base)
+    rating_rows = ann_df[ann_df['id'].str.contains('_rating', na=False)].copy()
+    comp_rows = ann_df[ann_df['id'].str.contains('_comparison', na=False)].copy()
 
-    # Join to get summary ids from comparison rows per triplet
-    trip_comp = trip[trip['type'] == 'comparison'][['id', 'summary_a_id', 'summary_b_id']]
-    comp_rows = comp_rows.merge(trip_comp, left_on='instance_id', right_on='id', how='left')
-    comp_rows.drop(columns=['id'], inplace=True)
+    print(f"Rating rows: {len(rating_rows)}")
+    print(f"Comparison rows: {len(comp_rows)}")
+    print(f"Available columns in comp_rows: {list(comp_rows.columns)}")
 
     # Map each triplet_base to its summary_a_id (the rated summary for that triplet)
     base_to_summary_a = {}
     base_to_summary_b = {}
-    for _, row in comp_rows.dropna(subset=['summary_a_id', 'summary_b_id']).iterrows():
+    valid_rows = comp_rows.dropna(subset=['summary_a_id', 'summary_b_id'])
+    print(f"Valid comparison rows with summary IDs: {len(valid_rows)}")
+    
+    for _, row in valid_rows.iterrows():
         base = row['triplet_base']
         base_to_summary_a[base] = row['summary_a_id']
         base_to_summary_b[base] = row['summary_b_id']
@@ -391,6 +474,10 @@ def compute_sample_level_metrics(output_path):
     for dim, qs in dims.items():
         colname = f'rating_{dim}'
         rating_rows[colname] = rating_rows.apply(lambda r: _rating_value_from_row(r, qs['rating']), axis=1)
+    
+    print(f"Rating rows: {len(rating_rows)}")
+    print(f"Base to summary mapping: {len(base_to_summary_a)} entries")
+    
     for _, r in rating_rows.iterrows():
         base = r['triplet_base']
         if base in base_to_summary_a:
@@ -399,7 +486,13 @@ def compute_sample_level_metrics(output_path):
                 val = r[f'rating_{dim}']
                 if pd.notna(val):
                     rating_records.append({'summary_id': summary_id, 'dimension': dim, 'rating': float(val)})
+    
     rating_df = pd.DataFrame(rating_records)
+    print(f"Rating records created: {len(rating_df)}")
+    
+    if rating_df.empty:
+        print("Warning: No rating records created. Creating empty DataFrame with required columns.")
+        rating_df = pd.DataFrame(columns=['summary_id', 'dimension', 'rating'])
 
     sample_avg_rating = rating_df.groupby(['summary_id', 'dimension'])['rating'].agg(['mean', 'count']).reset_index()
     sample_avg_rating.rename(columns={'mean': 'avg_rating', 'count': 'n_ratings'}, inplace=True)
@@ -408,21 +501,36 @@ def compute_sample_level_metrics(output_path):
     comp_records = []
     for dim, qs in dims.items():
         comp_rows[f'chosenA_{dim}'] = comp_rows.apply(lambda r: _comparison_choice_a_from_row(r, qs['comparison']), axis=1)
-        sub = comp_rows[[
-            'summary_a_id', 'summary_b_id', f'chosenA_{dim}'
-        ]].dropna(subset=[f'chosenA_{dim}'])
-        # A side
-        a_df = sub[['summary_a_id', f'chosenA_{dim}']].rename(columns={'summary_a_id': 'summary_id', f'chosenA_{dim}': 'win'})
-        # win is 1.0 if chosenA==1 else 0.0
-        # B side
-        b_df = sub[['summary_b_id', f'chosenA_{dim}']].rename(columns={'summary_b_id': 'summary_id'})
-        b_df['win'] = 1.0 - b_df[f'chosenA_{dim}']
-        b_df = b_df[['summary_id', 'win']]
-        all_df = pd.concat([a_df[['summary_id', 'win']], b_df], ignore_index=True)
-        stats_df = all_df.groupby('summary_id')['win'].agg(['mean', 'count']).reset_index()
-        stats_df['dimension'] = dim
-        comp_records.append(stats_df.rename(columns={'mean': 'win_rate', 'count': 'n_comparisons'}))
+        
+        # Check if required columns exist
+        required_cols = ['summary_a_id', 'summary_b_id', f'chosenA_{dim}']
+        missing_cols = [col for col in required_cols if col not in comp_rows.columns]
+        if missing_cols:
+            print(f"Warning: Missing columns for {dim}: {missing_cols}")
+            continue
+            
+        sub = comp_rows[required_cols].dropna(subset=[f'chosenA_{dim}'])
+        print(f"Valid comparison data for {dim}: {len(sub)} rows")
+        
+        # Filter out neutral choices (0.5)
+        sub = sub[sub[f'chosenA_{dim}'] != 0.5]
+        print(f"After filtering neutral choices for {dim}: {len(sub)} rows")
+        
+        if len(sub) > 0:
+            # A side
+            a_df = sub[['summary_a_id', f'chosenA_{dim}']].rename(columns={'summary_a_id': 'summary_id', f'chosenA_{dim}': 'win'})
+            # win is 1.0 if chosenA==1 else 0.0
+            # B side
+            b_df = sub[['summary_b_id', f'chosenA_{dim}']].rename(columns={'summary_b_id': 'summary_id'})
+            b_df['win'] = 1.0 - b_df[f'chosenA_{dim}']
+            b_df = b_df[['summary_id', 'win']]
+            all_df = pd.concat([a_df[['summary_id', 'win']], b_df], ignore_index=True)
+            stats_df = all_df.groupby('summary_id')['win'].agg(['mean', 'count']).reset_index()
+            stats_df['dimension'] = dim
+            comp_records.append(stats_df.rename(columns={'mean': 'win_rate', 'count': 'n_comparisons'}))
+    
     sample_win = pd.concat(comp_records, ignore_index=True) if comp_records else pd.DataFrame(columns=['summary_id','win_rate','n_comparisons','dimension'])
+    print(f"Comparison records created: {len(sample_win)}")
 
     # Merge per-sample metrics
     sample_metrics = pd.merge(sample_avg_rating, sample_win, on=['summary_id', 'dimension'], how='outer')
@@ -522,8 +630,7 @@ def compute_sample_level_metrics(output_path):
     plt.close(fig)
 
     # Brief print
-    print("\nSample-level visualization saved:")
-    print(f"  Combined plot: {output_path / 'sample_level_corr_winrate_vs_rating_combined.pdf'}")
+    print(f"\nSample-level visualization saved: {output_path / 'sample_level_corr_winrate_vs_rating_combined.pdf'}")
     
     return corr_df
 
@@ -560,9 +667,9 @@ def create_sample_level_pearson_corr_heatmap(corr_df, output_path):
     plt.close(fig)
 
 def main():
-    """Main analysis function"""
+    """Main analysis function - only generate the sample-level correlation plot"""
     # Paths
-    annotation_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full'
+    annotation_path = PROJECT_ROOT / 'annotation/summary-rating/annotation_output/full_augment'
     output_path = PROJECT_ROOT / 'results/dataset_visulization/analysis_annotation_rating_vs_comparison'
     
     # Create output directory
@@ -578,48 +685,13 @@ def main():
     print(f"\nData Summary:")
     print(f"  Total Ratings: {len(ratings)}")
     print(f"  Total Comparisons: {len(comparisons)}")
-    
-    # Calculate correlations
-    print("\nCalculating correlations...")
-    correlations = calculate_correlations(ratings, comparisons)
-    
-    # Generate and save report
-    print("\nGenerating report...")
-    report = generate_correlation_report(correlations)
-    
-    report_file = output_path / 'rating_comparison_correlation_report.txt'
-    with open(report_file, 'w', encoding='utf-8') as f:
-        f.write(report)
-    print(f"\nReport saved to: {report_file}")
-    
-    # Create visualizations
-    print("\nGenerating visualizations...")
-    create_correlation_heatmap(correlations, output_path)
-    create_distribution_plots(correlations, ratings, comparisons, output_path)
-    
-    # Save correlation data as CSV
-    print("\nSaving correlation data...")
-    correlation_data = []
-    for dim_name, stats in correlations.items():
-        correlation_data.append({
-            'dimension': dim_name,
-            **stats
-        })
-    correlation_df = pd.DataFrame(correlation_data)
-    
-    # Compute overall averages (avg rating and A-win rate)
-    print("\nComputing overall averages (avg rating and A-win rate)...")
-    overall_df = compute_overall_avg_rating_and_winrate(ratings, comparisons)
-    print("Overall averages computed.")
 
     # Compute per-sample metrics and correlations, then visualize
     print("\nComputing sample-level avg rating, win rate, and correlations...")
     corr_df = compute_sample_level_metrics(output_path)
-    # Heatmap for Pearson correlations across dimensions
-    create_sample_level_pearson_corr_heatmap(corr_df, output_path)
     
     print("\nAnalysis complete!")
-    print(f"All results saved to: {output_path}")
+    print(f"Main result saved to: {output_path / 'sample_level_corr_winrate_vs_rating_combined.pdf'}")
 
 if __name__ == "__main__":
     main()

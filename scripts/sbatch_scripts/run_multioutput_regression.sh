@@ -5,19 +5,19 @@ PROJECT_DIR="/ibex/project/c2328/LLMs-Scalable-Deliberation"
 
 # Data parameters
 # DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings.jsonl"
-DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings/train.jsonl"
+DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/split_data/train.jsonl"
 MODEL_NAME="microsoft/deberta-v3-base"
-OUTPUT_DIR="$PROJECT_DIR/checkpoints/deberta_regression_base_v3"
+OUTPUT_DIR="$PROJECT_DIR/checkpoints/deberta_regression_base_v12_pair_split_relu"
 
 # Training parameters
 MAX_LENGTH=4096
 TRAIN_BATCH_SIZE=8
 EVAL_BATCH_SIZE=8
-NUM_EPOCHS=30
+NUM_EPOCHS=20
 LEARNING_RATE=4e-5
-WEIGHT_DECAY=0.01
-WARMUP_RATIO=0.15
-EVAL_RATIO=0.20
+WEIGHT_DECAY=1e-4
+WARMUP_RATIO=0.1
+EVAL_RATIO=0.16
 SEED=42
 EVAL_EVERY_STEPS=25
 
@@ -26,12 +26,12 @@ EVAL_EVERY_STEPS=25
 TIME="12:00:00"  
 MEMORY="32G"    
 CPUS=8          
-LOG_DIR="$PROJECT_DIR/logs/multioutput_regression_v3"
+LOG_DIR="$PROJECT_DIR/logs/multioutput_regression_base_v12_pair_split_relu"
 GPUS_LINE="#SBATCH --gres=gpu:a100:1"
 
 # Wandb parameters
-WANDB_PROJECT="llm_comment_summary_regression_deberta_base"
-WANDB_RUN_NAME="new_regression_deberta-v3-base_v3"
+WANDB_PROJECT="llm_comment_summary_regression_deberta"
+WANDB_RUN_NAME="new_regression_deberta-v3-base_v12_pair_split_relu"
 
 # Advanced training parameters
 GRADIENT_CLIP=1.0
@@ -45,6 +45,10 @@ AUGMENT_PROB=0.3
 
 # Model parameters
 USE_TANH=false
+USE_SIGMOID=false
+USE_RELU=true
+USE_LEAKY_RELU=false
+USE_ELU=false
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -108,6 +112,42 @@ while [[ $# -gt 0 ]]; do
             ;;
         --use-tanh)
             USE_TANH=true
+            USE_SIGMOID=false
+            USE_RELU=false
+            USE_LEAKY_RELU=false
+            USE_ELU=false
+            shift
+            ;;
+        --use-sigmoid)
+            USE_SIGMOID=true
+            USE_TANH=false
+            USE_RELU=false
+            USE_LEAKY_RELU=false
+            USE_ELU=false
+            shift
+            ;;
+        --use-relu)
+            USE_RELU=true
+            USE_TANH=false
+            USE_SIGMOID=false
+            USE_LEAKY_RELU=false
+            USE_ELU=false
+            shift
+            ;;
+        --use-leaky-relu)
+            USE_LEAKY_RELU=true
+            USE_TANH=false
+            USE_SIGMOID=false
+            USE_RELU=false
+            USE_ELU=false
+            shift
+            ;;
+        --use-elu)
+            USE_ELU=true
+            USE_TANH=false
+            USE_SIGMOID=false
+            USE_RELU=false
+            USE_LEAKY_RELU=false
             shift
             ;;
         --help)
@@ -127,7 +167,11 @@ while [[ $# -gt 0 ]]; do
             echo "  --wandb-project PROJECT  WANDB project name (default: $WANDB_PROJECT)"
             echo "  --wandb-run-name NAME    WANDB run name (default: $WANDB_RUN_NAME)"
             echo "  --augment                Enable data augmentation"
-            echo "  --use-tanh               Use tanh activation for output"
+            echo "  --use-tanh               Use tanh activation for output (range [-1, 1])"
+            echo "  --use-sigmoid            Use sigmoid activation for output (range [0, 1])"
+            echo "  --use-relu               Use ReLU activation for output (range [0, +inf))"
+            echo "  --use-leaky-relu         Use LeakyReLU activation for output (range (-inf, +inf))"
+            echo "  --use-elu                Use ELU activation for output (range [-1, +inf))"
             echo "  --help                   Show this help message"
             exit 0
             ;;
@@ -155,6 +199,18 @@ if [ "$AUGMENT" = true ]; then
 fi
 if [ "$USE_TANH" = true ]; then
     CMD_ARGS="$CMD_ARGS --use-tanh"
+fi
+if [ "$USE_SIGMOID" = true ]; then
+    CMD_ARGS="$CMD_ARGS --use-sigmoid"
+fi
+if [ "$USE_RELU" = true ]; then
+    CMD_ARGS="$CMD_ARGS --use-relu"
+fi
+if [ "$USE_LEAKY_RELU" = true ]; then
+    CMD_ARGS="$CMD_ARGS --use-leaky-relu"
+fi
+if [ "$USE_ELU" = true ]; then
+    CMD_ARGS="$CMD_ARGS --use-elu"
 fi
 
 echo "Submitting multioutput regression training job..."

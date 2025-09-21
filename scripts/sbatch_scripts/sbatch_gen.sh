@@ -9,17 +9,15 @@ set -e
 # Default values
 MODELS=("gpt-5-mini" "web-rev-claude-sonnet-4-20250514" "gemini-2.5-flash" "deepseek-reasoner" "grok-4-latest" "TA/openai/gpt-oss-120b" "TA/openai/gpt-oss-20b" "qwen3-0.6b" "qwen3-1.7b" "qwen3-4b" "qwen3-8b" "qwen3-14b" "qwen3-30b-a3b" "qwen3-235b-a22b" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro" "deepseek-reasoner")
 
-# MODELS=("deepseek-reasoner")
-# Models to use for summarization
 # MODELS=("gpt-5")
 # MODELS=("gpt-5" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro")
 
-DATASETS=("datasets/cleaned_new_dataset/Binary-Health-Care-Policy.json" "datasets/cleaned_new_dataset/Binary-Online-Identity-Policies.json" "datasets/cleaned_new_dataset/Binary-Refugee-Policies.json" "datasets/cleaned_new_dataset/Binary-Tariff-Policy.json" "datasets/cleaned_new_dataset/Binary-Vaccination-Policy.json" "datasets/cleaned_new_dataset/Openqa-AI-changes-human-life.json" "datasets/cleaned_new_dataset/Openqa-Tipping-System.json" "datasets/cleaned_new_dataset/Openqa-Trump-cutting-funding.json" "datasets/cleaned_new_dataset/Openqa-Updates-of-electronic-products.json" "datasets/cleaned_new_dataset/Openqa-Influencers-as-a-job.json")
+DATASETS=("datasets/annotation_V0_V1_dataset/Binary-Health-Care-Policy.json" "datasets/annotation_V0_V1_dataset/Binary-Online-Identity-Policies.json" "datasets/annotation_V0_V1_dataset/Binary-Refugee-Policies.json" "datasets/annotation_V0_V1_dataset/Binary-Tariff-Policy.json" "datasets/annotation_V0_V1_dataset/Binary-Vaccination-Policy.json" "datasets/annotation_V0_V1_dataset/Openqa-AI-changes-human-life.json" "datasets/annotation_V0_V1_dataset/Openqa-Tipping-System.json" "datasets/annotation_V0_V1_dataset/Openqa-Trump-cutting-funding.json" "datasets/annotation_V0_V1_dataset/Openqa-Updates-of-electronic-products.json" "datasets/annotation_V0_V1_dataset/Openqa-Influencers-as-a-job.json")
 # DATASETS=("datasets/cleaned_new_dataset/Binary-Health-Care-Policy.json" )
 # "datasets/cleaned_new_dataset/Binary-Online-Identity-Policies.json" "datasets/cleaned_new_dataset/Binary-Refugee-Policies.json" "datasets/cleaned_new_dataset/Binary-Tariff-Policy.json" )
 
-NUM_SAMPLES_ARRAY=(20)
-# NUM_SAMPLES_ARRAY=(10 20 30 40 50 60 70 80 90)
+# NUM_SAMPLES_ARRAY=(300)
+NUM_SAMPLES_ARRAY=(120 160 200 240 300)
 SAMPLE_TIMES=3
 OUTPUT_BASE_DIR="results/summary_model_for_evaluation"
 DEBUG_MODE=""
