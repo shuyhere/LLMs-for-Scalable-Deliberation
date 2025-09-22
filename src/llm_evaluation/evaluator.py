@@ -215,7 +215,9 @@ class DebertaEvaluator:
         
         # Load tokenizer and model
         print(f"Loading DeBERTa model from {model_path}")
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        # Use the base model tokenizer to ensure compatibility
+        # The training used microsoft/deberta-v3-base tokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained("microsoft/deberta-v3-base", use_fast=True)
         if self.tokenizer.pad_token is None and self.tokenizer.eos_token is not None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
         
@@ -234,6 +236,21 @@ class DebertaEvaluator:
         
         print(f"DeBERTa evaluator loaded successfully on {self.device}")
     
+    def get_model_info(self) -> Dict[str, Any]:
+        """
+        Get information about the loaded model configuration.
+        
+        Returns:
+            Dictionary containing model configuration and loading details
+        """
+        return {
+            "successful_config": getattr(self, 'successful_config', None),
+            "successful_weight_file": getattr(self, 'successful_weight_file', None),
+            "device": self.device,
+            "model_path": self.model_path,
+            "target_keys": self.target_keys
+        }
+    
     def _load_trained_model(self, model_path: str):
         """Load the trained DeBERTa model"""
         import torch
@@ -241,54 +258,182 @@ class DebertaEvaluator:
         from transformers import AutoModel
         
         class MultiOutputRegressor(nn.Module):
-            """Model architecture matching the training script"""
+            """Model architecture matching the training script exactly"""
             def __init__(self, base_model_name: str, num_dims: int = 4, dropout_rate: float = 0.1, 
-                         use_tanh: bool = False):
+                         use_tanh: bool = False, use_sigmoid: bool = False, use_relu: bool = False,
+                         use_leaky_relu: bool = False, use_elu: bool = False):
                 super().__init__()
-                self.encoder = AutoModel.from_pretrained(base_model_name)
+                
+                # Load the model exactly as it was trained
+                # The training script used microsoft/deberta-v3-base with its default vocab size
+                from transformers import AutoConfig
+                
+                # Important: Just create the model architecture without loading pretrained weights
+                # The actual weights will be loaded later from the checkpoint
+                print(f"Creating model architecture based on microsoft/deberta-v3-base")
+                
+                # Get the config from the base model
+                config = AutoConfig.from_pretrained("microsoft/deberta-v3-base")
+                
+                # Create model with the config (not loading pretrained weights)
+                self.encoder = AutoModel.from_config(config)
                 hidden = self.encoder.config.hidden_size
                 self.dropout = nn.Dropout(dropout_rate)
+                # Add a hidden layer for better feature extraction
                 self.hidden = nn.Linear(hidden, hidden // 2)
                 self.activation = nn.GELU()
                 self.head = nn.Linear(hidden // 2, num_dims)
+                
+                # Check for parameter conflicts
+                activation_count = sum([use_tanh, use_sigmoid, use_relu, use_leaky_relu, use_elu])
+                if activation_count > 1:
+                    raise ValueError("Cannot use multiple activation functions at the same time. Choose only one.")
+                
                 self.use_tanh = use_tanh
+                self.use_sigmoid = use_sigmoid
+                self.use_relu = use_relu
+                self.use_leaky_relu = use_leaky_relu
+                self.use_elu = use_elu
+                
                 if use_tanh:
-                    self.output_activation = nn.Tanh()
+                    self.output_activation = nn.Tanh()  # Output in [-1, 1]
+                elif use_sigmoid:
+                    self.output_activation = nn.Sigmoid()  # Output in [0, 1]
+                elif use_relu:
+                    self.output_activation = nn.ReLU()  # Output in [0, +inf)
+                elif use_leaky_relu:
+                    self.output_activation = nn.LeakyReLU(negative_slope=0.01)  # Output in (-inf, +inf)
+                elif use_elu:
+                    self.output_activation = nn.ELU()  # Output in [-1, +inf)
+                else:
+                    self.output_activation = None  # No activation, raw logits
+                
                 self.num_dims = num_dims
+                self.loss_fct = nn.MSELoss()
+                
+                # Add config attribute for compatibility with Transformers Trainer
+                self.config = self.encoder.config
 
-            def forward(self, input_ids=None, attention_mask=None, **kwargs):
+            def forward(self, input_ids=None, attention_mask=None, labels=None, **kwargs):
+                # Remove any unexpected kwargs
+                kwargs.pop("num_items_in_batch", None)
+                
                 out = self.encoder(input_ids=input_ids, attention_mask=attention_mask, **kwargs)
                 pooled = out.last_hidden_state[:, 0, :]  # Use [CLS] token
                 pooled = self.dropout(pooled)
                 hidden = self.activation(self.hidden(pooled))
                 hidden = self.dropout(hidden)
-                logits = self.head(hidden)
+                logits = self.head(hidden)  # (B, num_dims)
                 
-                if self.use_tanh:
+                if self.output_activation is not None:
                     predictions = self.output_activation(logits)
                 else:
+                    # No constraint, let the model learn the range
                     predictions = logits
                 
-                return {"logits": predictions}
+                loss = None
+                if labels is not None:
+                    # Use Huber loss for robustness
+                    huber_loss = nn.HuberLoss(delta=1.0)
+                    loss = huber_loss(predictions, labels)
+                
+                return {"loss": loss, "logits": predictions}
         
-        # Try to load from checkpoint
-        model = MultiOutputRegressor(model_path)
+        # Automatically detect activation function from model path name
+        # Parse the model path to identify the activation function used
+        model_path_lower = model_path.lower()
         
-        # Load the trained weights
-        try:
-            state_dict = torch.load(f"{model_path}/pytorch_model.bin", map_location=self.device)
-            model.load_state_dict(state_dict)
-            print("Loaded model weights from pytorch_model.bin")
-        except FileNotFoundError:
+        # Define the primary configuration based on model name
+        primary_config = None
+        
+        if 'leaky_relu' in model_path_lower:
+            print(f"Detected LeakyReLU activation from model path")
+            primary_config = {"use_tanh": False, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": True, "use_elu": False}
+        elif 'elu' in model_path_lower:
+            print(f"Detected ELU activation from model path")
+            primary_config = {"use_tanh": False, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": False, "use_elu": True}
+        elif 'relu' in model_path_lower and 'leaky' not in model_path_lower:
+            print(f"Detected ReLU activation from model path")
+            primary_config = {"use_tanh": False, "use_sigmoid": False, "use_relu": True, "use_leaky_relu": False, "use_elu": False}
+        elif 'sigmoid' in model_path_lower:
+            print(f"Detected Sigmoid activation from model path")
+            primary_config = {"use_tanh": False, "use_sigmoid": True, "use_relu": False, "use_leaky_relu": False, "use_elu": False}
+        elif 'tanh' in model_path_lower:
+            print(f"Detected Tanh activation from model path")
+            primary_config = {"use_tanh": True, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": False, "use_elu": False}
+        else:
+            print(f"No activation function detected in model path, using default (no activation)")
+            primary_config = {"use_tanh": False, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": False, "use_elu": False}
+        
+        # Create model configurations list with detected config first
+        model_configs = [primary_config]
+        
+        # Add fallback configurations in case the primary doesn't work
+        fallback_configs = [
+            {"use_tanh": False, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": False, "use_elu": False},  # No activation
+            {"use_tanh": True, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": False, "use_elu": False},   # Tanh
+            {"use_tanh": False, "use_sigmoid": True, "use_relu": False, "use_leaky_relu": False, "use_elu": False},   # Sigmoid
+            {"use_tanh": False, "use_sigmoid": False, "use_relu": True, "use_leaky_relu": False, "use_elu": False},   # ReLU
+            {"use_tanh": False, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": True, "use_elu": False},  # LeakyReLU
+            {"use_tanh": False, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": False, "use_elu": True},   # ELU
+        ]
+        
+        # Add fallback configs that are different from the primary
+        for config in fallback_configs:
+            if config != primary_config:
+                model_configs.append(config)
+        
+        model = None
+        successful_config = None
+        successful_weight_file = None
+        
+        for i, config in enumerate(model_configs):
             try:
-                # Try loading from safetensors format
-                from safetensors.torch import load_file
-                state_dict = load_file(f"{model_path}/model.safetensors")
-                model.load_state_dict(state_dict)
-                print("Loaded model weights from model.safetensors")
+                print(f"Trying model configuration {i+1}: {config}")
+                model = MultiOutputRegressor(model_path, **config)
+                
+                # Try loading weights
+                try:
+                    state_dict = torch.load(f"{model_path}/pytorch_model.bin", map_location=self.device)
+                    model.load_state_dict(state_dict)
+                    successful_config = config
+                    successful_weight_file = "pytorch_model.bin"
+                    print(f"✓ Successfully loaded model weights from pytorch_model.bin with config {i+1}")
+                    print(f"✓ Final configuration: {config}")
+                    break
+                except FileNotFoundError:
+                    try:
+                        # Try loading from safetensors format
+                        from safetensors.torch import load_file
+                        state_dict = load_file(f"{model_path}/model.safetensors")
+                        model.load_state_dict(state_dict)
+                        successful_config = config
+                        successful_weight_file = "model.safetensors"
+                        print(f"✓ Successfully loaded model weights from model.safetensors with config {i+1}")
+                        print(f"✓ Final configuration: {config}")
+                        break
+                    except Exception as e:
+                        print(f"✗ Failed to load weights with config {i+1}: {e}")
+                        continue
             except Exception as e:
-                print(f"Warning: Could not load trained weights: {e}")
-                print("Using randomly initialized model")
+                print(f"✗ Failed to create model with config {i+1}: {e}")
+                continue
+        
+        if model is None:
+            print("⚠️  Warning: Could not load trained weights with any configuration")
+            print("⚠️  Using randomly initialized model with default configuration")
+            model = MultiOutputRegressor(model_path)
+            successful_config = {"use_tanh": False, "use_sigmoid": False, "use_relu": False, "use_leaky_relu": False, "use_elu": False}
+            successful_weight_file = "none (random initialization)"
+        
+        # Store the successful configuration for reference
+        self.successful_config = successful_config
+        self.successful_weight_file = successful_weight_file
+        
+        print(f"\n🎯 Model Loading Summary:")
+        print(f"   Configuration: {successful_config}")
+        print(f"   Weight file: {successful_weight_file}")
+        print(f"   Device: {self.device}")
         
         return model
     
@@ -511,17 +656,17 @@ def main():
     print("=== LLM-BASED EVALUATION (SummaryEvaluator) ===")
     
     # Initialize LLM evaluator
-    llm_evaluator = SummaryEvaluator(model="gpt-4o-mini")
+    # llm_evaluator = SummaryEvaluator(model="gpt-4o-mini")
     
-    print("Single comment evaluation:")
-    single_eval = llm_evaluator.evaluate_comment_representation(sample_summary, sample_comment)
-    print(f"Comment: {sample_comment}")
-    print(f"Evaluation: {single_eval}")
+    # print("Single comment evaluation:")
+    # single_eval = llm_evaluator.evaluate_comment_representation(sample_summary, sample_comment)
+    # print(f"Comment: {sample_comment}")
+    # print(f"Evaluation: {single_eval}")
     
     print("\n=== DEBERTA-BASED EVALUATION (DebertaEvaluator) ===")
     
     # Example usage of DebertaEvaluator (requires trained model)
-    model_path = "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_v3"
+    model_path = "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_v10_pair_split_sigmoid"
     
     if Path(model_path).exists():
         try:

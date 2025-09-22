@@ -108,12 +108,13 @@ def denormalize_score(normalized: float, min_val: float = -1.0, max_val: float =
 
 class CommentSummaryRatingsDataset(Dataset):
     def __init__(self, records: List[Dict[str, Any]], tokenizer: AutoTokenizer, max_length: int, 
-                 augment: bool = False, augment_prob: float = 0.3):
+                 augment: bool = False, augment_prob: float = 0.3, normalize: bool = True):
         self.records = records
         self.tokenizer = tokenizer
         self.max_length = max_length
         self.augment = augment
         self.augment_prob = augment_prob
+        self.normalize = normalize
 
     def __len__(self):
         return len(self.records)
@@ -179,13 +180,23 @@ class CommentSummaryRatingsDataset(Dataset):
         )
 
         scores = rec.get("scores", {})
-        # Normalize labels from original scale to [0, 1] range
-        labels = [normalize_score(float(scores.get(k, 0.0))) for k in TARGET_KEYS]
         
-        # Add label smoothing noise during training
-        if self.augment and np.random.random() < 0.2:
-            noise = np.random.normal(0, 0.01, len(labels))
-            labels = np.clip(np.array(labels) + noise, 0, 1).tolist()
+        if self.normalize:
+            # Normalize labels from original scale to [0, 1] range
+            labels = [normalize_score(float(scores.get(k, 0.0))) for k in TARGET_KEYS]
+            
+            # Add label smoothing noise during training (only for normalized)
+            if self.augment and np.random.random() < 0.2:
+                noise = np.random.normal(0, 0.01, len(labels))
+                labels = np.clip(np.array(labels) + noise, 0, 1).tolist()
+        else:
+            # Use original label scale [-1, 7] directly
+            labels = [float(scores.get(k, 0.0)) for k in TARGET_KEYS]
+            
+            # Add label smoothing noise during training (for original scale)
+            if self.augment and np.random.random() < 0.2:
+                noise = np.random.normal(0, 0.1, len(labels))  # Larger noise for larger scale
+                labels = np.clip(np.array(labels) + noise, -1, 7).tolist()
         
         enc["labels"] = torch.tensor(labels, dtype=torch.float32)
         return enc
@@ -304,20 +315,25 @@ def split_train_eval(data: List[Dict[str, Any]], eval_ratio: float, seed: int) -
     return train, eval_
 
 
-def compute_metrics(eval_pred):
+def compute_metrics(eval_pred, use_normalization=True):
     preds, labels = eval_pred
     # preds shape: (batch, 4), labels shape: (batch, 4)
-    # Both are normalized to [-1, 1]
     if preds.ndim == 3:
         preds = preds.squeeze(-1)
     
-    # Ensure predictions are in [0, 1] range
-    preds = np.clip(preds, 0.0, 1.0)
+    if use_normalization:
+        # For normalized training, ensure predictions are in [0, 1] range
+        preds = np.clip(preds, 0.0, 1.0)
+        
+        # Denormalize for interpretable MAE (back to original -1 to 7 scale)
+        preds_denorm = denormalize_score(preds)
+        labels_denorm = denormalize_score(labels)
+    else:
+        # For non-normalized training, work directly with [-1, 7] scale
+        preds = np.clip(preds, -1.0, 7.0)
+        preds_denorm = preds
+        labels_denorm = labels
     
-    
-    # Denormalize for interpretable MAE (back to original -1 to 7 scale)
-    preds_denorm = denormalize_score(preds)
-    labels_denorm = denormalize_score(labels)
     mae_denorm = np.abs(preds_denorm - labels_denorm).mean(axis=0)
     
     metrics = {
@@ -467,7 +483,6 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
                         if pred1_score < pred2_score:
                             correct_pairs += 1
                     else:  # label1 == label2, predictions should be close
-                        # Allow some tolerance for equal labels (reduced from 0.1 to 0.05)
                         if abs(pred1_score - pred2_score) < 0.05:
                             correct_pairs += 1
                     
@@ -802,6 +817,8 @@ def main():
     parser.add_argument("--lr-scheduler", type=str, default="linear", 
                         choices=["linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"],
                         help="Learning rate scheduler type")
+    parser.add_argument("--no-normalize", action="store_true", 
+                        help="Disable normalization and use original label range [-1, 7] directly")
 
     args = parser.parse_args()
 
@@ -839,11 +856,24 @@ def main():
     if tokenizer.pad_token is None and tokenizer.eos_token is not None:
         tokenizer.pad_token = tokenizer.eos_token
     
+    # Determine whether to normalize based on command line argument
+    use_normalization = not args.no_normalize
+    
+    if not use_normalization:
+        print("\n⚠️  Training with ORIGINAL label scale [-1, 7] (normalization disabled)")
+    else:
+        print("\n✓ Training with NORMALIZED label scale [0, 1]")
+    
     train_ds = CommentSummaryRatingsDataset(
         train_recs, tokenizer, args.max_len,
-        augment=args.augment, augment_prob=args.augment_prob
+        augment=args.augment, augment_prob=args.augment_prob,
+        normalize=use_normalization
     )
-    eval_ds = CommentSummaryRatingsDataset(eval_recs, tokenizer, args.max_len, augment=False)
+    eval_ds = CommentSummaryRatingsDataset(
+        eval_recs, tokenizer, args.max_len, 
+        augment=False,
+        normalize=use_normalization
+    )
 
     model = MultiOutputRegressor(
         args.model,
@@ -903,13 +933,17 @@ def main():
         save_safetensors=True,
     )
 
+    # Create a compute_metrics function with the normalization parameter
+    def compute_metrics_wrapper(eval_pred):
+        return compute_metrics(eval_pred, use_normalization=use_normalization)
+    
     trainer = CustomTrainer(
         model=model,
         args=training_args,
         train_dataset=train_ds,
         eval_dataset=eval_ds,
         data_collator=collator,
-        compute_metrics=compute_metrics,
+        compute_metrics=compute_metrics_wrapper,
         eval_dataset_for_ordering=eval_ds,  # Pass eval dataset for ordering accuracy
     )
 

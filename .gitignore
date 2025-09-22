@@ -229,3 +229,11 @@ src/finetuning/dcgm/
 /datasets/*
 
 /checkpoints/*
+
+checkpoints*/*
+
+tmp/
+
+scripts/visualization/final_leaderboard/distributions/*
+
+scripts/visualization/final_leaderboard/results/*

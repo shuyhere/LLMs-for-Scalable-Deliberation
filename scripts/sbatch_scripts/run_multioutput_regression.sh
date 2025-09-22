@@ -7,17 +7,17 @@ PROJECT_DIR="/ibex/project/c2328/LLMs-Scalable-Deliberation"
 # DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings.jsonl"
 DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/split_data/train.jsonl"
 MODEL_NAME="microsoft/deberta-v3-base"
-OUTPUT_DIR="$PROJECT_DIR/checkpoints/deberta_regression_base_v12_pair_split_relu"
+OUTPUT_DIR="$PROJECT_DIR/checkpoints_final/deberta_regression_base_evaluate_v3_pair_split"
 
 # Training parameters
 MAX_LENGTH=4096
 TRAIN_BATCH_SIZE=8
 EVAL_BATCH_SIZE=8
-NUM_EPOCHS=20
+NUM_EPOCHS=12
 LEARNING_RATE=4e-5
-WEIGHT_DECAY=1e-4
+WEIGHT_DECAY=0.01
 WARMUP_RATIO=0.1
-EVAL_RATIO=0.16
+EVAL_RATIO=0.1
 SEED=42
 EVAL_EVERY_STEPS=25
 
@@ -26,15 +26,15 @@ EVAL_EVERY_STEPS=25
 TIME="12:00:00"  
 MEMORY="32G"    
 CPUS=8          
-LOG_DIR="$PROJECT_DIR/logs/multioutput_regression_base_v12_pair_split_relu"
+LOG_DIR="$PROJECT_DIR/logs/multioutput_regression_base_final_evaluate_v3_pair_split"
 GPUS_LINE="#SBATCH --gres=gpu:a100:1"
 
 # Wandb parameters
-WANDB_PROJECT="llm_comment_summary_regression_deberta"
-WANDB_RUN_NAME="new_regression_deberta-v3-base_v12_pair_split_relu"
+WANDB_PROJECT="llm_comment_summary_regression_deberta_base_final"
+WANDB_RUN_NAME="new_regression_deberta-v3-base_final_evaluate_v3_pair_split"
 
 # Advanced training parameters
-GRADIENT_CLIP=1.0
+GRADIENT_CLIP=2.0
 LABEL_SMOOTHING=0.0
 DROPOUT=0.1
 LR_SCHEDULER="linear"
@@ -46,9 +46,12 @@ AUGMENT_PROB=0.3
 # Model parameters
 USE_TANH=false
 USE_SIGMOID=false
-USE_RELU=true
+USE_RELU=false
 USE_LEAKY_RELU=false
 USE_ELU=false
+
+# Normalization parameter (set to true to disable normalization)
+NO_NORMALIZE=false
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -150,6 +153,10 @@ while [[ $# -gt 0 ]]; do
             USE_LEAKY_RELU=false
             shift
             ;;
+        --no-normalize)
+            NO_NORMALIZE=true
+            shift
+            ;;
         --help)
             echo "Usage: $0 [OPTIONS]"
             echo "Options:"
@@ -172,6 +179,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --use-relu               Use ReLU activation for output (range [0, +inf))"
             echo "  --use-leaky-relu         Use LeakyReLU activation for output (range (-inf, +inf))"
             echo "  --use-elu                Use ELU activation for output (range [-1, +inf))"
+            echo "  --no-normalize           Disable normalization and use original label range [-1, 7]"
             echo "  --help                   Show this help message"
             exit 0
             ;;
@@ -211,6 +219,9 @@ if [ "$USE_LEAKY_RELU" = true ]; then
 fi
 if [ "$USE_ELU" = true ]; then
     CMD_ARGS="$CMD_ARGS --use-elu"
+fi
+if [ "$NO_NORMALIZE" = true ]; then
+    CMD_ARGS="$CMD_ARGS --no-normalize"
 fi
 
 echo "Submitting multioutput regression training job..."
