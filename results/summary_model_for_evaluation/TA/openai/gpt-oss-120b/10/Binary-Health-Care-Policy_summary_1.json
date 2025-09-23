@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:52:11.264377",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments overwhelmingly endorse the idea of government‑provided health care. Most respondents argue that health care should be treated as a right rather than a luxury, emphasizing that everyone will need medical services at some point and that access should not depend on personal wealth or employment status. A recurring theme is the moral responsibility of the state to safeguard the safety, happiness, and overall well‑being of its citizens, with many noting that universal coverage would reduce suffering and prevent deaths caused by unaffordable treatment.\n\nEconomic arguments are also prominent. Several participants point out that a publicly funded system would lower overall costs, make the health‑care market more efficient, and protect the nation’s competitiveness by ensuring a healthy workforce. Comparisons to other nations—particularly Canada and many European countries—are used to illustrate that universal models can function effectively and often deliver better health outcomes.\n\nA minority view expresses conditional support, suggesting that while government involvement is appropriate, individuals should retain the ability to choose alternatives rather than being forced into a single system.\n\nOverall, the feedback reflects strong consensus that government‑run health care would improve equity, affordability, and national productivity, with only a small fraction voicing concerns about personal choice within the system.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1447,
+    "custom_summary_length": 60
+  }
+}

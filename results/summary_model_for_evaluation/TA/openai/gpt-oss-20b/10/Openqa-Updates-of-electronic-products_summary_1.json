@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Updates-of-electronic-products",
+    "question": "What is your opinion on the rapid update cycle of electronic products, especially smartphones? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:58:04.135022",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reflects a mix of enthusiasm for rapid innovation and frustration with the pace of change.  \n- **Innovation and convenience**: Many respondents highlight the excitement of frequent new features, improved performance, and the overall progression of technology that keeps smartphones “at the cutting edge.”  \n- **Cost and obsolescence**: A strong share of comments point out that constant updates can make devices feel outdated quickly, generate additional costs (new accessories, charging cables, payment plans that expire), and press consumers to upgrade more often than they would like.  \n- **Longevity and quality**: Several participants note that the best phones are those that can last longer than the typical 1–2‑year release cycle, and they express a desire for devices that can endure without needing major updates.  \n- **Security and marketing**: Some comments suggest that frequent updates are necessary for security and that manufacturers may use update schedules as a marketing tool, but that the benefits are not always perceived as worth the inconvenience.  \n\nOverall, the conversation balances a recognition of the benefits of rapid development with a clear concern about the economic, environmental, and practical downsides of constantly pushing new updates and hardware.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1301,
+    "custom_summary_length": 60
+  }
+}

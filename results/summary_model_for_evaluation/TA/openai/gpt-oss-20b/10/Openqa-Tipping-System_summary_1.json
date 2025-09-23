@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Tipping-System",
+    "question": "What is your opinion on tipping, and if given the chance, how would you improve or change the current tipping system? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:57:24.342618",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reflect a strong push to rethink or reduce the current tipping model.  \n- **Elimination or minimization of mandatory tipping:** Most voices argue that tipping should not be required, citing pressure on customers and the prevalence of “mandatory” tip prompts in everyday transactions.  \n- **Livable wages for workers:** A recurring theme is that tipped employees should receive a reliable, livable base wage, which would reduce dependence on tips and curb the current wage gap.  \n- **Optional or service‑based tipping:** Those still supportive of tipping want it to be genuinely optional, tied clearly to the quality of service, and not implied by the menu or payment interface.  \n- **Alternatives to the percent‑based system:** Some suggest moving from a percentage model to fixed amounts or a standardized tip (e.g., a set $20 or $30 for certain services) to simplify the process and encourage fairer contributions.  \n- **Enhancing the tipping experience:** A few participants propose small gestures to accompany tips—such as a thank‑you note or a coupon for a future visit—to give the tip a tangible value.\n\nOverall, the discussion leans toward removing the current obligatory tipping structure, ensuring workers earn living wages, and making tipping optional and more transparent when it remains in place.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1321,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Online-Identity-Policies",
+    "question": "Do you support requiring real-name registration on social media platforms, where users must register and post under their real identity? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:52:28.828560",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reveals three broad positions:\n\n* **Opposition (about 60 %)** – Most commenters argue that mandatory real‑name registration would erode privacy and expose users to intrusive data collection, potential government surveillance, and commercial misuse of personal information. Several emphasize the importance of anonymity for free expression, especially in politically charged environments, and warn that forced identification could jeopardize jobs or personal safety.\n\n* **Support (about 20 %)** – A smaller group sees real‑name policies as a way to increase accountability on social platforms, which they believe could curb cyber‑bullying, scams, and other harmful behavior. For them, the trade‑off of reduced anonymity is justified by the prospect of a safer online community.\n\n* **Conditional or mixed views (about 20 %)** – Some participants are open to the idea only if the requirement comes from the platform itself rather than from the government, or they acknowledge both benefits (greater accountability) and drawbacks (loss of anonymity and freedom of speech). These commenters suggest that a nuanced approach—perhaps limited to certain contexts—might be acceptable.\n\nOverall, the conversation highlights a tension between **privacy and safety**: while a minority sees mandatory real‑name policies as a tool for improving online conduct, the majority prioritize the protection of anonymity and fear the broader implications of centralized personal data collection.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1487,
+    "custom_summary_length": 60
+  }
+}

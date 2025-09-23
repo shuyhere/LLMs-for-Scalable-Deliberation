@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Vaccination-Policy",
+    "question": "Do you support the government having the authority to enforce vaccination and quarantine measures during severe epidemics? Please answer briefly in 1–2 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:26.000103",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Summary of the deliberation**\n\n- **Strong support for enforcement**: A majority of respondents argue that the government should enforce vaccination and quarantine measures, citing public health protection, herd immunity, and the need to prevent widespread disease. Many emphasize that such measures are justified during severe epidemics and can save lives.\n\n- **Conditional support**: A notable group agrees with enforcement only under specific circumstances—when the epidemic is truly severe, the vaccines are proven effective, and the risks are clearly understood. They call for a balanced approach that weighs national survival against individual rights.\n\n- **Opposition to mandatory vaccination**: Several participants reject compulsory vaccination outright, citing concerns about vaccine safety, insufficient long‑term data, and potential adverse effects such as autoimmune issues. They insist on personal choice and criticize past rapid vaccine rollouts as unsafe.\n\n- **Mixed views on quarantine**: While most defenders of enforcement also support quarantine, a few respondents see it as acceptable only when the situation is dire and suggest it should be less stringent in less severe cases. Some express skepticism that quarantine measures are always necessary.\n\n- **Concerns about government overreach**: A minority of comments highlight fears that government enforcement could become too powerful, eroding individual freedoms and leading to poor decision‑making by authorities. They caution against using public health measures as a means to exert control beyond what is necessary.\n\n- **Impact of past experience**: Many participants refer to the COVID‑19 pandemic as a key example, using it to illustrate both the successes (e.g., the importance of vaccination) and the pitfalls (e.g., rushed vaccine approval, side‑effects, or ineffective policy implementation). These reflections shape their stance on current and future public‑health mandates.\n\nOverall, the discussion reveals a spectrum of opinions ranging from outright endorsement of mandatory public‑health measures to strong opposition on grounds of safety, autonomy, and governance. Some voices call for a careful, evidence‑based, and context‑sensitive application of enforcement, while others stress the primacy of individual choice and the risks of over‑reaching authority.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2347,
+    "custom_summary_length": 60
+  }
+}

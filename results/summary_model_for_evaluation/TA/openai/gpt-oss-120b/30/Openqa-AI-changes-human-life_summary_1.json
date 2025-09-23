@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:53:51.985015",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments paint a largely optimistic picture of how AI is reshaping everyday life, while also flagging a handful of serious reservations.\n\n**Productivity and Convenience**  \nA dominant share of respondents (about 70 %) describe AI as a personal assistant that speeds up routine work, condenses research, drafts and refines writing, and automates repetitive tasks. Many cite concrete gains such as quicker article summarisation, easier table‑building, smoother event planning, and faster homework completion. The technology is also praised for sparking new ideas—whether for home‑renovation projects, passive‑income concepts, or creative art—allowing users to explore possibilities that previously felt out of reach.\n\n**Learning and Knowledge Access**  \nRoughly half of the participants note that AI has transformed how they acquire information. It is likened to an upgraded “Google,” delivering concise explanations, technical overviews, and quick fact‑checks that make self‑education and professional research far more efficient.\n\n**Creative and Personal Use**  \nA noticeable portion (around 30 %) highlights AI’s role in artistic expression and personal tasks. Users mention AI‑generated drawings, photo‑editing, voice‑dictation correction, and even home‑automation or security functions that simplify daily routines.\n\n**Emotional and Social Effects**  \nWhile many feel more productive and less stressed, a smaller but significant minority (about 20 %) express unease. Concerns include:\n\n* **Privacy and Data Tracking** – Several commenters worry that AI continuously records preferences and search histories, creating a sense of intrusion.  \n* **Accuracy and Bias** – A few note that AI‑summaries can be misleading or biased, requiring independent fact‑checking.  \n* **Job Security and Economic Impact** – Some fear that AI could displace certain roles, leading to anxiety about future employment.  \n* **Trust and Authenticity** – A handful feel increasingly suspicious of content that might be AI‑generated, perceiving it as a source of distrust and even “theft.”  \n* **Addiction and Over‑reliance** – One participant observes that‑the‑AI‑driven algorithms have nudged them toward more social‑media consumption, while another remarks that AI has not yet made a major difference in their life.\n\n**Neutral or Limited Impact**  \nA small segment (roughly 10 %) reports that AI remains an optional tool with modest influence, or that it has not yet produced any transformative change for them.\n\n**Overall Takeaway**  \nThe consensus leans heavily toward AI being a catalyst for efficiency, creativity, and faster access to information across work, education, and personal domains. At the same time, privacy, reliability, and the broader societal implications of pervasive AI use remain focal points of concern for a meaningful minority of users. The balance of enthusiasm and caution suggests that while AI is already reshaping daily habits for many, ongoing attention to ethical, security, and trust issues will be crucial as its role expands.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 3045,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Tipping-System",
+    "question": "What is your opinion on tipping, and if given the chance, how would you improve or change the current tipping system? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:54:09.847395",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The respondents expressed a strong consensus that tipping should no longer be mandatory and that workers should receive a reliable, livable wage regardless of tips. Around three‑quarters of the comments called for eliminating compulsory tip prompts—especially for low‑value transactions or services that traditionally did not involve gratuities—and for shifting the financial responsibility of fair compensation onto employers.\n\nWhen tipping is retained, the prevailing view (about two‑thirds of the remarks) is that it should reflect the quality of service rather than be built into every purchase. Several participants suggested concrete ways to make voluntary tips feel more meaningful, such as offering a thank‑you note, a coupon for a future visit, or other small tokens of appreciation.\n\nA notable minority (roughly 30 %) advocated for restructuring how tips are calculated. — they proposed moving away from percentage‑based suggestions toward fixed‑amount guidelines (e.g., a standard $20‑$30 tip) or providing clearer, optional tip options that avoid “overkill” on minor purchases.\n\nOverall, the feedback favors a system where tips are truly optional, tied to service excellence, and complemented by employer‑provided wages that ensure financial stability for staff.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1274,
+    "custom_summary_length": 60
+  }
+}

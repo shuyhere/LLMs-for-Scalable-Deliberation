@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Updates-of-electronic-products",
+    "question": "What is your opinion on the rapid update cycle of electronic products, especially smartphones? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:01.782443",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reveals a clear split in how people view the rapid update cycle of smartphones.  \n\n**Positive perspectives** – roughly one‑third of the remarks highlight the benefits of frequent releases.  Commenters appreciate the continual rollout of new features, especially improved cameras and security patches, and see the speed of innovation as a sign that technology is advancing quickly and keeping information readily accessible.\n\n**Negative perspectives** – about half of the responses focus on the downsides.  Many participants feel that manufacturers prioritize new models over refining existing ones, leading to planned obsolescence, forced upgrades, and a shortened useful life for devices.  This creates financial pressure for consumers, triggers frustration when updates introduce bugs or cause devices to stop working, and contributes to growing electronic waste.  Additional grievances include the need to replace accessories (e.g., chargers) and the perception that the incremental improvements from one generation to the next are often negligible for ordinary users.\n\n**Mixed or nuanced views** – the remaining comments acknowledge both sides.  Some recognize that security updates and occasional performance gains are necessary, yet they still question the yearly cadence and argue that a slower, more sustainable rhythm would better balance innovation with durability, repairability, and environmental responsibility.\n\nOverall, the consensus leans toward criticism of the current pace, with a strong call for a more balanced approach that preserves the advantages of technological progress while reducing waste, cost, and consumer inconvenience.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1667,
+    "custom_summary_length": 60
+  }
+}

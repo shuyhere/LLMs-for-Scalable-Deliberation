@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Vaccination-Policy",
+    "question": "Do you support the government having the authority to enforce vaccination and quarantine measures during severe epidemics? Please answer briefly in 1–2 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:53:35.435280",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a clear split in public opinion about whether governments should be able to mandate vaccination and quarantine during severe epidemics.  \n\n**Support for mandatory measures** is expressed by roughly half of the respondents.  Their arguments focus on protecting public health, achieving herd immunity, and preventing the rapid spread of disease—especially in light of the experience with COVID‑19.  Many view government enforcement as the most effective way to safeguard the community, reduce deaths, and ensure that individuals do not make choices that endanger others.  \n\n**Conditional support** appears in about one‑tenth of the remarks.  These participants are willing to accept mandates only when the epidemic is demonstrably severe, the vaccines have been thoroughly tested and shown to be safe, and quarantine is justified.  Some favor strong quarantine rules while insisting that vaccination remain voluntary or optional.  \n\n**Opposition** accounts for roughly one‑third of the comments.  Critics cite personal autonomy and bodily integrity, arguing that individuals should remain free to decide whether to be vaccinated.  Safety concerns are prominent, with many pointing to perceived rushed development, side‑effects, and insufficient long‑term data for COVID‑19 vaccines.  Distrust of government motives and competence also surfaces, as does the belief that the state lacks legitimate authority to impose such mandates, especially in societies that are not dictatorships.  \n\nOverall, the discussion balances a public‑health rationale for compulsory action against a strong emphasis on individual rights, vaccine safety, and governmental trustworthiness.  While a majority lean toward enforcement in the face of a severe outbreak, a sizable minority demand safeguards, transparency, and the preservation of personal choice.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1851,
+    "custom_summary_length": 60
+  }
+}

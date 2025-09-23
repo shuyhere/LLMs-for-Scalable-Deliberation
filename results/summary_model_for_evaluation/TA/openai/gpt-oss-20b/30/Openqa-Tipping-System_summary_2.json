@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Tipping-System",
+    "question": "What is your opinion on tipping, and if given the chance, how would you improve or change the current tipping system? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:57:25.980296",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reflects a strong consensus that the current tipping model in the United States is problematic.  \n- **Wage concerns**: A large portion of respondents argue that tipped workers receive insufficient base pay and that a living wage (or a guaranteed minimum wage) would eliminate the need for tips.  \n- **Systemic issues**: Many note that the tipping practice is enforced by technology (e.g., tablet POS prompts) and that it feels forced or mandatory, leading to uncomfortable situations for customers.  \n- **Quality‑based tipping**: A minority advocate keeping tipping but only for exceptional service, suggesting mechanisms such as a “no tip” option, a fixed or standard tip amount, or a service‑charge that replaces discretionary tips.  \n- **Alternatives and reforms**: Suggestions include a compulsory service charge, better communication of service quality before a tip is requested, or a shift to a European‑style inclusive pricing model where tips are not expected.  \n- **Attitudes toward tipping**: While some participants still tip out of gratitude, they emphasize that tipping should be voluntary and tied to real service rather than a default expectation.\n\nOverall, the comments indicate a desire for a more transparent, fair compensation system that reduces or eliminates the reliance on customer tips while still allowing for recognition of exceptional service.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1385,
+    "custom_summary_length": 60
+  }
+}

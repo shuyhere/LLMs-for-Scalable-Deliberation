@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:51.309094",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments paint a picture of AI as a largely beneficial but still imperfect companion in everyday life.  \n\n**Productivity and time‑saving** dominate the feedback, with roughly three‑quarters of respondents noting that AI speeds up work, automates routine or “meaningless” tasks, and frees up personal time. Many mentioned that it condenses research, drafts documents, creates tables, plans events, and even corrects voice‑dictated text, leading to smoother daily routines.  \n\n**Research and learning** were highlighted by about forty percent of participants. They appreciate quick summaries, easy access to technical information, and the ability to explore new topics without the effort of traditional library searches. A few, however, warned that the information can be inaccurate or biased, stressing the need for fact‑checking.  \n\n**Creative support** emerged in a smaller but notable slice (around fifteen percent). Users described AI as a new artistic partner that helps generate ideas, improve drawings, and inspire novel content.  \n\nOn the **concern side**, roughly a quarter of the comments expressed unease. Privacy and data‑usage worries were mentioned alongside fears about job security and the potential for AI to erode trust in human‑generated work. One participant even noted increased anxiety about detecting AI‑generated art or writing.  \n\nA minority of respondents (about five percent) took a more neutral stance, seeing AI as just another optional tool that hasn’t dramatically altered their lives.  \n\nOverall, the sentiment leans strongly toward AI being a helpful assistant that streamlines tasks, enhances learning, and expands creative possibilities, while the community remains vigilant about accuracy, bias, privacy, and the broader societal impact of widespread AI adoption.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1802,
+    "custom_summary_length": 60
+  }
+}

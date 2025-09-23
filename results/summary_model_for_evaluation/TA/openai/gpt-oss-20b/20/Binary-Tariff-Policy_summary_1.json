@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Tariff-Policy",
+    "question": "Do you think the current tariff policy under the Trump administration will have a positive or negative impact on the overall U.S. economy and society? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:22.382020",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall assessment**\n\n- **Predominant view:** The majority of respondents anticipate a **negative impact** of the current tariff policy on the U.S. economy.  \n- **Positive outlook:** A minority (about a quarter of the comments) argue that the tariffs will ultimately strengthen the economy by protecting domestic industries, raising federal revenue, or encouraging “buy‑American” behavior.  \n- **Mixed or nuanced perspective:** A small fraction acknowledge short‑term costs but expect long‑term benefits, or note that the effects will differ across sectors.\n\n**Common themes**\n\n| Theme | What respondents say | Approx. share |\n|-------|----------------------|---------------|\n| **Higher consumer prices / inflation** | Tariffs raise the cost of imported goods, which businesses pass on to consumers. | 70 % |\n| **Impact on small businesses** | Small firms feel the burden most acutely, fearing reduced competitiveness. | 25 % |\n| **Trade relationships** | Tariffs strain ties with key partners (e.g., China) and risk retaliation. | 20 % |\n| **Domestic industry protection** | Some see tariffs as a tool to shield U.S. manufacturers and create jobs. | 15 % |\n| **Long‑term vs short‑term effects** | A few expect initial pain but eventual stabilization or growth. | 10 % |\n| **Government revenue** | A handful note increased tax receipts as a benefit. | 8 % |\n\n**Key take‑aways**\n\n- The prevailing concern is that the tariffs will **raise living costs** for ordinary Americans and **hurt small‑ and medium‑sized enterprises**.  \n- A minority view the policy as a necessary step toward **economic self‑reliance** and **job creation**, especially if the tariffs become permanent.  \n- A small group points out that while there may be **short‑term disruptions**, the **long‑term trajectory could be positive** if the policy is sustained and accompanied by complementary measures.\n\nOverall, the discourse leans strongly toward a **negative assessment** of the tariff policy’s current economic effects, with optimism tempered by realistic concerns about costs and trade dynamics.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2073,
+    "custom_summary_length": 60
+  }
+}

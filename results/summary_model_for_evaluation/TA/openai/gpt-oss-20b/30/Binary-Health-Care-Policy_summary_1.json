@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:55:31.573624",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "Most respondents view government‑provided health insurance as a fundamental right that should be available to everyone, regardless of income, employment status, or medical history.  The arguments for universal coverage focus on fairness, affordability, and the public good, with many citing the high cost of private plans, the need for a healthier workforce, and the success of similar programs in other countries.  A recurring theme is that health care should not be a luxury or profit‑driven enterprise; instead it should be managed by the state to ensure equal access and reduce overall costs.\n\nA smaller group expresses concern that extensive government involvement could lead to inefficiency, loss of personal choice, and intrusive oversight.  These comments emphasize the benefits of the private sector, the potential for bureaucracy to stifle quality, and a general skepticism of large‑scale public programs.\n\nOverall, the discussion leans strongly toward supporting universal or basic government‑funded health insurance, while a minority warns against the risks of expanding state control.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1097,
+    "custom_summary_length": 60
+  }
+}

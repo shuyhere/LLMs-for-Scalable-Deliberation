@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Refugee-Policies",
+    "question": "Do you support the government accepting more refugees fleeing war or persecution? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:39.228175",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a strong overall endorsement of the United States accepting more refugees fleeing war or persecution, with the majority of respondents emphasizing humanitarian compassion and the nation’s historic role as a refuge for those escaping danger.  \n\n**Key points of consensus**  \n- **Humanitarian duty** – Many participants stress that offering safety to people whose lives are threatened is a moral responsibility and aligns with American values of liberty and diversity.  \n- **Economic and social balance** – While supportive, a sizable portion calls for safeguards to ensure that incoming refugees do not strain public resources. Common suggestions include thorough vetting, limits on numbers, and targeted placement in less‑populated areas where newcomers can contribute to local economies.  \n- **Integration measures** – Several respondents highlight the need for education about U.S. laws and cultural norms to facilitate successful integration and reduce potential friction with existing communities.  \n\n**Areas of concern**  \n- **Resource constraints** – A minority of participants argue that the country’s fiscal challenges and existing social‑service demands make additional refugee intake problematic until domestic needs are fully addressed.  \n- **Security and criminal background checks** – There is a recurring call for rigorous screening to prevent individuals with criminal histories or fraudulent claims from entering the country.  \n- **Distinguishing refugees from economic migrants** – Some commenters emphasize that assistance should be limited to those fleeing persecution, not to people seeking economic improvement alone.  \n\nOverall, roughly **85 %** of the comments express support for expanding refugee admissions, most of them conditioned on careful vetting, resource planning, and integration strategies to protect both newcomers and current citizens. The remaining perspectives focus on fiscal and security worries, suggesting that any policy shift should be accompanied by concrete measures to address these issues.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2058,
+    "custom_summary_length": 60
+  }
+}

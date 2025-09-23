@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:53:49.213517",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "Overall, the feedback paints a picture of AI as a versatile assistant that most users rely on to make everyday tasks more efficient. A clear majority describe how AI streamlines work, accelerates research, and frees up personal time, allowing them to focus on higher‑level activities. Many also value its ability to quickly compile information into concise summaries, which they use for everything from technical learning to generating new ideas. A noticeable portion of respondents appreciate the added entertainment and amusement that AI can offer, while a smaller but significant share view it as an optional, supplemental tool rather than a transformative force in their lives.\n\nConcerns surface around the reliability of AI‑generated content. Some users point out that the information can be inaccurate, biased, or limited to certain sources, prompting them to double‑check facts and verify relevance. Nevertheless, even those who are skeptical still acknowledge AI’s convenience for quick research and brainstorming.\n\nBeyond professional and academic contexts, a few participants note personal benefits, such as using AI to reflect on interpersonal conflicts and gain perspective. In sum, the consensus highlights AI’s role in boosting efficiency and learning while underscoring the need for critical evaluation of its outputs.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1333,
+    "custom_summary_length": 60
+  }
+}

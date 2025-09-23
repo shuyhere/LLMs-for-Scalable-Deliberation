@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:51.917054",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The respondents overwhelmingly see AI as a practical assistant that makes everyday work and personal tasks faster and easier.  \n- **Productivity and time‑saving** are the most frequently mentioned benefits; roughly three‑quarters of the comments note that AI speeds up routine work, condenses research, drafts documents, and handles repetitive chores, freeing up extra time for other activities.  \n- **Research and information‑gathering** also stand out, with about one‑quarter of participants highlighting AI’s ability to pull together summaries, locate sources quickly, and help them learn new technical material.  \n- **Creative support** appears in a notable share of remarks (around one‑fifth), where users describe AI‑generated art, design ideas, or assistance with visual expression that they previously found difficult.  \n- **Personal convenience** is another recurring theme, with many noting that AI‑driven recommendations, voice‑dictation correction, smart‑home control, and quick fact‑checking simplify daily routines.  \n\nAlongside these positives, a smaller but significant portion of the feedback raises concerns:  \n- **Accuracy and bias** are mentioned in roughly one‑in‑ten comments, stressing the need to verify AI‑produced summaries and the perception that certain sources are favoured.  \n- **Privacy, data use, and job security** surface in about fifteen percent of the remarks, reflecting worries about personal information being harvested and the potential for AI to replace human labour.  \n- **Emotional and trust‑related effects**—such as feeling uneasy about the authenticity of creative work or becoming more skeptical of others’ output—are noted by a minority of participants.  \n\nOverall, the picture is one of strong enthusiasm for AI’s ability to boost efficiency, aid learning, and unlock new creative possibilities, tempered by a cautious awareness of reliability, privacy, and broader societal impacts.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1932,
+    "custom_summary_length": 60
+  }
+}

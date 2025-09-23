@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Tipping-System",
+    "question": "What is your opinion on tipping, and if given the chance, how would you improve or change the current tipping system? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:57:26.942435",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Summary of the discussion**\n\n- **Calls to eliminate or reduce tipping**: A large portion of the comments argue that the current tipping model is unnecessary and, in many cases, coerces customers into paying extra. They suggest removing the tipping option entirely or making it optional rather than mandatory.\n\n- **Shift toward livable wages**: Many participants emphasize that workers should receive a fair base salary that covers their living expenses. They believe that if employees are paid a livable wage, the need for tips would diminish and the industry could operate more sustainably.\n\n- **Re‑thinking how tips are given**: A number of respondents propose changes to the tipping process itself. Suggestions include switching from percentage‑based tips to fixed amounts, tying tips more strictly to the quality of service, and providing tangible rewards (e.g., thank‑you notes or coupons) to the customer who tips.\n\n- **Concerns about pressure and fairness**: Several comments note that the current system can feel like a pressure point for customers, especially when tips are presented automatically. These participants stress that tipping should be entirely optional and should not be implied or forced by the establishment.\n\n- **Mixed feelings about the value of tips**: While some see tipping as a meaningful way to reward good service, others believe the practice is over‑used and not always reflective of the service actually received. They argue for a system that better respects both the customer’s ability to pay and the worker’s need for fair compensation.\n\nOverall, the discussion centers on whether to maintain the tipping culture, transform it into a more structured and honest system, or replace it entirely with a model that guarantees workers a livable wage and gives customers the freedom to choose whether and how much to tip.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1852,
+    "custom_summary_length": 60
+  }
+}

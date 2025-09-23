@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Vaccination-Policy",
+    "question": "Do you support the government having the authority to enforce vaccination and quarantine measures during severe epidemics? Please answer briefly in 1–2 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:49.938454",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reveals a clear split between those who view mandatory quarantine and vaccination as essential tools for protecting public health and those who see them as an overreach of governmental authority.\n\n**Support for enforcement**  \nAround three‑fifths of the respondents argue that compulsory measures are justified, especially during a severe epidemic. Their reasoning emphasizes the need to protect the community, achieve herd immunity, and prevent the spread of disease when scientific evidence shows that vaccines are effective. Many note that early in a pandemic, when knowledge is limited, stronger mandates are warranted, and some suggest that such policies should be lifted once the situation becomes better understood.\n\n**Conditional or nuanced support**  \nA subset of the pro‑enforcement comments adds caveats: they would back quarantine but not compulsory vaccination, or they would require that the epidemic be truly severe and that vaccines be proven safe before imposing mandates. This reflects a desire to balance public‑health goals with respect for individual autonomy.\n\n**Opposition to enforcement**  \nRoughly one‑third of the participants reject mandatory vaccination and, in some cases, any government‑imposed health measures. Their concerns focus on personal freedom, distrust of rapidly developed vaccines, potential side‑effects, and the belief that individuals should decide what is introduced into their bodies. Some also criticize the government’s handling of past crises, suggesting that the response was inadequate or overly punitive.\n\n**Key themes across the debate**  \n\n- **Public‑health benefit vs. individual rights:** Proponents stress collective safety and the scientific basis for mandates, while opponents prioritize personal choice and bodily autonomy.  \n- **Evidence and safety:** Supporters often cite proven efficacy, whereas detractors point to perceived insufficient testing and reported adverse reactions.  \n- **Severity of the outbreak:** Many agree that the seriousness of an epidemic should dictate the strength of the response; the more severe, the more acceptable strict measures become.  \n- **Government role:** There is consensus that the government has a responsibility to act in a crisis, but disagreement about how far that responsibility should extend, especially regarding enforcement mechanisms and penalties.\n\nOverall, the conversation captures a tension between the desire for decisive, science‑driven action to curb disease spread and concerns about the limits of governmental power over personal health decisions.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2583,
+    "custom_summary_length": 60
+  }
+}

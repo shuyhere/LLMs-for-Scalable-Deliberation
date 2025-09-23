@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Updates-of-electronic-products",
+    "question": "What is your opinion on the rapid update cycle of electronic products, especially smartphones? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:41.061940",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments paint a clear picture of a mixed reaction to the rapid update cycle of smartphones.  \n**Major concerns** dominate the discussion:  \n- **Frequent updates are seen as a form of planned obsolescence** that forces owners to replace devices sooner than necessary, creating both financial pressure and a surge in electronic waste.  \n- Many users report **bugs and performance problems** immediately after an update, which erodes trust in the reliability of newer software.  \n- The **marketing‑driven push for yearly releases** is criticized for prioritising new product sales over the refinement and longevity of existing devices.  \n- Environmental worries are common, with commenters pointing out how constant upgrades accelerate unsustainable consumption and waste.\n\n**Positive aspects** are noted by a smaller portion of respondents:  \n- Updates are praised for **bringing innovation, improved performance, and enhanced security** features that keep devices current and protect user data.  \n- Some users appreciate the **rapid access to new technologies** and find that the cycle keeps them connected to the latest advancements.\n\nOverall, roughly **70 % of the comments highlight drawbacks such as waste, cost, and reliability issues**, while about **30 % focus on the benefits of innovation and security**. The sense that a more balanced, sustainable approach—one that extends device life while still delivering meaningful updates—would better serve consumers and the planet.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1486,
+    "custom_summary_length": 60
+  }
+}

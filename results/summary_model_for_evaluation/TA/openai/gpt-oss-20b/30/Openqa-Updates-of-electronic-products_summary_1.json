@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Updates-of-electronic-products",
+    "question": "What is your opinion on the rapid update cycle of electronic products, especially smartphones? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:58:08.924829",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nThe discussion overwhelmingly focuses on the tension between rapid smartphone update cycles and the consequences that follow for consumers and the environment.  \n\n- **Majority sentiment**: Most participants express concern or dissatisfaction. Roughly three‑quarters highlight problems such as planned obsolescence, frequent hardware upgrades that feel unnecessary, high costs, and the environmental toll of electronic waste.  \n- **Positive views**: A smaller minority—about one‑fifth of comments—emphasize the benefits of quick updates, noting improved performance, new features, and enhanced security.  \n- **Balanced perspectives**: A modest portion of comments (around five percent) recognize both sides, acknowledging that while rapid progress can be exciting, it also brings challenges like pressure to replace devices and the appearance of bugs.  \n\n**Key themes across the comments**\n\n| Theme | What participants say |\n|-------|------------------------|\n| **Innovation & performance** | Many note that faster cycles bring better hardware, camera upgrades, and new apps. |\n| **Security** | Some view regular software updates as essential for data protection, though a few worry about intrusive tracking. |\n| **Consumer pressure & cost** | A strong current is the perception that manufacturers push consumers toward constant upgrades, driving up expenses. |\n| **Environmental impact** | Repeated obsolescence is seen as a major driver of e‑waste and resource waste. |\n| **Product longevity & repairability** | Several comments stress that devices feel short‑lived, are difficult to repair, and that software alone could suffice for many needs. |\n| **Business motives** | A recurring point is that companies prioritize profit over product durability, often at the expense of user experience. |\n\n**Takeaway**\n\nWhile rapid update cycles are celebrated for pushing technology forward, the prevailing view is that the pace is too swift for many users, fostering a cycle of consumerism that hurts both wallets and the planet. A more balanced rhythm—perhaps a major refresh every two years with incremental updates in between—emerges as a common suggestion for aligning innovation with sustainability.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 2218,
+    "custom_summary_length": 60
+  }
+}

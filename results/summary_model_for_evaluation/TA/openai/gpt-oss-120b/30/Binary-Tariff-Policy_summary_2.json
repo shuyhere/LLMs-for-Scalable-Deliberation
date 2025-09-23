@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Tariff-Policy",
+    "question": "Do you think the current tariff policy under the Trump administration will have a positive or negative impact on the overall U.S. economy and society? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:53:12.118166",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments paint a largely critical picture of the current U.S. tariff policy.  \n\n**Overall sentiment**  \n- About three‑quarters of the responses describe the tariffs as having a **negative impact** on the economy, businesses and consumers.  \n- Roughly one‑fifth of the remarks are **optimistic**, emphasizing possible long‑run benefits such as higher federal revenue, protection of certain domestic industries, or eventual job creation.  \n- The remaining comments adopt a **mixed or neutral** stance, acknowledging short‑term drawbacks while suggesting that the policy could be beneficial if applied more strategically.\n\n**Key concerns raised**  \n\n1. **Higher consumer prices and inflation** – The most frequent complaint is that tariffs raise the cost of imported goods, which is passed on to shoppers, squeezes household budgets and fuels inflation.  \n2. **Pressure on small businesses** – Many respondents argue that the added costs hurt small firms that rely on imported inputs, reducing competitiveness and profitability.  \n3. **Strained international relations** – A sizable share notes that the tariffs damage diplomatic and trade ties, especially with China, and risk retaliatory measures that could further hurt U.S. exporters.  \n4. **Question about effectiveness** – Several participants doubt whether the tariffs actually achieve their stated goals (e.g., reshoring production, protecting jobs), pointing out that many companies continue to source abroad because it remains cheaper.  \n5. **Uncertainty and long‑term risk** – Comments highlight the potential for reduced investment, slower economic growth, and heightened uncertainty that could undermine the United States’ global competitiveness.\n\n**Potential positive arguments**  \n\n- **Revenue generation** – A minority of comments cite projected increases in federal tax receipts as a fiscal upside.  \n- **Domestic industry protection** – Some view tariffs as a tool to shield certain sectors and preserve jobs, especially if applied selectively.  \n- **Long‑run strategic gains** – A few participants believe that, despite short‑term pain, the policy could eventually strengthen the U.S. economy by encouraging more domestic production and reducing dependence on foreign suppliers.\n\n**Overall takeaway**  \n\nThe prevailing view among the contributors is that the tariff regime is causing immediate economic strain—particularly through higher prices for consumers and challenges for businesses—while offering limited and uncertain benefits. Optimism about long‑term gains exists but is confined to a smaller portion of the discussion, and many respondents stress that any positive effects are contingent on careful, targeted implementation rather than the broad, often aggressive, approach currently observed.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 2774,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:55:17.130440",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments paint a largely favorable picture of internet influencing as a legitimate career, while also flagging a number of ambivalences and concerns.\n\n**Positive themes (about 55 % of the remarks)**  \n- Influencers are praised for turning a personal passion into a viable source of income and for opening new economic pathways that let people work from home.  \n- Many see the profession as a natural evolution of media: it democratizes content creation, supplies entertainment and niche information, and often reaches audiences more directly than traditional news outlets.  \n- Respondents note that the field has grown especially since the pandemic, providing a recognized, flexible alternative to conventional jobs and allowing everyday individuals to build a platform and connect with followers.  \n- The role of influencers in shaping trends, offering product recommendations, and delivering “real‑world” advice is viewed as valuable, with several commenters highlighting the educational or inspirational impact of good content.\n\n**Mixed or nuanced views (roughly 25 %)**  \n- Some acknowledge the benefits but stress that the profession carries responsibility; influencers should be transparent, accountable, and mindful of the influence they wield over audiences.  \n- A few point out that, despite its advantages, influencing is still a form of entertainment and should not replace formal education or trade skills.  \n- Several remarks compare influencers to past celebrities, noting the increased intimacy of personal branding while also recognizing that the space can become repetitive or “saturated” as many chase the same trends.\n\n**Negative or critical perspectives (around 20 %)**  \n- Critics describe certain influencers as inauthentic, “annoying,” or overly commercial, arguing that the market is becoming crowded with people who lack genuine expertise.  \n- Concerns are raised about oversaturation, the pressure to produce sensational content, and the potential for negative societal effects such as distorted ideas of success or increased internet addiction.  \n- A recurring worry is the lack of regulation; without clear standards, influencers may disseminate misinformation or behave irresponsibly, which could erode trust.\n\nOverall, the consensus leansw​ers recognize internet influencing as a growing, legitimate profession that expands creative and economic opportunities, but they also call for greater authenticity, accountability, and awareness of its broader cultural impact.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 2501,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Refugee-Policies",
+    "question": "Do you support the government accepting more refugees fleeing war or persecution? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:56:08.872386",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Summary of the comments**\n\nA majority of participants view the U.S. accepting refugees as a positive or necessary action, citing humanitarian reasons such as protecting those fleeing war, persecution, or life‑threatening conditions. Many emphasize that refugees are people who did not choose their circumstances and that the U.S. has a moral obligation to assist them, especially when the country has ample resources.\n\nThose who support this stance are largely conditional: they call for thorough vetting, integration support, and clear criteria for refugee status. Several participants also note that if the U.S. were truly wealthy, it should welcome refugees, but some argue that fiscal constraints and the need to prioritize existing citizens should temper the scale of intake.\n\nOn the opposite side, a minority of comments express concern that accepting more refugees could strain public resources, increase government expenditures, and potentially disadvantage average American citizens. These viewpoints also question whether the U.S. has sufficient capacity to care for its own population before extending aid to newcomers.\n\nIn short, about 70 % of the comments support refugee acceptance with caveats around vetting and resource allocation, while roughly 30 % raise concerns about economic impact and prioritization of domestic needs.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1344,
+    "custom_summary_length": 60
+  }
+}

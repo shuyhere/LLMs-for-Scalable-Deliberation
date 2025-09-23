@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Updates-of-electronic-products",
+    "question": "What is your opinion on the rapid update cycle of electronic products, especially smartphones? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:54:51.909871",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reveals a strong split between enthusiasm for the rapid pace of smartphone innovation and concern over its broader consequences.  \n\n**Positive perspectives**  \n- A sizable share of participants appreciate how frequent releases bring new features, better performance, larger storage, improved cameras, and enhanced security‑related updates.  \n- Many view the fast cycle as a sign of technological progress and value the convenience of having up‑to‑date services and information at their fingertips.  \n\n**Negative perspectives**  \n- A comparable proportion feels the pace is excessive, noting that incremental changes are often indistinguishable from one generation to the next and that the constant push for newer models creates a sense of planned obsolescence.  \n- Cost is a recurring worry: yearly flagship pricing is seen as unjustified given the modest improvements, and financing plans can leave users with devices that stop functioning shortly after payments end.  \n- Environmental and sustainability concerns dominate the criticism, with many highlighting the surge in electronic waste, the difficulty of repairing newer phones, and the waste of resources tied to unnecessary hardware turnover.  \n- Security updates are praised, yet several respondents point out that frequent software patches can introduce bugs, cause instability, and sometimes enable intrusive data collection.  \n- The rapid cycle is also linked to consumer pressure, making people feel compelled to upgrade even when their current devices remain functional, thereby increasing financial strain.  \n\n**Suggested alternatives**  \n- A notable portion of the dialogue proposes a slower rhythm—such as major releases every two years with modest interim upgrades—or a stronger focus on robust software updates that prioritize longevity and repairability.  \n- Some call for manufacturers to design phones that can receive longer‑term OS support, be more easily repaired, and have modular components to extend usable life.  \n\nOverall, while the rapid update cycle is celebrated for delivering cutting‑edge capabilities, many participants argue that its current speed sacrifices durability, affordability, and environmental responsibility, and they advocate for a more balanced approach that blends innovation with sustainability and consumer welfare.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 2333,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Online-Identity-Policies",
+    "question": "Do you support requiring real-name registration on social media platforms, where users must register and post under their real identity? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:52:31.427333",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reveals a clear split on the idea of requiring real‑name registration for a social‑media platform. Roughly one‑fifth of the respondents express strong approval, emphasizing that linking posts to verified identities could increase accountability and curb harmful behaviors such as cyber‑bullying and scams. In contrast, the majority—about three‑fifths— oppose the proposal, citing concerns that mandatory identification threatens privacy, invites intrusive data collection, and creates opportunities for misuse of personal information by corporations or governments. A smaller segment—around one‑fifth—takes a conditional stance: they would tolerate real‑name rules if the requirement comes from the platform itself, but reject it when imposed by governmental authorities, and they also acknowledge the value of anonymity for free expression and for protecting vulnerable voices.\n\nKey recurring themes include:\n\n- **Privacy and Data Security:** Many fear that a centralized database of real identities could be sold, shared, or leveraged to monitor and potentially arrest users, especially those with dissenting political views.\n- **Freedom of Expression:** Anonymity is seen as essential for speaking openly without fear of repercussions, with platforms like Reddit highlighted as positive examples of anonymous discourse.\n- **Accountability vs. Surveillance:** Supporters argue that real names would deter harassment and fraud, while opponents view the same mechanism as a step toward surveillance and a loss of personal freedom.  \n- **Source of Enforcement:** Opinions shift depending on who mandates the policy; platform‑driven requirements are more acceptable than government‑driven ones.\n\nOverall, the conversation underscores a tension between the desire for safer online interactions and the need to preserve user anonymity and privacy. Any policy moving forward would need to balance these competing concerns, perhaps by offering opt‑in mechanisms, robust data‑protection safeguards, and clear limits on governmental access.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 2047,
+    "custom_summary_length": 60
+  }
+}

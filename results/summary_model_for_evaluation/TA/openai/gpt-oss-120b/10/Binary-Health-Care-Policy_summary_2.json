@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:52:12.283726",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments form a largely unified endorsement of a government‑run or government‑funded health‑care system. Across the responses, the prevailing view is that health care should be treated as a basic right rather than a market commodity, and that the state has a central role in guaranteeing that right.  \n\n**Key arguments supporting government involvement**\n\n* **Equity and moral responsibility** – Many participants stress that no one should be forced to forgo treatment because they cannot afford it; health insurance is framed as a universal entitlement essential to personal safety and societal well‑being.  \n* **Economic and productivity benefits** – Several comments link universal coverage to lower overall costs, greater efficiency, and a more competitive workforce. One respondent describes health‑care security as a matter of national security, arguing that an unhealthy labor pool undermines economic stability.  \n* **International precedent** – The experience of other nations—particularly Canada and a range of European models—is cited as evidence that publicly financed systems can deliver quality care at lower expense, suggesting the U.S. could emulate those successes.  \n* **Support for vulnerable populations** – Respondents note that many people are unemployed or under‑employed and thus lack the means to‑pay private premiums; a government safety net would protect these groups and reduce disparities in outcomes.  \n* **Systemic efficiency** – A few participants argue that a single‑payer or universal framework would streamline administration, eliminate duplicate billing, and produce cost savings for the entire population.  \n\n**Reservations and nuances**\n\nOne comment expresses conditional support, indicating willingness to accept government provision of health care but objecting to a system that eliminates personal choice. This reflects a modest minority view that favors a public option while preserving alternatives.\n\n**Overall impression**\n\nThe overwhelming majority of the feedback advocates for a government‑led health‑care model, emphasizing moral imperatives, economic advantages, and comparative successes abroad. A small fraction seeks to retain some element of individual choice within that framework.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 2239,
+    "custom_summary_length": 60
+  }
+}

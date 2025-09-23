@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Online-Identity-Policies",
+    "question": "Do you support requiring real-name registration on social media platforms, where users must register and post under their real identity? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:55:49.081198",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Summary of the deliberation**\n\nA majority of comments caution against mandatory real‑name registration on social media.  \n*Privacy and safety* are the most common concerns: many respondents fear that revealing real identities could expose them to harassment, surveillance, government or corporate data collection, and potential misuse of personal information, especially for people who are victims of domestic abuse, marginalized groups, or those who simply wish to keep their professional and personal lives separate.  \nThey also point out that mandatory real‑name policies could reduce overall platform usage, create additional data‑leak risks, and reinforce existing power imbalances.\n\nA smaller but significant portion sees *accountability* as a key benefit of real‑name registration. These comments emphasize that knowing a user’s real identity could deter cyberbullying, impersonation, and other harmful behaviors, and that it could help platforms and law‑enforcement agencies more effectively address serious offenses such as identity theft.\n\nA handful of respondents suggest *conditional or hybrid* approaches. They propose allowing real‑name registration only for certain parts of a user’s account (e.g., administrative or “back‑office” functions), offering verified badges for public figures or businesses, or giving users the choice between a real name and a pseudonym while still enabling the platform to trace problematic accounts when necessary.\n\n**Overall sentiment**  \n- Approximately **60 %** of the comments express opposition to mandatory real‑name registration.  \n- Around **30 %** support it, citing accountability and safety.  \n- Roughly **10 %** advocate for a compromise or alternative solutions.\n\nThe discussion highlights a tension between protecting individual privacy and fostering a safer, more accountable online environment, with most participants leaning toward preserving anonymity and cautioning against broad enforcement of real‑name policies.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1980,
+    "custom_summary_length": 60
+  }
+}

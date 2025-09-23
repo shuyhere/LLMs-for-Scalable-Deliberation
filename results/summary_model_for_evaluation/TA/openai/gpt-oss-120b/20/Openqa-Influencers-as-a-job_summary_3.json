@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:05.791678",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reveals three broad sentiment clusters. Roughly half of the remarks are supportive, emphasizing that internet influencers have become a legitimate profession that offers creators a viable source of income, expands the ways people receive entertainment and information, and reflects a natural evolution of media and commerce. Supporters also note the sector’s role in shaping trends, providing niche knowledge, and opening new career paths, especially after the pandemic surge.\n\nAbout a quarter of the comments adopt a more balanced or ambivalent stance. These participants acknowledge the convenience and appeal of influencer work and recognize its growth as a response to social‑media proliferation, yet they also point out issues such as trend‑chasing, loss of originality, and the sheer volume of creators that can make the space feel crowded.\n\nThe remaining quarter are critical, describing influencers as often inauthentic, annoying, or overly saturated. Concerns focus on the potential for misleading notions of success, the pressure to produce ever‑more sensational content, and broader societal impacts such as reduced creativity, possible negative effects on audiences, and the need for greater responsibility and transparency.\n\nAcross all viewpoints, recurring themes include the importance of authenticity, the risk of oversaturation, the responsibility influencers have toward their audiences, and the tension between entertainment value and genuine societal contribution.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1499,
+    "custom_summary_length": 60
+  }
+}

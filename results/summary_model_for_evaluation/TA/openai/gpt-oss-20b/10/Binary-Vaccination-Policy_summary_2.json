@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Vaccination-Policy",
+    "question": "Do you support the government having the authority to enforce vaccination and quarantine measures during severe epidemics? Please answer briefly in 1–2 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:56:48.651722",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion shows a strong tilt toward supporting government‑led measures such as quarantine and vaccination mandates.  \n\n**Key points from supporters (70 %)**  \n* Enforcement is seen as the most reliable way to protect public health and stop disease spread.  \n* Many cite personal experience from the pandemic, noting how lack of vaccination slowed everyday life and increased risk.  \n* Some argue that early in an outbreak, strict measures were essential because little was known, but that they could be relaxed once more information became available.  \n* The overarching belief is that the greater good justifies temporary limits on individual choice when those limits safeguard the community.\n\n**Key points from opponents (30 %)**  \n* A minority argue that mandates infringe on personal freedom and that people should be free to decide for themselves.  \n* Concerns over vaccine safety, especially early in the rollout, are highlighted, with references to potential autoimmune reactions and insufficient long‑term study.  \n\n**Overall tone**  \nMost participants view enforcement as a necessary public‑health tool, while a smaller group raises legitimate concerns about personal liberty and safety. The conversation reflects a consensus that, in a pandemic, collective protection often outweighs individual preferences, but also acknowledges the need for ongoing evaluation and adjustment of policies as new evidence emerges.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1429,
+    "custom_summary_length": 60
+  }
+}

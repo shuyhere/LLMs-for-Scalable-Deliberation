@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Vaccination-Policy",
+    "question": "Do you support the government having the authority to enforce vaccination and quarantine measures during severe epidemics? Please answer briefly in 1–2 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:53:28.210477",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The collection of remarks reflects a clear split between those who view mandatory vaccination and quarantine as essential tools for protecting public health and those who prioritize individual choice and express safety concerns.\n\n**Support for enforcement (about 70 %)**  \n- Many participants argue that government‑mandated measures are the most effective way to curb disease spread and safeguard the community.  \n- Several note that early‑stage enforcement was especially justified when scientific knowledge about the virus was limited, but they are open to relaxing restrictions once evidence accumulates.  \n- A recurring theme is the belief that personal decisions can have collective consequences, so stepping in “for the greater good” is warranted.  \n\n**Opposition to enforcement (about 30 %)**  \n- Some respondents stress personal liberty and the idea that encouragement, not compulsion, respects diverse beliefs.  \n- A minority cites concerns about the speed of vaccine development and reports of adverse health effects, arguing that mandates are premature or unsafe.  \n\nOverall, the discussion balances public‑health imperatives against individual autonomy, with most commenters favoring mandatory measures—particularly in the early phases of a pandemic—while a notable portion cautions against compulsory policies on the grounds of personal freedom and vaccine safety.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1377,
+    "custom_summary_length": 60
+  }
+}

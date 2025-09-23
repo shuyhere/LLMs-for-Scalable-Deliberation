@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Refugee-Policies",
+    "question": "Do you support the government accepting more refugees fleeing war or persecution? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:52:51.000459",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reflects a clear leaning toward welcoming refugees, though many participants stress that this openness should be paired with careful safeguards. Roughly seventy percent of the remarks express support for expanding U.S. refugee admissions, emphasizing humanitarian responsibility (“everyone deserves safety and a good life,” “innocent children and parents are being killed”) and the moral imperative to help those fleeing war or persecution. Among the supportive voices, several call for robust vetting processes, clear qualification criteria, and integration measures such as education about American laws and customs to ensure that newcomers can adjust smoothly and not strain public services.\n\nConversely, about thirty percent of the comments voice opposition, centering on concerns about the nation’s fiscal capacity and the potential impact on existing citizens. These critics argue that limited resources, high national debt, and already‑and‑ongoing pressures on social systems make it difficult to accommodate additional refugees until domestic needs are fully met. A few also highlight perceived inequities, suggesting that illegal immigrants sometimes receive aid while ordinary Americans may be denied assistance.\n\nOverall, the conversation balances a strong humanitarian ethic with pragmatic worries about resource allocation and societal integration. The prevailing view favors accepting refugees, provided that stringent screening, adequate preparation, and responsible budgeting are put in place to mitigate the highlighted economic and social challenges.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1583,
+    "custom_summary_length": 60
+  }
+}

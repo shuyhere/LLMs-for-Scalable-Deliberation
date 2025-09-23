@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:57:03.041936",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments overwhelmingly point to AI as a powerful productivity aid that streamlines everyday tasks, speeds up research, and frees up time for other activities. Many respondents see it as a convenient tool that turns routine or “meaningless” work into quick, accurate summaries, and they appreciate its ability to help them learn new subjects faster than traditional methods. A smaller portion of the feedback raises concerns about the reliability of the information produced—highlighting occasional inaccuracies, a need for fact‑checking, and a tendency toward biased source selection. One comment notes a personal benefit in conflict‑resolution, using AI to assess emotional reactions. Overall, the discussion reflects a strong inclination toward valuing AI’s efficiency gains while acknowledging that it remains an optional supplement that requires human judgment for critical accuracy.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 892,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Vaccination-Policy",
+    "question": "Do you support the government having the authority to enforce vaccination and quarantine measures during severe epidemics? Please answer briefly in 1–2 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:53.119073",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nThe discussion reveals a clear split between those who favour government‑mandated health measures during a severe epidemic and those who resist such mandates, especially when it comes to vaccination.  \n\n- **Support for mandatory quarantine and vaccination** was expressed by roughly half of the participants (about 50 %). These respondents argue that compulsory actions are the most reliable way to protect public health, achieve herd immunity, and prevent disease spread, especially when scientific evidence confirms vaccine safety and effectiveness.  \n\n- **Conditional or nuanced support** appeared in about 10 % of the comments. These contributors acknowledge the usefulness of enforcement in the early, uncertain phases of an outbreak but call for relaxation once more data become available or the threat diminishes.  \n\n- **Support limited to quarantine only** was voiced by a small minority (around 5 %). These participants accept strict isolation measures for a severe epidemic but oppose compulsory vaccination, citing concerns about insufficient long‑term safety data.  \n\n- **Opposition to mandatory measures** accounted for roughly 35 % of the remarks. The main reasons given include:  \n  * Protection of individual autonomy and the right to choose what enters one’s body.  \n  * Skepticism about the rapid development and testing of vaccines, with worries about side‑effects and long‑term health impacts.  \n  * Distrust of government performance during the COVID‑19 pandemic, which some described as “poor” or “inconsistent.”  \n  * Belief that coercive policies may backfire by frightening the public and eroding confidence in health authorities.  \n\n**Key Themes Across the Debate**\n\n1. **Public‑health imperative vs. personal liberty** – Proponents stress collective safety and the necessity of a coordinated response, while opponents prioritize personal choice and view mandates as an overreach.  \n\n2. **Evidence‑based confidence** – Supportive voices often cite scientific validation, vaccine trials, and the demonstrated benefits of herd immunity. Critics point to perceived gaps in long‑term research, especially for newly developed vaccines.  \n\n3. **Severity of the epidemic** – Many agree that the gravity of the outbreak should dictate the level of enforcement; the more severe and fast‑spreading the disease, the stronger the justification for compulsory measures.  \n\n4. **Government credibility and communication** – Several comments highlight the need for transparent, consistent messaging and effective public education. When trust in authorities is low, mandates are more likely to be resisted.  \n\n5. **Flexibility over time** – A recurring suggestion is that enforcement should be adaptable: strict in the early, uncertain stage, and scalable back as knowledge grows and the threat recedes.  \n\nIn sum, while a majority leans toward endorsing governmental authority to enforce quarantine and vaccination during a serious epidemic, a substantial minority remains wary, emphasizing individual rights, safety concerns, and the importance of trust‑building and clear communication from public officials.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 3142,
+    "custom_summary_length": 60
+  }
+}

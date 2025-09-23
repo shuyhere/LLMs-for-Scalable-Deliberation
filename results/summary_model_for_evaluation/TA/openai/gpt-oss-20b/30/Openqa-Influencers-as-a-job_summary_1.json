@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:58:27.693052",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Take‑away**\n\n- **Majority view (≈ 70 %)**: Internet influencing is a legitimate, evolving profession that offers creative freedom, income, and a new way for ordinary people to reach wide audiences. Many see it as a natural extension of media and commerce, with the potential to provide useful information, entertainment, and even news‑like content.\n\n- **Moderate concern (≈ 18 %)**: A number of participants recognize both the benefits and the pitfalls. They highlight the need for authenticity, transparency, and accountability, and worry that the field may become too saturated or that followers could be misled by marketing or “fake” personas.\n\n- **Minor criticism (≈ 11 %)**: A small but vocal group feels that influencers can be annoying, inauthentic, or harmful, especially when they over‑commercialize or fail to maintain a responsible public stance. Some also worry that the profession may shift attention away from more traditional jobs or create unrealistic expectations about success.\n\n**Key Themes**\n\n| Theme | What participants said |\n|-------|------------------------|\n| **Legitimacy & Opportunity** | “It’s a real profession now,” “people can earn a living,” “everyday people can get a platform.” |\n| **Positive Impact** | “They entertain and inform,” “new wave of news,” “use their platform for good.” |\n| **Responsibility & Ethics** | “Influencers should be accountable,” “need authenticity,” “responsible content.” |\n| **Saturation & Authenticity Concerns** | “Too many influencers,” “many are fake,” “oversaturated market.” |\n| **Potential Downsides** | “Annoying,” “can mislead,” “may replace news outlets,” “creates unrealistic “easy‑money” expectations.” |\n\nIn short, most respondents view internet influencing as a valid, creative career that brings both opportunities and responsibilities, while a minority raise concerns about authenticity, market saturation, and potential negative influence on audiences.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1941,
+    "custom_summary_length": 60
+  }
+}

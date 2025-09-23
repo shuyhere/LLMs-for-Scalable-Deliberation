@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Trump-cutting-funding",
+    "question": "What are your thoughts on Trump’s decision to cut academic funding? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:54:33.695550",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a strong, mostly unified reaction against the proposed cuts to academic funding. The overwhelming majority view the reductions as short‑sighted and harmful: they argue that curtailing resources will weaken basic education, limit research opportunities, stifle innovation, and jeopardize the country’s long‑term competitiveness. Many stress that education is the foundation of all other sectors and that under‑funding will disproportionately hurt students—especially those from low‑income backgrounds—and push scholars to seek support abroad.\n\nA substantial share of respondents link the cuts to political motives, describing them as ideologically driven, authoritarian, or aimed at suppressing independent thought. Several participants portray the policy as a strategic move to keep the populace “dumb” or to favor a “low‑pay workforce,” and they invoke concerns about broader social consequences such as increased inequality and the erosion of democratic values.\n\nA smaller but notable minority offers a more nuanced perspective. Some acknowledge the need to curb wasteful spending and suggest that a balanced approach—reducing waste while preserving essential educational and research funding—could be acceptable. A few commentors express uncertainty or lack of detailed knowledge, indicating they would need more information before forming an opinion.\n\nOnly a very limited proportion explicitly defends the overall policy, framing the cuts as justified because of perceived left‑leaning bias in academia or as part of broader “excellent” policy decisions. These supportive remarks are outweighed by the critical and concerned voices.\n\nIn sum, the sentiment is predominantly negative: most participants see the funding cuts as detrimental to students, educators, researchers, and the nation’s future, warn of political manipulation, and call for either a reversal of the cuts or a more measured fiscal strategy that safeguards education and innovation.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1974,
+    "custom_summary_length": 60
+  }
+}

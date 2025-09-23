@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:47.186927",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments paint a picture of AI as a versatile, everyday assistant that most users rely on to streamline both work‑related and personal tasks.  \n\n**Productivity and time‑saving** dominate the discussion, with roughly three‑quarters of respondents noting that AI speeds up routine chores, condenses research, drafts documents, creates tables or event plans, and even corrects dictation errors. This efficiency translates into more free time and a feeling of being “more productive” or “less strained” at work.  \n\n**Information gathering and learning** are also highlighted. Many participants appreciate how quickly AI can pull together summaries, locate popular sources, and explain technical subjects—often likening the experience to a modern, more powerful version of a search engine.  \n\n**Creative support** emerges as a distinct, positive thread. Around a fifth of the remarks mention using AI for art, design or idea generation, describing it as a catalyst that helps overcome personal artistic blocks and expands creative possibilities.  \n\n**Entertainment and amusement** are noted by a smaller but noticeable share of users, who enjoy AI’s ability to provide light‑hearted content and novel experiences.  \n\nConversely, **concerns and drawbacks** appear in several comments. Approximately one‑third of the feedback points to issues of accuracy, bias, or the need for fact‑checking, indicating that users do not treat AI outputs as infallible. Privacy worries and anxiety about data misuse are raised by a minority, as are fears about job security and a growing distrust of content that might be AI‑generated. A few participants describe AI as an optional tool that has not dramatically altered their lives, underscoring that adoption and impact vary widely.  \n\nOverall, the sentiment is overwhelmingly positive regarding AI’s role in simplifying daily routines, enhancing productivity, and fostering creativity, while still acknowledging the need for vigilance around reliability, especially in research, and for safeguards concerning privacy and employment.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2066,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:58:24.005710",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nAcross the comments, there is a clear recognition that internet influencing is a legitimate and growing profession. Most respondents appreciate the accessibility of the field, its potential for income, and the way influencers can connect with audiences and shape trends. Many highlight the positive aspects—such as opening doors for creators, providing useful information, and offering a platform for everyday people to share their lives.\n\nA substantial minority, however, raise concerns about authenticity, oversaturation, and the responsibility that comes with influence. These participants worry that the ease of getting started may encourage superficial or misleading content, that the proliferation of creators can dilute originality, and that the profession may foster unrealistic expectations of success. Some also point out the lack of regulation and accountability compared to more traditional careers.\n\nOverall, about **60 %** of the comments express a supportive or neutral stance toward the profession, while **30 %** signal reservations or critique, and the remaining **10 %** blend both viewpoints. The prevailing sentiment is that internet influencing is a valid and evolving career path, but it requires careful handling of credibility, transparency, and ethical standards.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1310,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:11.627459",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion overwhelmingly favors a government‑led provision of basic health insurance.  \n- **Support:** Roughly 95 % of the comments advocate for some form of public coverage, citing it as a right, a means to reduce costs, improve public health, and strengthen national competitiveness. Most respondents envision universal or at least universal‑basic coverage, with a few insisting that any system must be timely, efficient, or allow private choice alongside public options.  \n- **Opposition:** Only about 5 % rejects the idea outright, arguing that the government is poorly suited for such a role and that private markets should remain responsible.  \n\nOverall, the consensus is that expanding government support for health insurance—whether universal or limited to basic coverage—would address affordability, equity, and public welfare concerns. Some practical conditions are raised, such as the necessity for timely care, the inclusion of choice, or a scaled‑down approach, but these do not alter the prevailing pro‑government stance.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1040,
+    "custom_summary_length": 60
+  }
+}

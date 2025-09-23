@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:58:31.489472",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nA majority of respondents see internet influencing as a legitimate and evolving profession that offers creative freedom, new revenue streams, and an expanded platform for personal expression. They highlight the convenience of working from home, the ability to connect with audiences, and the role influencers play in shaping trends, providing entertainment, and even delivering news content that may reach audiences more quickly than traditional outlets.\n\n**Key Themes**\n\n- **Legitimacy & Opportunity** – About 60 % view influencer work as a valid career path, noting how it has become a recognized profession, especially since the pandemic accelerated its growth. Many appreciate the accessibility and potential for earning a living through content creation.\n  \n- **Positive Impact** – Roughly 25 % focus on the benefits: empowerment for everyday people, diverse content, informative streams, and the chance for audiences to learn directly from relatable creators.\n\n- **Authenticity & Responsibility** – A notable share of comments (around 15 %) express concerns about authenticity, the need for accountability, and the potential for misleading or manipulative content. They call for clearer standards and ethical guidelines.\n\n- **Oversaturation & Creative Drain** – Some respondents worry that the market is becoming crowded, leading to formulaic content, loss of originality, and a culture of “copy‑cat” trends.\n\n- **Influence on Youth & Education** – A minority voice stresses the importance of teaching young people that internet careers are not merely “easy money” and that traditional education and trade skills remain essential.\n\nOverall, the discussion reflects a balanced view: while many celebrate the emerging role of influencers, a significant number advocate for greater responsibility, authenticity, and a clearer regulatory framework to safeguard audiences and maintain the profession’s credibility.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1936,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Tipping-System",
+    "question": "What is your opinion on tipping, and if given the chance, how would you improve or change the current tipping system? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:52.722541",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a strong consensus that the current tipping system feels coercive and tied to inadequate wages. Most respondents argue that tipping should be **optional and tied to the quality of service**, rather than a default part of every transaction. A large share (around 75 %) call for the removal of mandatory tipping prompts and suggest that businesses should instead guarantee a **livable base wage** for all service‑industry employees.  \n\nMany participants propose concrete alternatives:\n\n* **Service‑charge model** – roughly 40 % favor a flat, compulsory service fee (often suggested at about 10 % of the bill) that would replace discretionary tips, making tipping truly optional.  \n* **Fixed‑amount tips** – about 20 % would prefer standard tip amounts (e.g., $20–$30) instead of percentage‑based calculations, especially for lower‑priced orders.  \n* **Gratitude incentives** – a smaller segment (≈15 %) recommends giving customers something tangible for tipping, such as a thank‑you note or a coupon for a future visit.  \n\nAcross the board, there is a shared belief that the United‑States tipping culture is **over‑expected** and often used by employers to offset low wages. Several commenters point to European models where tipping is minimal because workers receive adequate pay. While a minority still view tipping positively when it reflects genuine appreciation, they echo the need to eliminate pressure or implied expectations, especially for minimal or self‑service transactions.  \n\nOverall, the prevailing sentiment is that **tipping should become a voluntary expression of gratitude**, supported by systemic wage reforms and, if retained, simplified or flat‑rate structures rather than the current ubiquitous percentage‑based prompts.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1761,
+    "custom_summary_length": 60
+  }
+}

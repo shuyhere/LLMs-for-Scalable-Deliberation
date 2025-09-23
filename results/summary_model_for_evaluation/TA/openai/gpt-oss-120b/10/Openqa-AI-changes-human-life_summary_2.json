@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:53:46.795633",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments paint a largely positive picture of AI’s impact on daily life and work. Most respondents highlight how AI streamlines routine and research tasks, quickly compiles information, and frees up time for other activities. Many note that AI’s speed, precision, and ability to generate summaries or ideas make it a useful assistant for learning new subjects, producing technical content, and even navigating personal conflicts.  \n\nAt the same time, a noticeable minority view AI as a convenient but optional tool that hasn’t dramatically altered their routines. Concerns are raised about the reliability of AI‑generated content—issues of accuracy, relevance, and source bias require users to verify information themselves.  \n\nOverall, the feedback suggests that AI is widely valued for boosting efficiency and expanding access to knowledge, while users remain cautious about its limitations and the need for critical oversight.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 932,
+    "custom_summary_length": 60
+  }
+}

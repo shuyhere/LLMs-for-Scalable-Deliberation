@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Updates-of-electronic-products",
+    "question": "What is your opinion on the rapid update cycle of electronic products, especially smartphones? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:40.355677",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nThe discussion reveals a strong tilt toward concern and skepticism about the rapid update cycle for smartphones.  \n- Roughly **80 %** of the comments voice doubt or criticism, highlighting issues such as planned obsolescence, financial pressure, and environmental waste.  \n- About **15 %** suggest that frequent updates are beneficial, citing innovation, improved performance, and enhanced security.  \n- The remaining **5 %** offer mixed or neutral observations, noting both convenience and inconvenience.\n\n**Key Themes**\n\n| Theme | Main Points | Sentiment |\n|-------|-------------|-----------|\n| **Innovation & Performance** | Updates bring new features, better cameras, security patches, and faster technology. | Positive |\n| **Planned Obsolescence & Consumer Pressure** | New models are released yearly, encouraging frequent purchases; accessories (chargers, cases) become obsolete. | Negative |\n| **Environmental Impact** | Frequent upgrades generate electronic waste and strain resources. | Negative |\n| **Financial Strain** | Consumers feel forced to upgrade to stay compatible or secure, sometimes paying for credit plans that end abruptly. | Negative |\n| **Usability & Reliability** | Updates can introduce bugs, cause device malfunction, or stop older models from receiving essential services. | Negative |\n| **Security** | Some see updates as reassuring for data protection, though concerns remain about data tracking. | Mixed |\n\n**Take‑away**  \nWhile many acknowledge the technological benefits of rapid updates, a substantial majority view the cycle as a driver of unnecessary consumption, financial burden, and environmental harm. A more balanced approach—slowing the cadence of major releases, extending device longevity, and enhancing repairability—appears to be a common hope among participants.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1832,
+    "custom_summary_length": 60
+  }
+}

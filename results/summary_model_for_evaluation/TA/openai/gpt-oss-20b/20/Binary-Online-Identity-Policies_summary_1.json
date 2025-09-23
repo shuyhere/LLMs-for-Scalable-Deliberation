@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Online-Identity-Policies",
+    "question": "Do you support requiring real-name registration on social media platforms, where users must register and post under their real identity? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:16.377002",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nAcross the discussion, a majority of respondents expressed **opposition** to mandatory real‑name registration on social media, citing a range of privacy and safety concerns. A smaller portion **supported** the idea, arguing that it would curb harassment, increase accountability, and enhance credibility. The remaining comments were **conditional**, acknowledging benefits while also highlighting risks.\n\n**Key Themes**\n\n| Theme | What participants said | Approx. Percent of overall stance |\n|-------|------------------------|----------------------------------|\n| **Privacy & Data Security** | Many argued that requiring real names would expose users to identity theft, stalking, targeted advertising, and potential misuse of data by companies or governments. | 60 % |\n| **Safety for Vulnerable Groups** | Several comments emphasized that anonymity protects people facing domestic abuse, political persecution, or other real‑world dangers. | 60 % |\n| **Accountability & Harassment** | A minority believed that real identities would deter cyberbullying, catfishing, and inflammatory speech, and would help platforms respond to misuse. | 15 % |\n| **Government vs. Platform Control** | Opinions varied on whether a platform or a state authority should enforce such a policy, with concerns that government involvement could lead to surveillance. | 25 % |\n| **Mixed Views** | Some respondents saw both advantages (credibility, trust) and disadvantages (privacy loss, potential data exploitation), suggesting a hybrid approach (e.g., real name for official accounts, pseudonym for public posts). | 25 % |\n\n**Overall Sentiment**\n\n- **Opposition**: 60 % of comments highlighted that mandatory real‑name registration would erode online privacy, increase risk of abuse, and could be exploited by corporations or governments.  \n- **Support**: 15 % felt the benefits—particularly reducing harassment and increasing accountability—outweighed the risks.  \n- **Conditional**: 25 % acknowledged potential gains but also the danger of data misuse and abuse of anonymity, often calling for safeguards or a selective implementation.\n\nThe discussion underscores a tension between protecting users’ privacy and ensuring responsible online behavior, with most participants leaning toward preserving anonymity while remaining open to limited, well‑regulated accountability mechanisms.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2382,
+    "custom_summary_length": 60
+  }
+}

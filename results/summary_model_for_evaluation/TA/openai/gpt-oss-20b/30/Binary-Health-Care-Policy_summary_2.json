@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:55:30.645688",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments overwhelmingly favor the idea that the government should provide basic health insurance or a universal health‑care system.  Most respondents frame health care as a fundamental human right, a public good that should not be tied to employment or income, and a means to protect the nation’s workforce and overall wellbeing.  Frequent arguments include the high cost and limited access of private insurance, the necessity of health care for all citizens regardless of socioeconomic status, and the positive example set by other developed nations.  \n\nA minority voice expresses opposition, citing concerns that government involvement would lead to inefficiency, loss of choice, or that private sector solutions are preferable.  These dissenting remarks highlight worries about government overreach and the potential for increased bureaucracy or lowered quality.  \n\nOverall, the sentiment is strongly supportive of a government‑led basic health‑insurance scheme, with the primary motivations being equity, public health, and economic stability.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1051,
+    "custom_summary_length": 60
+  }
+}

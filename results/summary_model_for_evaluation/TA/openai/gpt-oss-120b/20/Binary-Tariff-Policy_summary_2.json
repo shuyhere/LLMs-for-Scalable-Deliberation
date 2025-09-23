@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Tariff-Policy",
+    "question": "Do you think the current tariff policy under the Trump administration will have a positive or negative impact on the overall U.S. economy and society? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:46.666301",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion is dominated by concerns that the tariff policy is harming the U.S. economy. About a little more than half of the remarks describe negative outcomes such as higher consumer prices, inflation, tighter margins for small businesses, and strained trade relationships—especially with China. Several participants stress that these costs are being passed on to everyday Americans, eroding purchasing power and offering little immediate job creation. A notable portion of the commentary also frames the tariffs as politically motivated, suggesting they serve the interests of the administration rather than the broader public.\n\nConversely, roughly one‑third of the responses emphasize potential benefits. These include increased federal revenue, protection of certain domestic industries, and the prospect of long‑term fiscal stability by reducing reliance on foreign imports. Some contributors argue that, while short‑term disruptions are likely, the policy could eventually boost American manufacturing and help lift households out of poverty.\n\nThe remaining comments adopt a mixed or uncertain stance. They acknowledge short‑term pains—such as price hikes and industry disruption—while holding out hope for longer‑term gains, or they simply note that the impact appears minimal because firms are finding ways to circumvent the tariffs.\n\nOverall, the sentiment leans toward a negative assessment of the current tariff regime, tempered by a minority that sees possible fiscal or strategic advantages and a smaller group that perceives a nuanced, time‑dependent effect.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1576,
+    "custom_summary_length": 60
+  }
+}

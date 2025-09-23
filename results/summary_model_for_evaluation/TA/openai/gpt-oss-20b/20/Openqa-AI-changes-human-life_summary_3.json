@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:27.083827",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nMost respondents view AI as a powerful enabler that streamlines routine work, accelerates learning, and frees up time for more creative or personal pursuits. About **70 %** of the comments highlight gains in productivity, easier research, and a smoother flow of day‑to‑day tasks. A significant share (~**20 %**) describes AI as a useful, optional tool that augments but does not transform their lives, noting the need for fact‑checking and occasional inaccuracies. The remaining portion (~**10 %**) expresses concerns—ranging from privacy and job security to increased scepticism toward others’ work and the potential for AI to erode trust. Overall, while the majority celebrate AI’s convenience and creativity‑boosting features, a minority remain cautious about its broader social and ethical implications.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 828,
+    "custom_summary_length": 60
+  }
+}

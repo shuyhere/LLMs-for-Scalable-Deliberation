@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:55:06.403486",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a largely favorable view of internet influencers, with most respondents recognizing the profession’s legitimacy and its growing importance in shaping trends, providing entertainment, and delivering information that traditional media often overlook. Many appreciate that influencing can be a viable source of income and a flexible way for creators to turn personal passions into work, likening the role to a modern, more personable version of past celebrity culture. Respondents also note the positive impact influencers have on audiences—offering ideas, advice, and niche content that can be both enjoyable and educational.\n\nA smaller but notable portion adopts a more neutral stance, acknowledging the rise of influencing as a natural outcome of social‑media proliferation while not personally identifying with the career. These comments stress that the phenomenon makes sense given how digital platforms have reshaped how people consume content and news.\n\nCriticism appears in a minority of the remarks. Some participants find influencers inauthentic or irritating, warning that the drive to keep up with trends can lead to homogenization and a loss of creativity. Concerns about authenticity and responsibility are also voiced, suggesting that the space should remain genuine and accountable despite its commercial success.\n\nOverall, the feedback paints influencers as a significant, emerging professional sector that offers economic opportunities and valuable content, while also highlighting the need for authenticity and creative diversity to sustain its credibility.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1593,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Refugee-Policies",
+    "question": "Do you support the government accepting more refugees fleeing war or persecution? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:52:52.146250",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reveals a clear split between those who view the acceptance of refugees as a moral responsibility and those who worry about the practical consequences for the United States.\n\n**Supportive viewpoints (about 60 % of the comments)**  \n- **Humanitarian concerns dominate** – many participants stress empathy, noting that anyone fleeing war or persecution deserves safety and that innocent children and families should be protected.  \n- **Moral duty and kindness** are frequently cited, with the idea that people should be treated fairly regardless of where they were born.  \n- **Conditional endorsement** appears in roughly a third of the supportive remarks: respondents call for thorough vetting, clear criteria for refugee status, and integration programs (e.g., education about U.S. laws and culture) to ensure newcomers can adapt without harming existing communities.\n\n**Opposing viewpoints (about 40 % of the comments)**  \n- **Economic and resource worries** are the primary arguments. Commenters point to national debt, the need to prioritize American citizens, and the potential strain on public services and social safety nets.  \n- **Perceived unfairness** is also mentioned, with concerns that resources might be diverted from “average” Americans to newcomers, especially those who entered illegally.  \n- A minority of the dissenting remarks stress the possibility of a growing refugee population leading to higher long‑term government expenditures.\n\n**Overall synthesis**  \nThe debate balances compassion for individuals fleeing danger against pragmatic anxieties about fiscal capacity and social impact. Those in favor largely frame the issue in terms of universal human rights and moral obligation, while those against focus on the United States’ current economic constraints and the need to protect domestic resources. Even among supporters, there is a common call for stronger vetting and integration measures, indicating that many see a middle ground where humanitarian aid can be provided responsibly. Conversely, opponents tend to view the policy as a zero‑sum trade‑off, fearing that increased refugee intake could diminish the quality of life for existing residents.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 2196,
+    "custom_summary_length": 60
+  }
+}

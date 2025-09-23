@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:33.190256",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion is overwhelmingly in favor of expanding government‑provided health coverage. Most participants argue that health care is a basic right and that it is the government’s duty to ensure access for all citizens. Frequently cited reasons include:\n\n* **Equity and social justice** – many see health insurance as a right rather than a luxury, emphasizing that everyone should be protected from the risk of unaffordable care.\n* **Economic and security benefits** – respondents note that a healthier population boosts productivity and competitiveness, and that universal coverage can be a matter of national security.\n* **Cost‑effectiveness** – several commenters believe a public system would lower overall expenses, reduce waste, and make care more affordable for the population as a whole.\n* **International comparison** – the success of universal or largely public systems in other nations is repeatedly mentioned as evidence that the United States should adopt a similar model.\n* **Support for a public option** – a minority of voices suggest that a government‑run plan should coexist with private options, preserving individual choice while guaranteeing a baseline of coverage.\n\nA smaller portion of the feedback expresses conditional support. These participants are willing to endorse basic, essential coverage but raise concerns about:\n\n* **Potential government overreach** – worries about excessive monitoring or loss of personal autonomy.\n* **Implementation quality** – the need for timely, efficient delivery of services and safeguards against bureaucratic inefficiencies.\n\nOnly a single comment opposes government‑run health care, arguing that the public sector is inherently inefficient and that private provision is preferable for maintaining quality.\n\nOverall, roughly **85 %** of the comments are supportive of some form of government‑provided health insurance, about **10 %** endorse a limited or mixed approach, and **5 %** express outright opposition. The dominant narrative frames universal health care as a moral imperative, an economic advantage, and a proven model abroad, while the minority concerns focus on preserving choice and ensuring effective administration.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2194,
+    "custom_summary_length": 60
+  }
+}

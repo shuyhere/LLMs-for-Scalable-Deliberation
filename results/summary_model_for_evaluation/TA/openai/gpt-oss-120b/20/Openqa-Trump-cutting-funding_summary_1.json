@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Trump-cutting-funding",
+    "question": "What are your thoughts on Trump’s decision to cut academic funding? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:55.983482",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion is dominated by strong opposition to the proposed cuts in academic funding. Most participants argue that education is the foundation of a healthy society and that reducing financial support will jeopardize students, teachers, and the nation’s long‑term competitiveness. They stress that cutting resources hampers research, stifles innovation, and could cause a brain drain, ultimately weakening the country’s economic and scientific standing. Several comments link the cuts to political motivations—either accusing the administration of targeting “left‑leaning” institutions or suggesting a broader authoritarian agenda aimed at limiting independent thought and keeping the populace less informed.\n\nA smaller segment sees some justification for reduced funding, citing concerns about wasteful spending or the perceived ideological bias of certain universities. However, even these contributors generally call for a balanced approach that preserves essential research and educational opportunities while trimming excess.\n\nA few respondents express uncertainty, noting that they lack sufficient details to form an opinion or simply do not know enough about the policy to comment.\n\nOverall, the sentiment is overwhelmingly negative, with the majority emphasizing that sustained investment in education and research is crucial for individual opportunity, societal progress, and national security, while a minority either tentatively supports the cuts on ideological grounds or remains undecided.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1506,
+    "custom_summary_length": 60
+  }
+}

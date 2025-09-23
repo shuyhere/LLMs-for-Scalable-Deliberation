@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:57:07.773026",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nAcross the comments, the prevailing view is that AI has made daily life and work noticeably easier and more efficient. Users frequently cite:\n\n* **Productivity gains** – faster completion of routine tasks, streamlined research, and time‑saving shortcuts that free up space for higher‑level work or leisure.  \n* **Enhanced creativity and learning** – AI assists in generating ideas, refining writing, designing artwork, and simplifying complex subjects.  \n* **Convenience and accessibility** – quick summaries, voice‑dictation corrections, and the ability to ask for instant answers or automate home appliances.  \n\nA sizable minority express reservations, mainly centering on:\n\n* **Privacy and data security** – concerns about personal information being tracked, stored, or used without explicit consent.  \n* **Trust and authenticity** – feeling increasingly vigilant about AI‑generated content, fearing that it could erode trust in human‑created work.  \n* **Job security and societal impact** – worries that widespread AI adoption may reduce employment opportunities or deepen social media addiction.\n\nWhen expressed in percentages, roughly **70 %** of the comments highlight positive outcomes, **20 %** lean toward a neutral or limited impact, and **10 %** emphasize negative or cautionary aspects. The overall tone leans favorably toward AI’s role as a helpful assistant, while acknowledging legitimate concerns about privacy, trust, and the broader social implications.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1493,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:55:32.098583",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "Across the discussion, a strong majority of respondents view universal or basic government‑provided health insurance as a positive step toward ensuring that all citizens can access care regardless of income, employment status, or pre‑existing conditions.  \n\n**Key points of agreement**\n- **Human right and fairness:** Most participants frame health insurance as a fundamental right, insisting that the state has a duty to protect the well‑being of its people.  \n- **Economic and societal benefits:** Several comments note that healthier workers boost productivity and national competitiveness, while universal coverage would reduce personal debt and the burden on families.  \n- **Comparison with other nations:** Many respondents point out that other developed countries already offer such systems successfully, and that the U.S. lags behind in providing this essential service.  \n\n**Nuanced positions**\n- A portion of supporters advocate for a **public option** that coexists with private plans, allowing choice while expanding coverage.  \n- A small group stresses that any government‑run system should be **efficient and timely**, and that it should avoid excessive bureaucracy or intrusive monitoring.  \n\n**Opposing views**\n- A minority express concerns that government involvement may lead to inefficiencies, higher taxes, and reduced quality, preferring a private‑sector solution.  \n\n**Overall sentiment**\nApproximately 85 % of the comments support some form of government‑backed health insurance, while about 15 % oppose it. The prevailing tone is that universal coverage is both a moral imperative and a pragmatic solution to current gaps in the U.S. healthcare system.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1676,
+    "custom_summary_length": 60
+  }
+}

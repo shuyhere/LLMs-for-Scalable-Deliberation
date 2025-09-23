@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Vaccination-Policy",
+    "question": "Do you support the government having the authority to enforce vaccination and quarantine measures during severe epidemics? Please answer briefly in 1–2 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:53:37.279020",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nThe comments reveal a clear split between those who favor government‑mandated vaccination and quarantine during severe epidemics and those who resist such mandates. Roughly 57 % of the respondents express strong or conditional support for enforcement, while about 43 % oppose compulsory measures or advocate that they remain optional.\n\n**Key Themes Supporting Enforcement**\n\n* **Public‑health protection** – Many argue that mandatory vaccination and quarantine are the most reliable ways to curb disease spread, achieve herd immunity, and prevent deaths.  \n* **Government responsibility** – Respondents who back enforcement view the state as the only entity capable of coordinating large‑scale protective actions, especially when individual choices could endanger the wider community.  \n* **Experience with COVID‑19** – Several supporters cite the recent pandemic as evidence that early, decisive mandates saved lives and limited societal disruption.  \n* **Conditional acceptance** – A minority of supporters stress that enforcement should be limited to truly severe outbreaks and rely on vaccines that have demonstrated safety and efficacy.\n\n**Key Themes Opposing Enforcement**\n\n* **Individual autonomy** – The most frequent objection is that people should be free to decide what enters their bodies, and that compulsory vaccination infringes on personal rights.  \n* **Safety and trust concerns** – Critics point to perceived rushed development of COVID‑19 vaccines, reports of side‑effects, and a lack of long‑term data as reasons to reject mandatory immunisation.  \n* **Skepticism toward government** – Several respondents distrust governmental motives, suggesting that authorities may withhold information or act like a dictatorship, thereby eroding credibility.  \n* **Preference for voluntary measures** – Some participants are willing to accept quarantine when the epidemic is severe but insist that vaccination remain optional, proposing incentives rather than penalties.\n\n**Mixed or Conditional Positions**\n\nA small portion of the commentary (about 10 % of the total) blends the two perspectives: they endorse quarantine mandates but draw the line at forced vaccination, or they support enforcement only under strict conditions (e.g., proven vaccine safety, clear evidence of a severe epidemic).\n\n**Conclusion**\n\nThe discourse underscores a tension between collective safety and personal liberty. While a slight majority sees mandatory vaccination and quarantine as necessary tools during a severe health crisis, a substantial minority emphasizes the importance of individual choice, vaccine safety, and governmental transparency. Any policy framework will need to balance these concerns—perhaps by pairing voluntary vaccination campaigns with robust public education, strict safety monitoring, and targeted quarantine measures—if it hopes to gain broader public acceptance.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 2903,
+    "custom_summary_length": 60
+  }
+}

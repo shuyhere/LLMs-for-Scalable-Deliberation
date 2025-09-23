@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:57:02.355042",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments show a strong overall appreciation for AI’s ability to streamline routine work, accelerate research, and free up time for other pursuits. Many respondents note that AI tools—especially ChatGPT—have made gathering information faster and more accurate, and some even find them entertaining or helpful in personal conflict‑resolution.  \n\nA minority of comments suggest that the impact is more modest; they view AI as an optional aid rather than a life‑changing tool. These users also highlight concerns about accuracy, the need for fact‑checking, and potential bias in the sources provided.  \n\nIn short, while most participants feel AI has improved efficiency and learning, a smaller share remain cautious about its reliability and overall influence on their daily lives.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 781,
+    "custom_summary_length": 60
+  }
+}

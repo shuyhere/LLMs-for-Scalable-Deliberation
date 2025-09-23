@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:57:02.457203",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments overwhelmingly portray AI as a powerful aid that speeds up work, simplifies routine tasks, and makes research and learning easier and more enjoyable. Many participants appreciate the precision and time‑saving benefits, noting that AI frees them to focus on higher‑level activities and even provides entertainment. A minority, however, caution that the tool’s outputs can be inaccurate or biased, requiring additional fact‑checking and critical evaluation. One respondent highlighted AI’s usefulness in personal conflict assessment. Overall, the consensus is that AI is a valuable, optional resource that enhances productivity and knowledge acquisition, while also reminding users to remain mindful of its limitations.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 730,
+    "custom_summary_length": 60
+  }
+}

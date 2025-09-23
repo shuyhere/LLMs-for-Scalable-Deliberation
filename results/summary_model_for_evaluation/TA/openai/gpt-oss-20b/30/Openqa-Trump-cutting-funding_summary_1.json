@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Trump-cutting-funding",
+    "question": "What are your thoughts on Trump’s decision to cut academic funding? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:57:45.052115",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\n- **Dominant sentiment:** The majority of respondents view the reduction of academic funding as harmful. They emphasize that education underpins economic growth, innovation, and societal stability, and fear that cutting resources will weaken research, limit opportunities for students, and erode the country’s competitiveness.\n\n- **Key concerns:**\n  - **Impact on students and educators** – Many worry that fewer funds will restrict learning materials, support services, and opportunities for higher‑education admission.\n  - **Loss of research and innovation** – Several comments note that cutting budgets may force researchers to leave the U.S., drive away talent, and slow breakthroughs in fields such as medicine and technology.\n  - **Long‑term national health** – A large portion of the discussion ties the policy to future economic and social outcomes, stressing that a strong education system is essential for a prosperous nation.\n  - **Political motivation** – A minority attribute the cuts to ideological reasons, criticizing perceived left‑leaning influences or “authoritarian” tactics.\n\n- **Alternative views:** A small share of respondents either see potential justification for the cuts (e.g., reducing wasteful spending) or remain uncertain, expressing a need for more information before forming an opinion.\n\n- **Overall tone:** The conversation is largely critical of the policy, with a strong belief that maintaining or increasing investment in education and research is essential for the country’s future.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1542,
+    "custom_summary_length": 60
+  }
+}

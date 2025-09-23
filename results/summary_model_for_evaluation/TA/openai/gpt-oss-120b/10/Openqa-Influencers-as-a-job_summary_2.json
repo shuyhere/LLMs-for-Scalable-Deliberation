@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:55:07.435833",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments paint a largely supportive picture of internet influencing. Roughly seven‑tenths of the remarks highlight the profession’s legitimacy, its capacity to generate solid income, and its value as a source of entertainment, advice, and even alternative news. Many participants note that influencers open doors for creators, help shape trends, and can offer genuine, informative content that resonates with audiences.\n\nAt the same time, about three‑tenths of the feedback points to reservations. Some respondents find influencers inauthentic or annoying, and a few caution that the drive to keep up with trends can lead to homogenized content and a loss of creativity. There is also an expressed desire for the space to remain responsible and authentic despite its growing influence.\n\nOverall, the sentiment is overwhelmingly positive about the role and potential of influencers, tempered by a noticeable share of concerns regarding authenticity, audience impact, and the possible dilution of originality as the field matures.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1032,
+    "custom_summary_length": 60
+  }
+}

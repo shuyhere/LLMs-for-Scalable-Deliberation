@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:41.980851",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a largely supportive view of internet influencing, with most participants recognizing its role as a legitimate, accessible profession that offers creative freedom, income opportunities, and a new avenue for information and entertainment. A significant share also highlights the benefits of authenticity, responsibility, and the potential to connect with audiences in ways traditional media cannot.\n\nHowever, a notable minority voice concerns the authenticity and influence of these figures, noting that many appear unoriginal or “fake,” that the field is becoming saturated, and that it can sometimes promote shallow or misleading content. There is also a cautionary tone about the impact of influencer culture on creativity, individuality, and societal values, with some likening it to the “Tower of Babel” phenomenon.\n\nOverall, the discussion balances enthusiasm for the profession’s growth and innovation with a critical eye on its pitfalls—particularly questions of authenticity, oversaturation, and the social responsibility that influencers carry.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1073,
+    "custom_summary_length": 60
+  }
+}

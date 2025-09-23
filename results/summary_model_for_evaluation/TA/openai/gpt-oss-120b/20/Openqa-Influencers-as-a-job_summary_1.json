@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Influencers-as-a-job",
+    "question": "What is your opinion on internet influencers (e.g., streamers, bloggers, short video creators) increasingly becoming a recognized profession? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:04.495436",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a broadly mixed yet nuanced view of internet influencers as a burgeoning profession.\n\n**Positive perspectives** dominate, with roughly half of the respondents highlighting the value influencers bring. They are praised for opening new income avenues, offering entertainment, and delivering information that traditional media often overlook. Many see the rise of influencing as a natural evolution of media and commerce—an accessible platform where creativity can translate into viable careers, especially in the post‑COVID landscape. Supporters also note the role influencers play in shaping trends, providing product recommendations, and connecting with audiences in ways that feel more personal than conventional advertising.\n\n**Neutral or balanced viewpoints** appear in about a third of the feedback. These participants acknowledge the legitimacy of influencing as a modern job while stressing the need for authenticity, responsibility, and transparency. They recognize both the opportunities (e.g., flexible work, new forms of content creation) and the challenges (e.g., the pressure to stay on‑trend, the potential for misinformation) inherent in the field.\n\n**Critical sentiments** make up the remaining portion of the discussion. Critics point to oversaturation, with many influencers appearing inauthentic or “fake,” and express concerns that the space can encourage superficiality, diminish creativity, and propagate unrealistic ideas of success. Some liken the phenomenon to a “Tower of Babel,” suggesting that an excess of personal brands fragments communication and erodes shared understanding. There are also worries about the societal impact of constant streaming and the need for sensational content to capture attention.\n\nOverall, the consensus reflects a recognition that internet influencing is now a legitimate, influential sector of the digital economy, appreciated for its entertainment and informational value, yet tempered by apprehensions about authenticity, market saturation, and broader cultural effects.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2051,
+    "custom_summary_length": 60
+  }
+}

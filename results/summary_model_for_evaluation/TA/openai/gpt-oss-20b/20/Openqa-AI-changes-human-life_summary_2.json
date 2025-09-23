@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-AI-changes-human-life",
+    "question": "How has AI changed your life? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:31.897973",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments overwhelmingly point to AI as a powerful productivity booster.  Roughly **70 %** of respondents report that AI cuts the time needed for routine work, research, planning and even creative tasks such as drawing or writing.  Many highlight the convenience of instant summaries, quick fact‑checking, voice‑dictation correction, and the ability to automate “meaningless” chores, freeing up personal time and increasing overall efficiency.  A minority view AI simply as an optional add‑on, while a few feel it has become a kind of indispensable assistant.\n\nA notable portion—about **30 %**—express mixed feelings or concerns.  These voices flag issues of accuracy and bias, noting that AI outputs often require human fact‑checking and that the tool may surface only certain sources.  Privacy worries surface in several comments, with fears that personal data could be harvested or misused.  Job‑security anxiety also appears, as some users worry about potential job displacement.  A few participants describe a shift toward greater vigilance and mistrust of others’ AI‑generated content, and one comment mentions the anxiety of feeling “untrustworthy” of people.\n\nIn short, most participants see AI as a significant help that streamlines tasks, expands learning, and enhances creativity, while a minority raise important caveats about reliability, privacy, and the broader social impact.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1394,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Updates-of-electronic-products",
+    "question": "What is your opinion on the rapid update cycle of electronic products, especially smartphones? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:58:08.594381",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\n- **Positive sentiment** (≈ 17 %) focuses on the convenience and rapid innovation that smartphones bring—instant access to information, improved camera quality, and the excitement of new features.\n\n- **Negative sentiment** (≈ 42 %) centers on the costs and pressures of constant upgrades. Commenters cite frequent obsolescence, forced replacement of accessories, expensive payment plans, and the perception that manufacturers prioritize new models over improving existing ones.\n\n- **Neutral/ambivalent sentiment** (≈ 25 %) acknowledges both the benefits and drawbacks. These comments note that while updates can enhance security and services, the pace is sometimes too fast and the differences between successive models may be marginal.\n\n**Key Themes**\n\n1. **Innovation vs. Sustainability** – Those who value the rapid rollout highlight how quickly technology improves, yet many worry that this speed leads to waste and a “throw‑away” culture.\n\n2. **Consumer Pressure** – Multiple remarks point to overt marketing tactics that push consumers toward new purchases, often at the expense of device longevity.\n\n3. **Cost and Practicality** – Concerns about rising prices, shipping complexities, and the need for additional accessories (e.g., new charger types) recur across negative entries.\n\n4. **Security and Functionality** – A subset of respondents recognizes that timely updates can protect devices and improve services, suggesting a compromise between rapid releases and necessary security fixes.\n\nOverall, the discussion reflects a tension between the allure of constant technological progress and the practical, economic, and environmental costs that accompany a fast‑moving update cycle.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1713,
+    "custom_summary_length": 60
+  }
+}

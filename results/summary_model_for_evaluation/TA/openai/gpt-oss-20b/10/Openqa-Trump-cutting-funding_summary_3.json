@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Trump-cutting-funding",
+    "question": "What are your thoughts on Trump’s decision to cut academic funding? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:57:43.434738",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\nThe comments overwhelmingly express concern that cutting academic funding will harm students, educators, and the nation’s long‑term competitiveness.  \n- **Majority view (≈90 %)**: Education is essential for a healthy society; reducing funds threatens innovation, research breakthroughs, and the ability of young people to advance. The cuts are seen as short‑sighted, politically motivated, or detrimental to the country’s future.  \n- **Minority view (≈10 %)**: Some respondents said they lack enough information to form an opinion or saw potential justification for a modest reduction, but still worried about the impact on independent thinking.\n\nKey points raised include:\n- The foundational role of education for all professions and the risk of societal failure if funding falls.  \n- The importance of research for medical and technological progress that can save lives and money.  \n- Concerns that students—especially those who can’t afford college—will suffer.  \n- Fear that reduced funding will weaken the U.S. against competitors in science, industry, and non‑STEM fields.  \n- The need for alternative solutions before cuts are made, as the current proposals risk a gradual decline in quality.\n\nOverall, the discussion reflects a strong consensus that academic funding is vital, with a small segment uncertain or acknowledging potential political motives but still wary of the consequences.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1417,
+    "custom_summary_length": 60
+  }
+}

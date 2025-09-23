@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Refugee-Policies",
+    "question": "Do you support the government accepting more refugees fleeing war or persecution? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:56:07.070308",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Overall Summary**\n\n- **General sentiment**: A majority view the U.S. accepting refugees as a positive, humanitarian act.  \n- **Supportive comments (≈70 %)** emphasize that refugees are fleeing violence and deserve safety and opportunity. Many also stress the importance of careful vetting and integration training to help newcomers adapt.  \n- **Conditional support**: Several participants note that acceptance should be paired with thorough screening, clear rules for integration, and measures that protect existing citizens’ quality of life.  \n- **Opposing comments (≈30 %)** focus on fiscal and social strain, arguing that the country’s resources are already stretched and that refugees could exacerbate debt or compete for limited services.  \n- **Common themes across all views**:  \n  - **Humanitarian concern** for those escaping war or persecution.  \n  - **Resource capacity**: Whether the U.S. can afford to absorb newcomers without compromising its own welfare.  \n  - **Integration & safety**: Calls for robust vetting and education to facilitate smooth assimilation.  \n\nThese perspectives collectively highlight a balance between compassion for displaced individuals and caution over the potential economic and societal impacts of expanding refugee intake.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1266,
+    "custom_summary_length": 60
+  }
+}

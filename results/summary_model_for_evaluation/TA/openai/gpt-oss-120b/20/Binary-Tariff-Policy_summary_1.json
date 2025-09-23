@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Tariff-Policy",
+    "question": "Do you think the current tariff policy under the Trump administration will have a positive or negative impact on the overall U.S. economy and society? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:40.774156",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a polarized view of the United States’ tariff policy. Roughly half of the respondents describe the impact as negative, about a third see it as positive, and the remainder offer mixed or uncertain assessments.\n\n**Key concerns voiced by those who view the tariffs negatively**\n\n* **Higher prices and inflation** – many participants note that tariffs raise the cost of imported goods, which in turn pushes up prices for everyday consumers and strains household budgets.  \n* **Small‑business strain** – several comments point to disproportionate harm for smaller firms that lack the capacity to absorb higher input costs or to pass them on to customers.  \n* **Trade‑relationship damage** – the policy is frequently linked to deteriorating ties with major trading partners, especially China, and to the perception that the U.S. is becoming a less reliable trading partner.  \n* **Limited short‑term job creation** – critics argue that the expected boost in domestic employment has not materialized, and that any jobs created are outweighed by broader economic costs.  \n* **Uncertainty for investment** – the unpredictability of tariff levels is described as discouraging firms from making long‑term investment decisions, including reshoring efforts.\n\n**Arguments presented by supporters of the tariffs**\n\n* **Revenue generation** – several respondents highlight the substantial tariff receipts, suggesting that the inflow helps stabilize the federal budget and can be used to fund public priorities.  \n* **Long‑term strategic benefits** – a portion of the commentary emphasizes that, while short‑run costs may be felt, the policy could eventually protect certain domestic industries, encourage “buy‑American” consumption, and reduce reliance on foreign suppliers.  \n* **Debt reduction** – some participants view the tariffs as a tool to curb trade deficits and lower the nation’s indebtedness over time.\n\n**Mixed or nuanced perspectives**\n\n* **Short‑run pain versus long‑run gain** – a few comments acknowledge initial price increases and industry disruptions but express optimism that the economy will adjust and benefit in the future.  \n* **Limited immediate impact** – at least one participant notes that companies are finding ways to circumvent the tariffs, suggesting that the real‑world effect may be muted in certain sectors.  \n* **Balanced assessment** – a broader analysis points out that while tariffs can protect specific sectors, they also raise costs for businesses and consumers, potentially slowing overall growth and creating uncertainty for investors.\n\nOverall, the discussion underscores a tension between immediate economic hardships—chiefly higher consumer prices and strain on small businesses—and the hoped‑for strategic advantages of greater fiscal revenue and long‑term industrial resilience. The prevailing sentiment leans toward concern over short‑term negative consequences, with a smaller but notable segment optimistic about longer‑term outcomes.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2989,
+    "custom_summary_length": 60
+  }
+}

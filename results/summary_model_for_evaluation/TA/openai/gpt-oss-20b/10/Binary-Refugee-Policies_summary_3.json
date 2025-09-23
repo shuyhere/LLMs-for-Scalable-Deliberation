@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Refugee-Policies",
+    "question": "Do you support the government accepting more refugees fleeing war or persecution? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:56:07.762063",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Summary of the deliberation**\n\n- **Majority sentiment:** Roughly **70 %** of the comments express support for the U.S. accepting refugees, often coupled with a call for stronger vetting, integration programs, or limits to protect citizens’ quality of life.  \n- **Key motivations for supporters:**  \n  - **Humanitarian concern:** Many see refugees as people fleeing war or persecution who deserve safety and a chance to rebuild.  \n  - **Resource utilization:** Some argue that available resources should be used to help those in need rather than left idle.  \n  - **Ethical stance:** A belief that kindness and the right to a good life should transcend birthplace.  \n\n- **Conditions highlighted by supporters:**  \n  - Thorough screening to ensure legitimate refugee status.  \n  - Clear integration and education pathways.  \n  - Safeguards so that U.S. citizens are not adversely affected.  \n\n- **Opposition perspective (≈ 30 %):**  \n  - **Resource constraints:** Concerns that the U.S. is already indebted and cannot afford additional social‑service costs.  \n  - **Fairness and equity:** Argument that existing citizens are denied resources while newcomers receive aid.  \n  - **Economic impact:** Worries that increasing refugee numbers could strain public systems and reduce opportunities for ordinary Americans.  \n\n- **Common themes across the debate:**  \n  - **Balance between compassion and practicality:** Participants repeatedly acknowledge the moral imperative to help refugees but also stress the need for realistic limits and safeguards.  \n  - **Focus on national well‑being:** Whether in support or opposition, many comments emphasize protecting the welfare of current U.S. residents.  \n\nOverall, the discussion reflects a strong humanitarian inclination tempered by concerns over national capacity and fairness.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1822,
+    "custom_summary_length": 60
+  }
+}

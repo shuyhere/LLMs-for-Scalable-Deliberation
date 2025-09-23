@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Openqa-Trump-cutting-funding",
+    "question": "What are your thoughts on Trump’s decision to cut academic funding? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:57.798816",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion overwhelmingly views the reduction in academic funding as a harmful move. Most participants stress that education underpins every other sector and that cutting resources jeopardizes students, teachers, and the nation’s long‑term competitiveness. A large share argue that diminished funding will stall research, stifle innovation, and weaken the country’s ability to compete globally, especially in science and technology. Many also frame the cuts as unfair to low‑income students and as a short‑sighted, politically driven decision that could erode public trust in institutions.\n\nA minority of commenters suggest there might be some political justification for trimming funds—citing concerns about perceived left‑leaning bias in academia—or express confidence that the administration has valid reasons, though they still acknowledge potential risks. One participant admits a lack of information and therefore withholds judgment, while another adopts a more neutral tone, emphasizing the need to balance fiscal restraint with continued investment in education and research.\n\nOverall, the sentiment is that preserving robust funding for schools and research is essential for individual opportunity, societal progress, and national strength, and that any cuts should be carefully weighed against the long‑term costs to the country’s future.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1352,
+    "custom_summary_length": 60
+  }
+}

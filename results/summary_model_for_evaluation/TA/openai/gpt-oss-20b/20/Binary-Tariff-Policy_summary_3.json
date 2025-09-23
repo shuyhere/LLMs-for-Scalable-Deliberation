@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Tariff-Policy",
+    "question": "Do you think the current tariff policy under the Trump administration will have a positive or negative impact on the overall U.S. economy and society? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:23.671056",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The discussion reflects a clear split in opinion about the tariff policy.  \n- **Positive views**: About a third of participants see the tariffs as a net benefit, citing potential long‑term economic gains, increased federal revenue, and a boost to domestic industries.  \n- **Negative views**: More than half of the comments express concern that the tariffs will hurt the U.S. economy, citing higher consumer prices, inflation, job losses, strained trade relations, and the risk of undermining U.S. competitiveness.  \n- **Mixed or neutral observations**: A small minority note that the effects may be uneven—some sectors could gain while others suffer, or that short‑term pain could be offset by long‑term benefits.\n\nOverall, the conversation leans toward a predominantly negative assessment of the tariffs, with a significant number of participants recognizing potential positive outcomes but also highlighting substantial risks.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 928,
+    "custom_summary_length": 60
+  }
+}

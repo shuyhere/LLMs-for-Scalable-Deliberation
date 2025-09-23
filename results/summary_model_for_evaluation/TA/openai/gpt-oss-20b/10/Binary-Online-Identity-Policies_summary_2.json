@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Online-Identity-Policies",
+    "question": "Do you support requiring real-name registration on social media platforms, where users must register and post under their real identity? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:55:46.003706",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Summary of the deliberation comments**\n\n- **Dominant concern:** A large share of respondents express that requiring real‑name registration would erode privacy, expose users to potential abuse, and create a database that could be used for surveillance or retaliation.  \n- **Professional and political risk:** Several participants note that revealing identities could lead to discrimination or job loss, especially for those with left‑leaning views or unpopular opinions.  \n- **Fear of misuse:** There is a recurring worry that companies or governments might misuse personal data, sell it, or use it as justification for arrests.  \n- **Accountability arguments:** A minority see the advantage of increased accountability, claiming that real names could reduce cyberbullying and scams.  \n- **Conditional support:** Some respondents are open to the idea only if the enforcement comes from the platform itself rather than from external authorities.  \n- **Balance between anonymity and responsibility:** A few comments recognize both sides, noting that while accountability is valuable, the ability to speak anonymously remains an important freedom.\n\n**Overall impression**\n\n- Roughly **60 %** of the comments voice opposition or caution, citing privacy, safety, and freedom concerns.  \n- Approximately **30 %** highlight potential benefits or are supportive, pointing to accountability and reduced misconduct.  \n- Around **10 %** offer a conditional stance or a balanced view, acknowledging both benefits and risks.  \n\nThe discussion leans toward skepticism about mandatory real‑name registration, with privacy and freedom concerns outweighing the perceived benefits of greater accountability.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1690,
+    "custom_summary_length": 60
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:33.540104",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The overwhelming majority of participants favor a government‑run health‑insurance system, viewing health care as a fundamental right rather than a market commodity. Around ninety‑five percent of the comments express support for some form of public coverage, while only a small minority (roughly five percent) argue that health care should remain in private hands because of concerns about government inefficiency or overreach.\n\n**Key reasons for support**\n\n* **Human right and equity** – Many respondents stress that everyone should have access to health care regardless of income, emphasizing that it is a moral imperative and a basic safety net.\n* **Economic competitiveness** – Several participants link universal coverage to national productivity, noting that sick workers can’t compete globally and that a healthier population benefits the economy.\n* **Cost and efficiency** – A common argument is that a single‑payer or public option would lower overall costs, reduce administrative waste, and make the system more efficient.\n* **International comparison** – Respondents frequently cite other countries—particularly Canada and European nations—as evidence that government‑provided health care can work well and be more affordable.\n* **Public good over profit** – There is strong sentiment that health care should not be driven by for‑profit motives, which are seen as conflicting with patient welfare.\n\n**Conditional or nuanced positions**\n\n* A few commenters support basic coverage but caution against overly expansive programs that might entail intrusive monitoring or excessive bureaucracy.\n* Several participants advocate for a public option that coexists with private plans, emphasizing the importance of preserving individual choice while ensuring a safety net.\n* Some express the desire for timely and high‑quality care as a prerequisite for full endorsement of a public system.\n\n**Reasons for opposition**\n\n* The lone dissenting voice frames health care as a service that cannot be free, arguing that government management is inherently less effective than private sector solutions.\n\nOverall, the discourse reflects a strong consensus that government involvement in health insurance is essential for equity, affordability, and national well‑being, with only minimal resistance rooted in concerns about governmental competence and the preservation of market choice.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2378,
+    "custom_summary_length": 60
+  }
+}

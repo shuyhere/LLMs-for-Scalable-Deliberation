@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Refugee-Policies",
+    "question": "Do you support the government accepting more refugees fleeing war or persecution? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:57:37.876317",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a largely favorable attitude toward expanding U.S. refugee admissions, with roughly three‑quarters of respondents expressing support—many of them emphasizing that this support should be coupled with safeguards.  \n\n**Key reasons for support**  \n- **Humanitarian concern:** Many participants stress the moral imperative to protect people fleeing war, persecution, or life‑threatening conditions, framing refugee assistance as a core American value and a humanitarian responsibility.  \n- **Safety and empathy:** Several comments note that, if they were in the refugees’ shoes, they would want a safe haven, and that offering protection aligns with the nation’s historical role as a refuge for the oppressed.  \n- **Cultural and economic benefits:** Some respondents point to the enrichment of cultural diversity and the potential for refugees to revitalize sparsely populated or declining rural areas, thereby contributing to local economies.  \n\n**Conditions and caveats attached to support**  \n- **Rigorous vetting:** A strong majority of supporters call for thorough background checks and security screenings to prevent entry of individuals with criminal histories or fraudulent claims.  \n- **Limits on numbers:** Several participants argue that admission caps are necessary to avoid overwhelming public services and to ensure that existing citizens retain adequate access to resources.  \n- **Resource considerations:** A notable share of comments highlight fiscal constraints, suggesting that refugee intake should not compromise the nation’s ability to meet the needs of its own residents.  \n\n**Reasons for opposition**  \n- **Economic strain:** Opponents worry that additional refugees could increase government expenditures, strain social services, and compete with Americans for jobs, housing, and public benefits.  \n- **Fiscal health:** Some express concern that the United States, burdened by debt and other financial pressures, should prioritize domestic needs before expanding refugee programs.  \n\n**Overall synthesis**  \nWhile the dominant sentiment is supportive—anchored in compassion, historical identity, and potential societal benefits—most supporters also advocate for a balanced approach that incorporates stringent vetting, manageable intake levels, and safeguards for the economic well‑being of current citizens. Opposition is primarily rooted in concerns about resource allocation and fiscal sustainability. The discussion therefore reflects a nuanced consensus: broad humanitarian endorsement tempered by pragmatic checks to ensure security and economic stability.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 2602,
+    "custom_summary_length": 60
+  }
+}

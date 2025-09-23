@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Vaccination-Policy",
+    "question": "Do you support the government having the authority to enforce vaccination and quarantine measures during severe epidemics? Please answer briefly in 1–2 sentences.",
+    "summary_model": "TA/openai/gpt-oss-120b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:53:31.739043",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments reveal a clear split between those who view mandatory quarantine and vaccination as a necessary tool for protecting public health and those who see such mandates as an overreach of personal freedom or an insufficiently tested measure.\n\n**Support for enforcement**  \nA majority of respondents argue that compulsory measures are justified, especially in the early stages of a pandemic when knowledge about the pathogen is limited. They point to real‑world experience—such as the disruptions caused by low vaccination rates—and stress that collective safety outweighs individual preferences. Many emphasize that government‑led mandates can curb the spread of disease, protect vulnerable populations, and prevent people’s poor personal choices from endangering the broader community.\n\n**Conditional or nuanced support**  \nOne participant notes that while strict enforcement was appropriate at the outset, easing restrictions becomes reasonable once more information is available and the threat diminishes. This reflects a view that mandates should be adaptable rather than permanent.\n\n**Opposition to mandates**  \nA smaller but vocal segment rejects compulsory measures on principle. Their concerns focus on respecting diverse beliefs, the limited long‑term safety data for newly developed vaccines, and reports of adverse health effects such as autoimmune reactions. Some also argue that enforcement is ineffective because individuals will act according to their own will regardless of legal requirements.\n\nOverall, roughly 70 % of the comments favor some form of mandated quarantine or vaccination, citing public‑health benefits and pandemic experience, while about 30 % oppose mandates, emphasizing personal autonomy and safety uncertainties. The debate centers on balancing collective health protection with individual rights and the evolving scientific understanding of vaccines.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 1893,
+    "custom_summary_length": 60
+  }
+}

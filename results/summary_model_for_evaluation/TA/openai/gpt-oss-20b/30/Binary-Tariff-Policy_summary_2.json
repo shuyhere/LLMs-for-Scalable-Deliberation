@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Tariff-Policy",
+    "question": "Do you think the current tariff policy under the Trump administration will have a positive or negative impact on the overall U.S. economy and society? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 30,
+    "timestamp": "2025-09-03T12:56:29.093241",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "The comments overwhelmingly point to a view that the current tariff policy will hurt the U.S. economy. Roughly 85 % of respondents emphasize higher consumer prices, inflation, and reduced competitiveness, noting that businesses will pass costs onto shoppers and that many industries will suffer. Concerns about strained trade relations, especially with China, and the potential for isolationist fallout are frequently mentioned. Small‑business owners and everyday consumers are highlighted as the most vulnerable groups, with many warning that the tariffs will deepen existing economic challenges and slow growth.\n\nA smaller portion—about 15 %—expresses optimism or sees a more balanced picture. These voices argue that the tariffs could bring long‑term benefits such as increased federal revenue, a shift back to domestic manufacturing, or protection for certain domestic sectors. Some respondents point out that the policy might help stabilize the budget or that its positive effects may only become apparent over the long haul, though they still acknowledge short‑term pain.\n\nOverall, the sentiment leans heavily toward a negative outlook, with a minority believing that the tariffs might yield strategic or fiscal gains in the future. The dominant narrative stresses consumer burden, price hikes, and the risk of broader economic instability.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 30,
+    "comments_used_for_summary": 30,
+    "topic_summary_length": 59,
+    "main_summary_length": 1346,
+    "custom_summary_length": 60
+  }
+}

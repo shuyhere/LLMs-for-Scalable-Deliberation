@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Refugee-Policies",
+    "question": "Do you support the government accepting more refugees fleeing war or persecution? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:15.692270",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "Across the comments, a strong inclination to accept refugees fleeing war or persecution is evident. Most respondents emphasize the human‑rights and moral imperatives of offering sanctuary to those escaping violence, with many framing it as a continuation of the nation’s founding values and a way to promote cultural diversity and global solidarity. \n\nAt the same time, a significant portion stresses the importance of safeguards. Common themes include rigorous vetting processes to exclude economic migrants and individuals with criminal backgrounds, as well as setting limits on numbers to prevent strain on public services and resources. Several comments highlight concerns that an influx could negatively impact the domestic economy or compete with citizens for housing, jobs, and social services, especially in a country already burdened by debt. \n\nA minority of respondents outright oppose expanding refugee intake, citing fears of overburdening the system and favoring a focus on domestic needs. Overall, the conversation balances compassion for those in peril with a pragmatic assessment of logistical, economic, and social implications.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1145,
+    "custom_summary_length": 60
+  }
+}

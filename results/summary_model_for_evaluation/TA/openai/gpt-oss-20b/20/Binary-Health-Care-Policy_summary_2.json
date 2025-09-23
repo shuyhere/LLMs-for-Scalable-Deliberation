@@ -1,0 +1,54 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 20,
+    "timestamp": "2025-09-20T21:58:13.691902",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "Across the comments, a vast majority view government‑provided health insurance—or a universal coverage model—as a necessary and beneficial policy.  \n\n**Key themes among supporters**\n\n| Theme | Approx. % of supportive comments |\n|-------|---------------------------------|\n| **Health as a right** | 70 % |\n| **Equity and affordability** | 65 % |\n| **Economic security and national competitiveness** | 45 % |\n| **Cost‑effectiveness compared with private insurance** | 55 % |\n| **Improved health outcomes (e.g., earlier diagnosis of chronic conditions)** | 35 % |\n\nMany respondents also emphasize that a public system would reduce administrative waste, limit profit‑driven denial of care, and ensure that everyone can access timely treatment. A minority of voices express reservations about the scale of government involvement, citing concerns about over‑regulation, loss of choice, or inefficiencies. One comment specifically rejects the idea outright, arguing that the private sector is better suited to deliver quality care.\n\n**Nuanced positions**\n\n- A few advocates propose a *public option* that operates alongside private plans, preserving consumer choice while still guaranteeing a baseline of coverage.  \n- Some support basic coverage but call for limits on government scope, stressing the importance of timely care and minimal bureaucratic delays.  \n\n**Overall sentiment**\n\nThe discussion is overwhelmingly supportive of a government‑backed insurance framework, with most participants framing it as a moral imperative, a public good, and a strategic economic necessity. The lone opposing viewpoint highlights skepticism toward governmental efficiency, underscoring a small but notable divide in opinion.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 20,
+    "comments_used_for_summary": 20,
+    "topic_summary_length": 59,
+    "main_summary_length": 1709,
+    "custom_summary_length": 60
+  }
+}

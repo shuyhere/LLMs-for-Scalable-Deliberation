@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "dataset_name": "Binary-Health-Care-Policy",
+    "question": "Do you support the government provide basic health insurance for everyone? Please answer briefly in 2–3 sentences.",
+    "summary_model": "TA/openai/gpt-oss-20b",
+    "num_samples": 10,
+    "timestamp": "2025-09-03T12:55:26.826792",
+    "version": "1.0"
+  },
+  "summary_parameters": {
+    "summary_types": {
+      "topic_modeling": false,
+      "main_points": true,
+      "custom_analysis": false
+    },
+    "custom_system_prompt": "You are an expert data analyst specializing in public opinion analysis.",
+    "custom_user_prompt": "Analyze the sentiment and key themes in these comments. Focus on areas of agreement and disagreement: {comments}",
+    "script_version": "1.0"
+  },
+  "summaries": {
+    "topic_modeling": "Topic modeling summary generation disabled in configuration",
+    "main_points": "**Summary of comments**\n\nAll respondents voiced strong support for a government‑based healthcare system. Their arguments consistently emphasize that health insurance should be a right, not a luxury, and that a public model is both more affordable and more efficient than the current market‑driven approach. Many highlighted the social and economic benefits of universal coverage, noting that it helps protect workers, reduces overall health costs, and strengthens national security. Comparisons with other nations were used to illustrate that similar systems can function successfully and that the United States should follow suit. Overall, every comment underscored the importance of governmental responsibility in ensuring that all citizens have access to essential medical care.",
+    "custom_analysis": "Custom analysis summary generation disabled in configuration"
+  },
+  "comment_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "statistics": {
+    "total_comments_in_dataset": 10,
+    "comments_used_for_summary": 10,
+    "topic_summary_length": 59,
+    "main_summary_length": 781,
+    "custom_summary_length": 60
+  }
+}
