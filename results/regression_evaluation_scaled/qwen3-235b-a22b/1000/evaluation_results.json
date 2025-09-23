@@ -1,0 +1,322 @@
+{
+  "model_path": "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_final_v6_pair_split_noactivation",
+  "model_info": {
+    "successful_config": {
+      "use_tanh": false,
+      "use_sigmoid": false,
+      "use_relu": false,
+      "use_leaky_relu": false,
+      "use_elu": false
+    },
+    "successful_weight_file": "model.safetensors",
+    "device": "cuda",
+    "model_path": "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_final_v6_pair_split_noactivation",
+    "target_keys": [
+      "perspective_representation",
+      "informativeness",
+      "neutrality_balance",
+      "policy_approval"
+    ]
+  },
+  "evaluation_params": {
+    "summary_dir": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation_scaled",
+    "comments_dir": "/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/minority",
+    "n_summaries": 3,
+    "model_names": [
+      "qwen3-235b-a22b"
+    ],
+    "sample_sizes": [
+      1000
+    ],
+    "topics": [
+      "Openqa-AI_changes_human_life",
+      "Binary-Tariff_Policy"
+    ]
+  },
+  "results": [
+    {
+      "topic": "Openqa-AI_changes_human_life",
+      "model": "qwen3-235b-a22b",
+      "sample_size": 1000,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation_scaled/qwen3-235b-a22b/1000/Openqa-AI_changes_human_life_summary_1.json",
+          "summary_length": 1934,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6084591374099254,
+              "std": 0.09601216550217795,
+              "min": 0.26124995946884155,
+              "max": 0.846788227558136,
+              "n_samples": 1000
+            },
+            "informativeness": {
+              "mean": 0.608938611805439,
+              "std": 0.06993695119612582,
+              "min": 0.3572812080383301,
+              "max": 0.8143734335899353,
+              "n_samples": 1000
+            },
+            "neutrality_balance": {
+              "mean": 0.586140245705843,
+              "std": 0.08793324754510311,
+              "min": 0.316557377576828,
+              "max": 0.8452827334403992,
+              "n_samples": 1000
+            },
+            "policy_approval": {
+              "mean": 0.5996557751297951,
+              "std": 0.07740573354373279,
+              "min": 0.3238131105899811,
+              "max": 0.8040376305580139,
+              "n_samples": 1000
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation_scaled/qwen3-235b-a22b/1000/Openqa-AI_changes_human_life_summary_2.json",
+          "summary_length": 2489,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6125734558105469,
+              "std": 0.09784652245057673,
+              "min": 0.23280873894691467,
+              "max": 0.8443860411643982,
+              "n_samples": 1000
+            },
+            "informativeness": {
+              "mean": 0.6051028016507626,
+              "std": 0.0684746923375097,
+              "min": 0.3137508034706116,
+              "max": 0.776395320892334,
+              "n_samples": 1000
+            },
+            "neutrality_balance": {
+              "mean": 0.5778546243906021,
+              "std": 0.08265358413999027,
+              "min": 0.27138128876686096,
+              "max": 0.8005069494247437,
+              "n_samples": 1000
+            },
+            "policy_approval": {
+              "mean": 0.6044716952443123,
+              "std": 0.0763487783017744,
+              "min": 0.3007919490337372,
+              "max": 0.8016166090965271,
+              "n_samples": 1000
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation_scaled/qwen3-235b-a22b/1000/Openqa-AI_changes_human_life_summary_3.json",
+          "summary_length": 1756,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.58310752338171,
+              "std": 0.09951684817897913,
+              "min": 0.2495337724685669,
+              "max": 0.8615080118179321,
+              "n_samples": 1000
+            },
+            "informativeness": {
+              "mean": 0.5861531053185463,
+              "std": 0.0776600300684451,
+              "min": 0.2999771237373352,
+              "max": 0.8148015141487122,
+              "n_samples": 1000
+            },
+            "neutrality_balance": {
+              "mean": 0.6022719779312611,
+              "std": 0.09155726830510767,
+              "min": 0.27663055062294006,
+              "max": 0.8732802867889404,
+              "n_samples": 1000
+            },
+            "policy_approval": {
+              "mean": 0.6099789156913757,
+              "std": 0.09189584184181591,
+              "min": 0.29715394973754883,
+              "max": 0.8905869722366333,
+              "n_samples": 1000
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.601380038867394,
+          "std": 0.013029339215947646,
+          "min": 0.23280873894691467,
+          "max": 0.8615080118179321,
+          "n_samples": 3000
+        },
+        "informativeness": {
+          "mean": 0.6000648395915825,
+          "std": 0.009960944491642016,
+          "min": 0.2999771237373352,
+          "max": 0.8148015141487122,
+          "n_samples": 3000
+        },
+        "neutrality_balance": {
+          "mean": 0.5887556160092354,
+          "std": 0.010138438730898794,
+          "min": 0.27138128876686096,
+          "max": 0.8732802867889404,
+          "n_samples": 3000
+        },
+        "policy_approval": {
+          "mean": 0.6047021286884945,
+          "std": 0.004217553196083108,
+          "min": 0.29715394973754883,
+          "max": 0.8905869722366333,
+          "n_samples": 3000
+        }
+      }
+    },
+    {
+      "topic": "Binary-Tariff_Policy",
+      "model": "qwen3-235b-a22b",
+      "sample_size": 1000,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation_scaled/qwen3-235b-a22b/1000/Binary-Tariff_Policy_summary_1.json",
+          "summary_length": 1687,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6024689052999019,
+              "std": 0.10568676719285969,
+              "min": 0.19433265924453735,
+              "max": 0.898367166519165,
+              "n_samples": 1000
+            },
+            "informativeness": {
+              "mean": 0.5422648587524891,
+              "std": 0.08586614083852562,
+              "min": 0.27726292610168457,
+              "max": 0.7729625105857849,
+              "n_samples": 1000
+            },
+            "neutrality_balance": {
+              "mean": 0.5655538857281208,
+              "std": 0.08895634709937873,
+              "min": 0.22108164429664612,
+              "max": 0.8016729354858398,
+              "n_samples": 1000
+            },
+            "policy_approval": {
+              "mean": 0.5409176565110684,
+              "std": 0.09194883496470224,
+              "min": 0.22792130708694458,
+              "max": 0.7878789901733398,
+              "n_samples": 1000
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation_scaled/qwen3-235b-a22b/1000/Binary-Tariff_Policy_summary_2.json",
+          "summary_length": 1919,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5675804079473019,
+              "std": 0.09570987335736306,
+              "min": 0.22673827409744263,
+              "max": 0.8435413241386414,
+              "n_samples": 1000
+            },
+            "informativeness": {
+              "mean": 0.5498136364519596,
+              "std": 0.08762203536083797,
+              "min": 0.25181084871292114,
+              "max": 0.7705808281898499,
+              "n_samples": 1000
+            },
+            "neutrality_balance": {
+              "mean": 0.5408657892793417,
+              "std": 0.08383498085189195,
+              "min": 0.17388834059238434,
+              "max": 0.7690887451171875,
+              "n_samples": 1000
+            },
+            "policy_approval": {
+              "mean": 0.5175779534876347,
+              "std": 0.09262753236094301,
+              "min": 0.15440383553504944,
+              "max": 0.7627142071723938,
+              "n_samples": 1000
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation_scaled/qwen3-235b-a22b/1000/Binary-Tariff_Policy_summary_3.json",
+          "summary_length": 1764,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5996385245770216,
+              "std": 0.10092542111889719,
+              "min": 0.20830367505550385,
+              "max": 0.8764597177505493,
+              "n_samples": 1000
+            },
+            "informativeness": {
+              "mean": 0.5566577369272709,
+              "std": 0.08881007375871455,
+              "min": 0.24009865522384644,
+              "max": 0.7909724116325378,
+              "n_samples": 1000
+            },
+            "neutrality_balance": {
+              "mean": 0.5401405353099108,
+              "std": 0.0857962998027453,
+              "min": 0.18144093453884125,
+              "max": 0.7729467153549194,
+              "n_samples": 1000
+            },
+            "policy_approval": {
+              "mean": 0.5147341127693653,
+              "std": 0.09100720083045555,
+              "min": 0.18147796392440796,
+              "max": 0.7527989149093628,
+              "n_samples": 1000
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.5898959459414085,
+          "std": 0.015821719053965524,
+          "min": 0.19433265924453735,
+          "max": 0.898367166519165,
+          "n_samples": 3000
+        },
+        "informativeness": {
+          "mean": 0.5495787440439065,
+          "std": 0.005878214942823411,
+          "min": 0.24009865522384644,
+          "max": 0.7909724116325378,
+          "n_samples": 3000
+        },
+        "neutrality_balance": {
+          "mean": 0.5488534034391245,
+          "std": 0.011812735495891858,
+          "min": 0.17388834059238434,
+          "max": 0.8016729354858398,
+          "n_samples": 3000
+        },
+        "policy_approval": {
+          "mean": 0.5244099075893561,
+          "std": 0.011730336407635282,
+          "min": 0.15440383553504944,
+          "max": 0.7878789901733398,
+          "n_samples": 3000
+        }
+      }
+    }
+  ]
+}
