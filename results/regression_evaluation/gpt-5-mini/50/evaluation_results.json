@@ -1,0 +1,1466 @@
+{
+  "model_path": "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_final_v6_pair_split_noactivation",
+  "model_info": {
+    "successful_config": {
+      "use_tanh": false,
+      "use_sigmoid": false,
+      "use_relu": false,
+      "use_leaky_relu": false,
+      "use_elu": false
+    },
+    "successful_weight_file": "model.safetensors",
+    "device": "cuda",
+    "model_path": "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_final_v6_pair_split_noactivation",
+    "target_keys": [
+      "perspective_representation",
+      "informativeness",
+      "neutrality_balance",
+      "policy_approval"
+    ]
+  },
+  "evaluation_params": {
+    "summary_dir": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation",
+    "comments_dir": "/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/annotation_V0_V1_dataset",
+    "n_summaries": 3,
+    "model_names": [
+      "gpt-5-mini"
+    ],
+    "sample_sizes": [
+      50
+    ],
+    "topics": [
+      "Binary-Online-Identity-Policies",
+      "Openqa-Trump-cutting-funding",
+      "Openqa-Tipping-System",
+      "Binary-Refugee-Policies",
+      "Openqa-AI-changes-human-life",
+      "Binary-Vaccination-Policy",
+      "Openqa-Updates-of-electronic-products",
+      "Openqa-Influencers-as-a-job",
+      "Binary-Tariff-Policy",
+      "Binary-Health-Care-Policy"
+    ]
+  },
+  "results": [
+    {
+      "topic": "Binary-Online-Identity-Policies",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Online-Identity-Policies_summary_1.json",
+          "summary_length": 3073,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6547037631273269,
+              "std": 0.10879341327783881,
+              "min": 0.3439912497997284,
+              "max": 0.8654693365097046,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.7321774876117706,
+              "std": 0.07744118422291027,
+              "min": 0.5494691729545593,
+              "max": 0.8799045085906982,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6910984349250794,
+              "std": 0.09056547424181909,
+              "min": 0.44629690051078796,
+              "max": 0.8885789513587952,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6746883207559585,
+              "std": 0.10512897761166964,
+              "min": 0.42728298902511597,
+              "max": 0.8799601197242737,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Online-Identity-Policies_summary_2.json",
+          "summary_length": 2485,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6484739381074905,
+              "std": 0.11343183326721881,
+              "min": 0.4134223163127899,
+              "max": 0.8393091559410095,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.7234842205047607,
+              "std": 0.07721801156552811,
+              "min": 0.5297793745994568,
+              "max": 0.9353745579719543,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6626328474283218,
+              "std": 0.09149684933292761,
+              "min": 0.3564840257167816,
+              "max": 0.8355971574783325,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6599003291130066,
+              "std": 0.09872238420384931,
+              "min": 0.4543484151363373,
+              "max": 0.9055455923080444,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Online-Identity-Policies_summary_3.json",
+          "summary_length": 2369,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6703525865077973,
+              "std": 0.10272767793377872,
+              "min": 0.4081558585166931,
+              "max": 0.8185712695121765,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6879201364517212,
+              "std": 0.07409447884276515,
+              "min": 0.5110350251197815,
+              "max": 0.8809646964073181,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6506013226509094,
+              "std": 0.09757094387870797,
+              "min": 0.3282531797885895,
+              "max": 0.8551653027534485,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6255887097120285,
+              "std": 0.09348439367308906,
+              "min": 0.397248774766922,
+              "max": 0.8416035175323486,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6578434292475382,
+          "std": 0.009203692790246867,
+          "min": 0.3439912497997284,
+          "max": 0.8654693365097046,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.7145272815227508,
+          "std": 0.0191459020832408,
+          "min": 0.5110350251197815,
+          "max": 0.9353745579719543,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.6681108683347701,
+          "std": 0.016980588141076385,
+          "min": 0.3282531797885895,
+          "max": 0.8885789513587952,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6533924531936643,
+          "std": 0.02056627154513699,
+          "min": 0.397248774766922,
+          "max": 0.9055455923080444,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-Trump-cutting-funding",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Trump-cutting-funding_summary_1.json",
+          "summary_length": 2432,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6380743283033371,
+              "std": 0.10088467327012468,
+              "min": 0.3784157633781433,
+              "max": 0.8141052722930908,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6814941370487213,
+              "std": 0.08219255306021417,
+              "min": 0.4667304754257202,
+              "max": 0.8360807299613953,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5672328960895539,
+              "std": 0.09286823175076177,
+              "min": 0.34788253903388977,
+              "max": 0.726005494594574,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6135518550872803,
+              "std": 0.11467149305691127,
+              "min": 0.22666126489639282,
+              "max": 0.8356652855873108,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Trump-cutting-funding_summary_2.json",
+          "summary_length": 2159,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6378568184375762,
+              "std": 0.0899321397074284,
+              "min": 0.36777520179748535,
+              "max": 0.817221462726593,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6823901009559631,
+              "std": 0.08855446590906739,
+              "min": 0.43542563915252686,
+              "max": 0.8481578230857849,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.559891807436943,
+              "std": 0.09103270141653659,
+              "min": 0.36945199966430664,
+              "max": 0.790547251701355,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6027365916967392,
+              "std": 0.1068820362623291,
+              "min": 0.2472819685935974,
+              "max": 0.8178885579109192,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Trump-cutting-funding_summary_3.json",
+          "summary_length": 2337,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6706131798028946,
+              "std": 0.09001117591070003,
+              "min": 0.4323055148124695,
+              "max": 0.8367815613746643,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6780450141429901,
+              "std": 0.0789741104650605,
+              "min": 0.4252750277519226,
+              "max": 0.8323119282722473,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5684244406223297,
+              "std": 0.09263249525567835,
+              "min": 0.3789162337779999,
+              "max": 0.726923406124115,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6302413392066956,
+              "std": 0.10204162994157914,
+              "min": 0.2751769423484802,
+              "max": 0.8090106844902039,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.648848108847936,
+          "std": 0.015390485435082134,
+          "min": 0.36777520179748535,
+          "max": 0.8367815613746643,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6806430840492248,
+          "std": 0.0018731725777464355,
+          "min": 0.4252750277519226,
+          "max": 0.8481578230857849,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5651830480496087,
+          "std": 0.0037729621439253126,
+          "min": 0.34788253903388977,
+          "max": 0.790547251701355,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6155099286635718,
+          "std": 0.01131380640321787,
+          "min": 0.22666126489639282,
+          "max": 0.8356652855873108,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-Tipping-System",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Tipping-System_summary_1.json",
+          "summary_length": 3157,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6360240924358368,
+              "std": 0.10739125123690918,
+              "min": 0.3245318531990051,
+              "max": 0.8303747773170471,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.722110857963562,
+              "std": 0.08283904452127037,
+              "min": 0.527310311794281,
+              "max": 0.9273290038108826,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5911549216508866,
+              "std": 0.06944927936044235,
+              "min": 0.4401504397392273,
+              "max": 0.7526922225952148,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6541609019041061,
+              "std": 0.07919333596465283,
+              "min": 0.42224767804145813,
+              "max": 0.8168044686317444,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Tipping-System_summary_2.json",
+          "summary_length": 2433,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6620464050769805,
+              "std": 0.10201478948520111,
+              "min": 0.43582040071487427,
+              "max": 0.8789052963256836,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6891146796941757,
+              "std": 0.0807383769139282,
+              "min": 0.4314204156398773,
+              "max": 0.8494847416877747,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5526196432113647,
+              "std": 0.07264725459533636,
+              "min": 0.3799056112766266,
+              "max": 0.6998139023780823,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6591329395771026,
+              "std": 0.08375682611657242,
+              "min": 0.4571325182914734,
+              "max": 0.8365690112113953,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Tipping-System_summary_3.json",
+          "summary_length": 2093,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.656821398139,
+              "std": 0.09635266052101511,
+              "min": 0.409791499376297,
+              "max": 0.8137807250022888,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.7093033599853515,
+              "std": 0.07550350391473669,
+              "min": 0.5071501135826111,
+              "max": 0.8781358003616333,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5839539396762848,
+              "std": 0.0639394310591546,
+              "min": 0.41832107305526733,
+              "max": 0.7128461599349976,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6515392929315567,
+              "std": 0.09100638100231487,
+              "min": 0.39423760771751404,
+              "max": 0.7918959259986877,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6516306318839391,
+          "std": 0.011239757694136958,
+          "min": 0.3245318531990051,
+          "max": 0.8789052963256836,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.7068429658810298,
+          "std": 0.01358251570850594,
+          "min": 0.4314204156398773,
+          "max": 0.9273290038108826,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5759095015128454,
+          "std": 0.016728750902302313,
+          "min": 0.3799056112766266,
+          "max": 0.7526922225952148,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6549443781375887,
+          "std": 0.003149205571852113,
+          "min": 0.39423760771751404,
+          "max": 0.8365690112113953,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Binary-Refugee-Policies",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Refugee-Policies_summary_1.json",
+          "summary_length": 2196,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5848700404167175,
+              "std": 0.08667715160065263,
+              "min": 0.3659987151622772,
+              "max": 0.7975087761878967,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6435437160730362,
+              "std": 0.0745726470105287,
+              "min": 0.44303247332572937,
+              "max": 0.922993004322052,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5676685738563537,
+              "std": 0.1078923091399708,
+              "min": 0.2623579800128937,
+              "max": 0.7596407532691956,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6185961437225341,
+              "std": 0.09632442823998975,
+              "min": 0.3885284960269928,
+              "max": 0.8082491755485535,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Refugee-Policies_summary_2.json",
+          "summary_length": 1527,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6097285705804825,
+              "std": 0.10388208460382482,
+              "min": 0.38163644075393677,
+              "max": 0.8275979161262512,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6041079187393188,
+              "std": 0.09882640171960147,
+              "min": 0.3711654245853424,
+              "max": 0.949373185634613,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5674797138571739,
+              "std": 0.12546888175154275,
+              "min": 0.2242310494184494,
+              "max": 0.7940413355827332,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5842645174264908,
+              "std": 0.11415870573085081,
+              "min": 0.3417268395423889,
+              "max": 0.8023830056190491,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Refugee-Policies_summary_3.json",
+          "summary_length": 2098,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6173826587200165,
+              "std": 0.0991153168447557,
+              "min": 0.37976670265197754,
+              "max": 0.8813416957855225,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6484517592191696,
+              "std": 0.09139277138210108,
+              "min": 0.4291553795337677,
+              "max": 0.9659720659255981,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6031111741065979,
+              "std": 0.11289128903533209,
+              "min": 0.36659640073776245,
+              "max": 0.8516653776168823,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6042039090394974,
+              "std": 0.11534600399583357,
+              "min": 0.3493882417678833,
+              "max": 0.8652483224868774,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6039937565724057,
+          "std": 0.013878848559695192,
+          "min": 0.3659987151622772,
+          "max": 0.8813416957855225,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6320344646771748,
+          "std": 0.019848445747639224,
+          "min": 0.3711654245853424,
+          "max": 0.9659720659255981,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5794198206067086,
+          "std": 0.016752494143009732,
+          "min": 0.2242310494184494,
+          "max": 0.8516653776168823,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6023548567295074,
+          "std": 0.014076680168908277,
+          "min": 0.3417268395423889,
+          "max": 0.8652483224868774,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-AI-changes-human-life",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-AI-changes-human-life_summary_1.json",
+          "summary_length": 2406,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6159575617313385,
+              "std": 0.08873758396828295,
+              "min": 0.4011977016925812,
+              "max": 0.80854332447052,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6310983216762542,
+              "std": 0.06557184887896686,
+              "min": 0.48180443048477173,
+              "max": 0.757150411605835,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5988696151971817,
+              "std": 0.0775460008626834,
+              "min": 0.46721065044403076,
+              "max": 0.7842676043510437,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6180073416233063,
+              "std": 0.08042269961743059,
+              "min": 0.38167887926101685,
+              "max": 0.7583633661270142,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-AI-changes-human-life_summary_2.json",
+          "summary_length": 1397,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6152571249008179,
+              "std": 0.09148339863286101,
+              "min": 0.3967536687850952,
+              "max": 0.8582301735877991,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6070684134960175,
+              "std": 0.057339726707734864,
+              "min": 0.47158968448638916,
+              "max": 0.7121322751045227,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6191774272918701,
+              "std": 0.08057363136752001,
+              "min": 0.48652786016464233,
+              "max": 0.8400513529777527,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5997473973035813,
+              "std": 0.08957675588892756,
+              "min": 0.37329521775245667,
+              "max": 0.8271816968917847,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-AI-changes-human-life_summary_3.json",
+          "summary_length": 1559,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.611490871310234,
+              "std": 0.09079216556069306,
+              "min": 0.36456868052482605,
+              "max": 0.7817960381507874,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6169801580905915,
+              "std": 0.052243901327405286,
+              "min": 0.4530423879623413,
+              "max": 0.7095314264297485,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6265791887044907,
+              "std": 0.07442806405181164,
+              "min": 0.4957878291606903,
+              "max": 0.8370831608772278,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6201386481523514,
+              "std": 0.0712247731365034,
+              "min": 0.41196659207344055,
+              "max": 0.7738136053085327,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6142351859807967,
+          "std": 0.0019614790672155126,
+          "min": 0.36456868052482605,
+          "max": 0.8582301735877991,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6183822977542878,
+          "std": 0.009860142612729123,
+          "min": 0.4530423879623413,
+          "max": 0.757150411605835,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.6148754103978475,
+          "std": 0.011714254223141462,
+          "min": 0.46721065044403076,
+          "max": 0.8400513529777527,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6126311290264128,
+          "std": 0.00915163097338803,
+          "min": 0.37329521775245667,
+          "max": 0.8271816968917847,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Binary-Vaccination-Policy",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Vaccination-Policy_summary_1.json",
+          "summary_length": 2793,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6369510895013809,
+              "std": 0.0978177575745343,
+              "min": 0.4338357448577881,
+              "max": 0.8199802041053772,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.7118202638626099,
+              "std": 0.09721433131640787,
+              "min": 0.48244816064834595,
+              "max": 0.8791009187698364,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6473531776666641,
+              "std": 0.08827567328000051,
+              "min": 0.39683929085731506,
+              "max": 0.8031047582626343,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6040566396713257,
+              "std": 0.12805706188559332,
+              "min": 0.2069055736064911,
+              "max": 0.9153667092323303,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Vaccination-Policy_summary_2.json",
+          "summary_length": 2502,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.629763298034668,
+              "std": 0.1090528827658666,
+              "min": 0.3961193263530731,
+              "max": 0.8490772843360901,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6811406701803208,
+              "std": 0.10359235603452668,
+              "min": 0.4380391538143158,
+              "max": 0.8572044968605042,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6276871472597122,
+              "std": 0.08278230530734758,
+              "min": 0.4158768951892853,
+              "max": 0.7557389736175537,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5533353793621063,
+              "std": 0.12691355907330387,
+              "min": 0.20637404918670654,
+              "max": 0.9009851813316345,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Vaccination-Policy_summary_3.json",
+          "summary_length": 1710,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5861071270704269,
+              "std": 0.09265684240615743,
+              "min": 0.3790653944015503,
+              "max": 0.8032914996147156,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6446438699960708,
+              "std": 0.08632762794687507,
+              "min": 0.4329891502857208,
+              "max": 0.8041560649871826,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6094218438863754,
+              "std": 0.080409795799858,
+              "min": 0.42074960470199585,
+              "max": 0.7368157505989075,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5597874611616135,
+              "std": 0.12291616636031932,
+              "min": 0.26824459433555603,
+              "max": 0.9012359380722046,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6176071715354919,
+          "std": 0.022466355401177765,
+          "min": 0.3790653944015503,
+          "max": 0.8490772843360901,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.679201601346334,
+          "std": 0.027458902189579023,
+          "min": 0.4329891502857208,
+          "max": 0.8791009187698364,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.628154056270917,
+          "std": 0.01548892127955711,
+          "min": 0.39683929085731506,
+          "max": 0.8031047582626343,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.5723931600650152,
+          "std": 0.022543872714794973,
+          "min": 0.20637404918670654,
+          "max": 0.9153667092323303,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-Updates-of-electronic-products",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Updates-of-electronic-products_summary_1.json",
+          "summary_length": 2506,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6185810929536819,
+              "std": 0.08627008782214558,
+              "min": 0.3960901200771332,
+              "max": 0.8234689831733704,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.691760882139206,
+              "std": 0.058316267997028465,
+              "min": 0.5631471872329712,
+              "max": 0.8412977457046509,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5463609981536866,
+              "std": 0.08809013259059598,
+              "min": 0.2795847952365875,
+              "max": 0.6965939998626709,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.658909278512001,
+              "std": 0.07945796060182525,
+              "min": 0.3408490717411041,
+              "max": 0.8420986533164978,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Updates-of-electronic-products_summary_2.json",
+          "summary_length": 2072,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6222206950187683,
+              "std": 0.09741147040796568,
+              "min": 0.43000078201293945,
+              "max": 0.8712172508239746,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6556782126426697,
+              "std": 0.06666924341931417,
+              "min": 0.4930778741836548,
+              "max": 0.8602998852729797,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5460164418816567,
+              "std": 0.08894336889511405,
+              "min": 0.24500088393688202,
+              "max": 0.7181304097175598,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6274681514501572,
+              "std": 0.08707686675803186,
+              "min": 0.4365454912185669,
+              "max": 0.8574394583702087,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Updates-of-electronic-products_summary_3.json",
+          "summary_length": 3107,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6168892031908035,
+              "std": 0.09013127077162753,
+              "min": 0.4516550600528717,
+              "max": 0.835175633430481,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6909506225585937,
+              "std": 0.05543613146167256,
+              "min": 0.562201976776123,
+              "max": 0.8183536529541016,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5713805484771729,
+              "std": 0.09009378118562048,
+              "min": 0.3743816018104553,
+              "max": 0.7488404512405396,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6587951999902725,
+              "std": 0.09022655587818472,
+              "min": 0.41401422023773193,
+              "max": 0.8778359889984131,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6192303303877511,
+          "std": 0.0022244599662631973,
+          "min": 0.3960901200771332,
+          "max": 0.8712172508239746,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6794632391134899,
+          "std": 0.016821806151742516,
+          "min": 0.4930778741836548,
+          "max": 0.8602998852729797,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5545859961708387,
+          "std": 0.011876374871533691,
+          "min": 0.24500088393688202,
+          "max": 0.7488404512405396,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6483908766508103,
+          "std": 0.014794674173359596,
+          "min": 0.3408490717411041,
+          "max": 0.8778359889984131,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-Influencers-as-a-job",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Influencers-as-a-job_summary_1.json",
+          "summary_length": 2069,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5643378794193268,
+              "std": 0.10386890653767031,
+              "min": 0.31453102827072144,
+              "max": 0.7790672183036804,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6049337500333786,
+              "std": 0.08527844988831948,
+              "min": 0.4324418306350708,
+              "max": 0.7753398418426514,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5927954614162445,
+              "std": 0.09113663817214586,
+              "min": 0.3346015214920044,
+              "max": 0.754963755607605,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5907364362478256,
+              "std": 0.11568426238569643,
+              "min": 0.36506518721580505,
+              "max": 0.7928348779678345,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Influencers-as-a-job_summary_2.json",
+          "summary_length": 2132,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5824837774038315,
+              "std": 0.10168973498388931,
+              "min": 0.36583414673805237,
+              "max": 0.7843356728553772,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6265231549739838,
+              "std": 0.08519781701953126,
+              "min": 0.430899441242218,
+              "max": 0.7979165315628052,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6142479526996613,
+              "std": 0.08059880523416117,
+              "min": 0.3997073471546173,
+              "max": 0.7506659030914307,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6302514117956162,
+              "std": 0.12055230471785862,
+              "min": 0.42347270250320435,
+              "max": 0.8444416522979736,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Openqa-Influencers-as-a-job_summary_3.json",
+          "summary_length": 2349,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5625294333696366,
+              "std": 0.09599231340307475,
+              "min": 0.3256303668022156,
+              "max": 0.7222926020622253,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6225231528282166,
+              "std": 0.08590874031683333,
+              "min": 0.42592817544937134,
+              "max": 0.8028808236122131,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6246327698230744,
+              "std": 0.08621251084574211,
+              "min": 0.3958362936973572,
+              "max": 0.80482017993927,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5795713067054749,
+              "std": 0.11459732914586823,
+              "min": 0.3951030671596527,
+              "max": 0.7968123555183411,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.5697836967309315,
+          "std": 0.009010610637919568,
+          "min": 0.31453102827072144,
+          "max": 0.7843356728553772,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6179933526118596,
+          "std": 0.00937780780788481,
+          "min": 0.42592817544937134,
+          "max": 0.8028808236122131,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.61055872797966,
+          "std": 0.01325673001218377,
+          "min": 0.3346015214920044,
+          "max": 0.80482017993927,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6001863849163055,
+          "std": 0.021742345938507823,
+          "min": 0.36506518721580505,
+          "max": 0.8444416522979736,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Binary-Tariff-Policy",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Tariff-Policy_summary_1.json",
+          "summary_length": 2357,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6414879024028778,
+              "std": 0.09831112526412315,
+              "min": 0.4591255187988281,
+              "max": 0.8416132926940918,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6305137026309967,
+              "std": 0.08263391704616423,
+              "min": 0.39543724060058594,
+              "max": 0.7775520086288452,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5729408746957779,
+              "std": 0.09295988081723673,
+              "min": 0.35470181703567505,
+              "max": 0.7526705861091614,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5732838839292527,
+              "std": 0.10017986108615777,
+              "min": 0.34733712673187256,
+              "max": 0.7947998642921448,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Tariff-Policy_summary_2.json",
+          "summary_length": 2233,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6302552056312561,
+              "std": 0.08858493332948165,
+              "min": 0.3713816702365875,
+              "max": 0.8456610441207886,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.641836918592453,
+              "std": 0.08518189067265138,
+              "min": 0.357147216796875,
+              "max": 0.7976238131523132,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5420322680473327,
+              "std": 0.0791961083755365,
+              "min": 0.310308039188385,
+              "max": 0.7143803238868713,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5828498333692551,
+              "std": 0.089618985027731,
+              "min": 0.32418787479400635,
+              "max": 0.7730804681777954,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Tariff-Policy_summary_3.json",
+          "summary_length": 2038,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6576895630359649,
+              "std": 0.0956820925895079,
+              "min": 0.4507793188095093,
+              "max": 0.8869649171829224,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6371940279006958,
+              "std": 0.07603550201663135,
+              "min": 0.3952433466911316,
+              "max": 0.7804536819458008,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5598212116956711,
+              "std": 0.0847236929418292,
+              "min": 0.35848191380500793,
+              "max": 0.733688473701477,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5708962845802307,
+              "std": 0.0966918368046579,
+              "min": 0.33338263630867004,
+              "max": 0.7742699384689331,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.643144223690033,
+          "std": 0.01126109946399662,
+          "min": 0.3713816702365875,
+          "max": 0.8869649171829224,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.636514883041382,
+          "std": 0.0046475608823262566,
+          "min": 0.357147216796875,
+          "max": 0.7976238131523132,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5582647848129273,
+          "std": 0.012666289636092419,
+          "min": 0.310308039188385,
+          "max": 0.7526705861091614,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.5756766672929127,
+          "std": 0.0051650034741487815,
+          "min": 0.32418787479400635,
+          "max": 0.7947998642921448,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Binary-Health-Care-Policy",
+      "model": "gpt-5-mini",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Health-Care-Policy_summary_1.json",
+          "summary_length": 2000,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6154078501462936,
+              "std": 0.10866830311704952,
+              "min": 0.4068659245967865,
+              "max": 0.86977219581604,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6673235338926315,
+              "std": 0.10500359481125722,
+              "min": 0.4522600471973419,
+              "max": 0.9112183451652527,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5453285777568817,
+              "std": 0.09720342752060133,
+              "min": 0.33413952589035034,
+              "max": 0.7591522932052612,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5947318053245545,
+              "std": 0.09893323543177578,
+              "min": 0.3120425045490265,
+              "max": 0.8649449944496155,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Health-Care-Policy_summary_2.json",
+          "summary_length": 2603,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6411020016670227,
+              "std": 0.09879380747680418,
+              "min": 0.4476989805698395,
+              "max": 0.8657130002975464,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.7078631448745728,
+              "std": 0.09152175142429898,
+              "min": 0.5557321310043335,
+              "max": 0.962977945804596,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5883397537469864,
+              "std": 0.09221347413161288,
+              "min": 0.4081886410713196,
+              "max": 0.7526752948760986,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6543876737356186,
+              "std": 0.0920077117867838,
+              "min": 0.43275725841522217,
+              "max": 0.8346025347709656,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/gpt-5-mini/50/Binary-Health-Care-Policy_summary_3.json",
+          "summary_length": 1939,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6353026503324508,
+              "std": 0.09505614137292052,
+              "min": 0.46211689710617065,
+              "max": 0.9178139567375183,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6689264225959778,
+              "std": 0.09574740873851276,
+              "min": 0.4990846514701843,
+              "max": 0.90899258852005,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5724038863182068,
+              "std": 0.09384542471039761,
+              "min": 0.3386395573616028,
+              "max": 0.7665384411811829,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6078341275453567,
+              "std": 0.09031126551163844,
+              "min": 0.4383769929409027,
+              "max": 0.8092685341835022,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6306041673819223,
+          "std": 0.011003155975138854,
+          "min": 0.4068659245967865,
+          "max": 0.9178139567375183,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6813710337877273,
+          "std": 0.018744177325721666,
+          "min": 0.4522600471973419,
+          "max": 0.962977945804596,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5686907392740249,
+          "std": 0.017754453164238872,
+          "min": 0.33413952589035034,
+          "max": 0.7665384411811829,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6189845355351767,
+          "std": 0.02559888484191095,
+          "min": 0.3120425045490265,
+          "max": 0.8649449944496155,
+          "n_samples": 150
+        }
+      }
+    }
+  ]
+}

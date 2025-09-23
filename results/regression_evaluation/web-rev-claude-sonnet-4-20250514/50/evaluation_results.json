@@ -1,0 +1,1466 @@
+{
+  "model_path": "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_final_v6_pair_split_noactivation",
+  "model_info": {
+    "successful_config": {
+      "use_tanh": false,
+      "use_sigmoid": false,
+      "use_relu": false,
+      "use_leaky_relu": false,
+      "use_elu": false
+    },
+    "successful_weight_file": "model.safetensors",
+    "device": "cuda",
+    "model_path": "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_final_v6_pair_split_noactivation",
+    "target_keys": [
+      "perspective_representation",
+      "informativeness",
+      "neutrality_balance",
+      "policy_approval"
+    ]
+  },
+  "evaluation_params": {
+    "summary_dir": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation",
+    "comments_dir": "/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/annotation_V0_V1_dataset",
+    "n_summaries": 3,
+    "model_names": [
+      "web-rev-claude-sonnet-4-20250514"
+    ],
+    "sample_sizes": [
+      50
+    ],
+    "topics": [
+      "Binary-Online-Identity-Policies",
+      "Openqa-Trump-cutting-funding",
+      "Openqa-Tipping-System",
+      "Binary-Refugee-Policies",
+      "Openqa-AI-changes-human-life",
+      "Binary-Vaccination-Policy",
+      "Openqa-Updates-of-electronic-products",
+      "Openqa-Influencers-as-a-job",
+      "Binary-Tariff-Policy",
+      "Binary-Health-Care-Policy"
+    ]
+  },
+  "results": [
+    {
+      "topic": "Binary-Online-Identity-Policies",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Online-Identity-Policies_summary_1.json",
+          "summary_length": 2260,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6294990390539169,
+              "std": 0.09070469081686784,
+              "min": 0.32689595222473145,
+              "max": 0.8090319037437439,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6435354030132294,
+              "std": 0.07654199146328905,
+              "min": 0.399372935295105,
+              "max": 0.8021976351737976,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6525019997358322,
+              "std": 0.08428345062280108,
+              "min": 0.4076184928417206,
+              "max": 0.8127841949462891,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6423112154006958,
+              "std": 0.0871455192956178,
+              "min": 0.3913658857345581,
+              "max": 0.8146774172782898,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Online-Identity-Policies_summary_2.json",
+          "summary_length": 2323,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6433166468143463,
+              "std": 0.08119666146657112,
+              "min": 0.43389397859573364,
+              "max": 0.7939233779907227,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6718444120883942,
+              "std": 0.07147534280084482,
+              "min": 0.4960046410560608,
+              "max": 0.8012961149215698,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6731588011980056,
+              "std": 0.08553165318180961,
+              "min": 0.4710336923599243,
+              "max": 0.8535847067832947,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6385085624456406,
+              "std": 0.07950053742745943,
+              "min": 0.42603009939193726,
+              "max": 0.8142080903053284,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Online-Identity-Policies_summary_3.json",
+          "summary_length": 2410,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6231625884771347,
+              "std": 0.08491169061268286,
+              "min": 0.4665537476539612,
+              "max": 0.7947428822517395,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6611209881305694,
+              "std": 0.07052963967860221,
+              "min": 0.49668413400650024,
+              "max": 0.8688462972640991,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6558462566137314,
+              "std": 0.08121234402198445,
+              "min": 0.46277281641960144,
+              "max": 0.8480770587921143,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6529665458202362,
+              "std": 0.07583071106138119,
+              "min": 0.4508492052555084,
+              "max": 0.8533146977424622,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6319927581151327,
+          "std": 0.008414689256775333,
+          "min": 0.32689595222473145,
+          "max": 0.8090319037437439,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6588336010773976,
+          "std": 0.01166973588254974,
+          "min": 0.399372935295105,
+          "max": 0.8688462972640991,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.6605023525158563,
+          "std": 0.009053002575545546,
+          "min": 0.4076184928417206,
+          "max": 0.8535847067832947,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6445954412221907,
+          "std": 0.006119454579056814,
+          "min": 0.3913658857345581,
+          "max": 0.8533146977424622,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-Trump-cutting-funding",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Trump-cutting-funding_summary_1.json",
+          "summary_length": 2334,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6188790714740753,
+              "std": 0.10211393668397332,
+              "min": 0.3213186264038086,
+              "max": 0.8353556990623474,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6323369252681732,
+              "std": 0.08511864510894067,
+              "min": 0.3923007845878601,
+              "max": 0.80229651927948,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5428778427839279,
+              "std": 0.1113749076064417,
+              "min": 0.31106066703796387,
+              "max": 0.791376531124115,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5631448549032211,
+              "std": 0.1048678026310611,
+              "min": 0.24370306730270386,
+              "max": 0.7868906855583191,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Trump-cutting-funding_summary_2.json",
+          "summary_length": 2130,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6409441512823105,
+              "std": 0.12424741179463812,
+              "min": 0.33856719732284546,
+              "max": 0.8898715376853943,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6225894689559937,
+              "std": 0.09757410396535976,
+              "min": 0.40495729446411133,
+              "max": 0.8380783796310425,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5571694850921631,
+              "std": 0.10534580014188404,
+              "min": 0.344139039516449,
+              "max": 0.7680778503417969,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5998445761203766,
+              "std": 0.12732036897353022,
+              "min": 0.21067243814468384,
+              "max": 0.8650020956993103,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Trump-cutting-funding_summary_3.json",
+          "summary_length": 2140,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6439696878194809,
+              "std": 0.10382492209004167,
+              "min": 0.36787712574005127,
+              "max": 0.8489699363708496,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6119599270820618,
+              "std": 0.08388191586150555,
+              "min": 0.4155580699443817,
+              "max": 0.7529182434082031,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5550509548187256,
+              "std": 0.10322891558784866,
+              "min": 0.3295547664165497,
+              "max": 0.7547220587730408,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5898516166210175,
+              "std": 0.11285934415446539,
+              "min": 0.24551603198051453,
+              "max": 0.8189701437950134,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.634597636858622,
+          "std": 0.011183125417212218,
+          "min": 0.3213186264038086,
+          "max": 0.8898715376853943,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6222954404354095,
+          "std": 0.008321472359600164,
+          "min": 0.3923007845878601,
+          "max": 0.8380783796310425,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5516994275649388,
+          "std": 0.0062974762757944495,
+          "min": 0.31106066703796387,
+          "max": 0.791376531124115,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.5842803492148717,
+          "std": 0.015491861298486585,
+          "min": 0.21067243814468384,
+          "max": 0.8650020956993103,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-Tipping-System",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Tipping-System_summary_1.json",
+          "summary_length": 2170,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6295327633619309,
+              "std": 0.08837158331270194,
+              "min": 0.40877458453178406,
+              "max": 0.8065750002861023,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6676090335845948,
+              "std": 0.07155581807757364,
+              "min": 0.49574756622314453,
+              "max": 0.8191338181495667,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5470177692174911,
+              "std": 0.07452338649441437,
+              "min": 0.36664167046546936,
+              "max": 0.6999951601028442,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6525112813711167,
+              "std": 0.08001341734009465,
+              "min": 0.37401282787323,
+              "max": 0.7916384339332581,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Tipping-System_summary_2.json",
+          "summary_length": 2262,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6195836007595062,
+              "std": 0.091286543587655,
+              "min": 0.3631918430328369,
+              "max": 0.7901535630226135,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.7060175013542175,
+              "std": 0.07575733027339493,
+              "min": 0.5320199131965637,
+              "max": 0.8675881624221802,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5346762502193451,
+              "std": 0.07590669418550192,
+              "min": 0.3407869040966034,
+              "max": 0.7178366184234619,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6498546296358109,
+              "std": 0.09034089090016204,
+              "min": 0.3440121114253998,
+              "max": 0.8589442372322083,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Tipping-System_summary_3.json",
+          "summary_length": 2415,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.652690703868866,
+              "std": 0.08678445823917491,
+              "min": 0.4174240827560425,
+              "max": 0.8375131487846375,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.7132752358913421,
+              "std": 0.06944702606940828,
+              "min": 0.5648723244667053,
+              "max": 0.8422603011131287,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5559099358320236,
+              "std": 0.07161587687809012,
+              "min": 0.40439024567604065,
+              "max": 0.7053636312484741,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6520415043830872,
+              "std": 0.08912430313329463,
+              "min": 0.38976818323135376,
+              "max": 0.7948268055915833,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.633935689330101,
+          "std": 0.01386985668958249,
+          "min": 0.3631918430328369,
+          "max": 0.8375131487846375,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6956339236100516,
+          "std": 0.020036874728976556,
+          "min": 0.49574756622314453,
+          "max": 0.8675881624221802,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.54586798508962,
+          "std": 0.00870665851824708,
+          "min": 0.3407869040966034,
+          "max": 0.7178366184234619,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.651469138463338,
+          "std": 0.0011576273638332815,
+          "min": 0.3440121114253998,
+          "max": 0.8589442372322083,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Binary-Refugee-Policies",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Refugee-Policies_summary_1.json",
+          "summary_length": 2924,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6092169028520584,
+              "std": 0.0928682847134376,
+              "min": 0.4297705590724945,
+              "max": 0.8133885860443115,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6432006639242173,
+              "std": 0.08894812338526696,
+              "min": 0.41482946276664734,
+              "max": 0.912575364112854,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5896481585502624,
+              "std": 0.11511399440285328,
+              "min": 0.3465619683265686,
+              "max": 0.8442838191986084,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6165795421600342,
+              "std": 0.10576297634136544,
+              "min": 0.4230049252510071,
+              "max": 0.912545919418335,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Refugee-Policies_summary_2.json",
+          "summary_length": 2811,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.581605840921402,
+              "std": 0.08557573144851766,
+              "min": 0.3700009882450104,
+              "max": 0.7809106111526489,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6265721088647842,
+              "std": 0.08983035971027417,
+              "min": 0.4113783836364746,
+              "max": 0.9065406322479248,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5930074888467789,
+              "std": 0.11567145373652032,
+              "min": 0.3269979655742645,
+              "max": 0.8118590116500854,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5912950730323792,
+              "std": 0.09748636435662732,
+              "min": 0.4065417945384979,
+              "max": 0.8419495224952698,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Refugee-Policies_summary_3.json",
+          "summary_length": 2898,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6395878231525421,
+              "std": 0.10205723067439548,
+              "min": 0.4152192175388336,
+              "max": 0.8606055378913879,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6683858889341354,
+              "std": 0.09606216741667875,
+              "min": 0.3945319354534149,
+              "max": 0.966495931148529,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6243553841114045,
+              "std": 0.12279706288011226,
+              "min": 0.2961162328720093,
+              "max": 0.8837884664535522,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6244018524885178,
+              "std": 0.10724752607964898,
+              "min": 0.42261403799057007,
+              "max": 0.8623147010803223,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6101368556420007,
+          "std": 0.0236799817105061,
+          "min": 0.3700009882450104,
+          "max": 0.8606055378913879,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6460528872410456,
+          "std": 0.0171891328908473,
+          "min": 0.3945319354534149,
+          "max": 0.966495931148529,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.6023370105028153,
+          "std": 0.015629626937024358,
+          "min": 0.2961162328720093,
+          "max": 0.8837884664535522,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6107588225603103,
+          "std": 0.014128583179340312,
+          "min": 0.4065417945384979,
+          "max": 0.912545919418335,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-AI-changes-human-life",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-AI-changes-human-life_summary_1.json",
+          "summary_length": 3830,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6307782691717148,
+              "std": 0.10706650941237963,
+              "min": 0.375579297542572,
+              "max": 0.8836344480514526,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.668739857673645,
+              "std": 0.06323041576850709,
+              "min": 0.5068665146827698,
+              "max": 0.79439777135849,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6116022235155105,
+              "std": 0.08662655427617537,
+              "min": 0.4197261333465576,
+              "max": 0.8012606501579285,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6397058510780335,
+              "std": 0.09599731244998773,
+              "min": 0.4081660211086273,
+              "max": 0.8293404579162598,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-AI-changes-human-life_summary_2.json",
+          "summary_length": 3781,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6141519612073898,
+              "std": 0.10551747174839851,
+              "min": 0.3782007098197937,
+              "max": 0.8131092190742493,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6706206464767456,
+              "std": 0.06351854584599907,
+              "min": 0.5219568610191345,
+              "max": 0.7864770889282227,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6031512707471848,
+              "std": 0.08560409730160416,
+              "min": 0.4087732136249542,
+              "max": 0.7617098689079285,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6503827404975892,
+              "std": 0.09772259639190076,
+              "min": 0.46737080812454224,
+              "max": 0.8728913068771362,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-AI-changes-human-life_summary_3.json",
+          "summary_length": 2607,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6050755137205124,
+              "std": 0.09400620603382721,
+              "min": 0.4115656018257141,
+              "max": 0.8005836606025696,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6302311527729034,
+              "std": 0.06572043880089133,
+              "min": 0.4977719783782959,
+              "max": 0.7587791085243225,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5775155466794968,
+              "std": 0.08130640389546766,
+              "min": 0.3991757929325104,
+              "max": 0.8009970188140869,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6290284836292267,
+              "std": 0.08109510954597061,
+              "min": 0.43798860907554626,
+              "max": 0.8194876313209534,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6166685813665391,
+          "std": 0.010642930117066927,
+          "min": 0.375579297542572,
+          "max": 0.8836344480514526,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6565305523077645,
+          "std": 0.018612328415169004,
+          "min": 0.4977719783782959,
+          "max": 0.79439777135849,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5974230136473976,
+          "std": 0.014493333674064496,
+          "min": 0.3991757929325104,
+          "max": 0.8012606501579285,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6397056917349498,
+          "std": 0.008717838861363285,
+          "min": 0.4081660211086273,
+          "max": 0.8728913068771362,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Binary-Vaccination-Policy",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Vaccination-Policy_summary_1.json",
+          "summary_length": 2238,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5960513126850128,
+              "std": 0.09254921286201184,
+              "min": 0.3655978739261627,
+              "max": 0.8555732369422913,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6608391213417053,
+              "std": 0.09249231694461509,
+              "min": 0.5004212260246277,
+              "max": 0.8780699372291565,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6295731174945831,
+              "std": 0.08741969708294363,
+              "min": 0.3823500871658325,
+              "max": 0.7706831097602844,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6020851755142211,
+              "std": 0.10945221381957067,
+              "min": 0.28358909487724304,
+              "max": 0.929702877998352,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Vaccination-Policy_summary_2.json",
+          "summary_length": 2219,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6031083416938782,
+              "std": 0.10073349439357815,
+              "min": 0.37087059020996094,
+              "max": 0.7835190296173096,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6935086786746979,
+              "std": 0.09121864204106686,
+              "min": 0.5002100467681885,
+              "max": 0.8616909384727478,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6711633998155594,
+              "std": 0.09508401628672944,
+              "min": 0.46387001872062683,
+              "max": 0.8414088487625122,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5966579711437225,
+              "std": 0.1200232725953009,
+              "min": 0.3262374997138977,
+              "max": 0.9574977159500122,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Vaccination-Policy_summary_3.json",
+          "summary_length": 3041,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6150190788507461,
+              "std": 0.09307094419708642,
+              "min": 0.40145760774612427,
+              "max": 0.8132014870643616,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6957400012016296,
+              "std": 0.0965274657237291,
+              "min": 0.5255936980247498,
+              "max": 0.9044760465621948,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6533256262540817,
+              "std": 0.09109905291741739,
+              "min": 0.44482025504112244,
+              "max": 0.8340926170349121,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5798109656572342,
+              "std": 0.11731931149745126,
+              "min": 0.26650452613830566,
+              "max": 0.885668158531189,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6047262444098789,
+          "std": 0.007827611182147339,
+          "min": 0.3655978739261627,
+          "max": 0.8555732369422913,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6833626004060109,
+          "std": 0.015952534426122992,
+          "min": 0.5002100467681885,
+          "max": 0.9044760465621948,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.6513540478547414,
+          "std": 0.01703629922495272,
+          "min": 0.3823500871658325,
+          "max": 0.8414088487625122,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.5928513707717259,
+          "std": 0.009483415734229117,
+          "min": 0.26650452613830566,
+          "max": 0.9574977159500122,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-Updates-of-electronic-products",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Updates-of-electronic-products_summary_1.json",
+          "summary_length": 2466,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.610090805888176,
+              "std": 0.0906548495857252,
+              "min": 0.4199034571647644,
+              "max": 0.8522718548774719,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6739243495464325,
+              "std": 0.0651384474025003,
+              "min": 0.5318858623504639,
+              "max": 0.8064315915107727,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5376584023237229,
+              "std": 0.08559886493471183,
+              "min": 0.30326589941978455,
+              "max": 0.6843247413635254,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6596201455593109,
+              "std": 0.07773740788825677,
+              "min": 0.4339539408683777,
+              "max": 0.8283202648162842,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Updates-of-electronic-products_summary_2.json",
+          "summary_length": 2457,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6196219617128372,
+              "std": 0.08496046222395837,
+              "min": 0.45524129271507263,
+              "max": 0.8558505177497864,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6707160758972168,
+              "std": 0.06753467908452732,
+              "min": 0.4978296160697937,
+              "max": 0.8466715812683105,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5340653881430626,
+              "std": 0.09285883982102922,
+              "min": 0.1842961460351944,
+              "max": 0.7269092798233032,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.63582190990448,
+              "std": 0.08202312972598613,
+              "min": 0.4096541702747345,
+              "max": 0.8278704285621643,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Updates-of-electronic-products_summary_3.json",
+          "summary_length": 2692,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6293737715482712,
+              "std": 0.09087046719981341,
+              "min": 0.46111860871315,
+              "max": 0.885415256023407,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.682302018404007,
+              "std": 0.06553271726554473,
+              "min": 0.5706620812416077,
+              "max": 0.896187424659729,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5712976378202438,
+              "std": 0.09482523912257133,
+              "min": 0.23778480291366577,
+              "max": 0.7689300775527954,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6679449337720871,
+              "std": 0.08566920053341101,
+              "min": 0.3899668753147125,
+              "max": 0.9069060683250427,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6196955130497617,
+          "std": 0.00787240956384916,
+          "min": 0.4199034571647644,
+          "max": 0.885415256023407,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6756474812825523,
+          "std": 0.004884356196243839,
+          "min": 0.4978296160697937,
+          "max": 0.896187424659729,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5476738094290098,
+          "std": 0.016768847875737975,
+          "min": 0.1842961460351944,
+          "max": 0.7689300775527954,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6544623297452925,
+          "std": 0.013611868928211559,
+          "min": 0.3899668753147125,
+          "max": 0.9069060683250427,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Openqa-Influencers-as-a-job",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Influencers-as-a-job_summary_1.json",
+          "summary_length": 2832,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5955573320388794,
+              "std": 0.09241477326987872,
+              "min": 0.40169912576675415,
+              "max": 0.7932872772216797,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6330915063619613,
+              "std": 0.09098250086846257,
+              "min": 0.4088735580444336,
+              "max": 0.8131945729255676,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5922372311353683,
+              "std": 0.09553850273262605,
+              "min": 0.3240964114665985,
+              "max": 0.789699137210846,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6261277669668197,
+              "std": 0.12051743457453735,
+              "min": 0.38026732206344604,
+              "max": 0.841748833656311,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Influencers-as-a-job_summary_2.json",
+          "summary_length": 2343,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5792983430624008,
+              "std": 0.09692984223534,
+              "min": 0.3609926998615265,
+              "max": 0.7459408640861511,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.5882467132806778,
+              "std": 0.09373539132010968,
+              "min": 0.37206628918647766,
+              "max": 0.753091037273407,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6080390846729279,
+              "std": 0.09949471407561647,
+              "min": 0.3386934995651245,
+              "max": 0.8151371479034424,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6015690469741821,
+              "std": 0.12535041722411513,
+              "min": 0.3453710377216339,
+              "max": 0.8382261395454407,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Openqa-Influencers-as-a-job_summary_3.json",
+          "summary_length": 2569,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.5894958013296128,
+              "std": 0.09536026551534309,
+              "min": 0.378966748714447,
+              "max": 0.7708086371421814,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6244416934251785,
+              "std": 0.08733634045145507,
+              "min": 0.4210348129272461,
+              "max": 0.7926053404808044,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.6056395417451859,
+              "std": 0.08377915739139898,
+              "min": 0.3499186038970947,
+              "max": 0.7928024530410767,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.619048268198967,
+              "std": 0.11826150168196212,
+              "min": 0.36369284987449646,
+              "max": 0.8311116695404053,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.5881171588102977,
+          "std": 0.006708908109439805,
+          "min": 0.3609926998615265,
+          "max": 0.7932872772216797,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6152599710226058,
+          "std": 0.01942493048180117,
+          "min": 0.37206628918647766,
+          "max": 0.8131945729255676,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.6019719525178273,
+          "std": 0.00695284363221736,
+          "min": 0.3240964114665985,
+          "max": 0.8151371479034424,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6155816940466563,
+          "std": 0.010321354374444463,
+          "min": 0.3453710377216339,
+          "max": 0.841748833656311,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Binary-Tariff-Policy",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Tariff-Policy_summary_1.json",
+          "summary_length": 2702,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6708958601951599,
+              "std": 0.11141261288300396,
+              "min": 0.4034290909767151,
+              "max": 0.8970742225646973,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6353512036800385,
+              "std": 0.09430286359987612,
+              "min": 0.37950190901756287,
+              "max": 0.8247681260108948,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5172263932228088,
+              "std": 0.09385644838692671,
+              "min": 0.2952275276184082,
+              "max": 0.753244936466217,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5638423126935959,
+              "std": 0.0918801745685258,
+              "min": 0.3425619304180145,
+              "max": 0.7211261987686157,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Tariff-Policy_summary_2.json",
+          "summary_length": 2577,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6430618941783905,
+              "std": 0.10132533954623503,
+              "min": 0.3689113259315491,
+              "max": 0.8461305499076843,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6182811743021012,
+              "std": 0.09320997010306828,
+              "min": 0.3957102298736572,
+              "max": 0.792180061340332,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5187513452768325,
+              "std": 0.0808183981454549,
+              "min": 0.35894057154655457,
+              "max": 0.7030450701713562,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5547036755084992,
+              "std": 0.09127086633476074,
+              "min": 0.32034480571746826,
+              "max": 0.7499522566795349,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Tariff-Policy_summary_3.json",
+          "summary_length": 2182,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6261036747694015,
+              "std": 0.10575562878373583,
+              "min": 0.36959367990493774,
+              "max": 0.8375349640846252,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.5974616032838821,
+              "std": 0.08977030854658356,
+              "min": 0.34884560108184814,
+              "max": 0.7457013726234436,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5029274380207062,
+              "std": 0.08895486212747632,
+              "min": 0.28608182072639465,
+              "max": 0.708162248134613,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5389065062999725,
+              "std": 0.09623590987254657,
+              "min": 0.2859731614589691,
+              "max": 0.7521841526031494,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6466871430476507,
+          "std": 0.018465134548240433,
+          "min": 0.3689113259315491,
+          "max": 0.8970742225646973,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6170313270886739,
+          "std": 0.015493590999459267,
+          "min": 0.34884560108184814,
+          "max": 0.8247681260108948,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.5129683921734493,
+          "std": 0.007127268757613637,
+          "min": 0.28608182072639465,
+          "max": 0.753244936466217,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.5524841648340225,
+          "std": 0.01030026798520808,
+          "min": 0.2859731614589691,
+          "max": 0.7521841526031494,
+          "n_samples": 150
+        }
+      }
+    },
+    {
+      "topic": "Binary-Health-Care-Policy",
+      "model": "web-rev-claude-sonnet-4-20250514",
+      "sample_size": 50,
+      "summaries": [
+        {
+          "summary_index": 1,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Health-Care-Policy_summary_1.json",
+          "summary_length": 2112,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6250656253099441,
+              "std": 0.09394336189505026,
+              "min": 0.4514712989330292,
+              "max": 0.8296894431114197,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6250144785642624,
+              "std": 0.0984142234391179,
+              "min": 0.42559635639190674,
+              "max": 0.8585091829299927,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5619497907161712,
+              "std": 0.0882928029007101,
+              "min": 0.38756728172302246,
+              "max": 0.7378274202346802,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5747357273101806,
+              "std": 0.0895751604402936,
+              "min": 0.33996376395225525,
+              "max": 0.7934362888336182,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 2,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Health-Care-Policy_summary_2.json",
+          "summary_length": 2393,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6209540957212448,
+              "std": 0.0769308953032916,
+              "min": 0.46099844574928284,
+              "max": 0.7526740431785583,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6485687935352326,
+              "std": 0.0855802631336212,
+              "min": 0.45632678270339966,
+              "max": 0.8632441163063049,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5208084744215011,
+              "std": 0.07918594896761913,
+              "min": 0.3666476309299469,
+              "max": 0.6667835712432861,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.5942648184299469,
+              "std": 0.08540567437392033,
+              "min": 0.40285465121269226,
+              "max": 0.7481443881988525,
+              "n_samples": 50
+            }
+          }
+        },
+        {
+          "summary_index": 3,
+          "summary_file": "/ibex/project/c2328/LLMs-Scalable-Deliberation/results/summary_model_for_evaluation/web-rev-claude-sonnet-4-20250514/50/Binary-Health-Care-Policy_summary_3.json",
+          "summary_length": 2369,
+          "evaluation_stats": {
+            "perspective_representation": {
+              "mean": 0.6352443253993988,
+              "std": 0.08021982681380836,
+              "min": 0.49629390239715576,
+              "max": 0.7884491086006165,
+              "n_samples": 50
+            },
+            "informativeness": {
+              "mean": 0.6680131316184997,
+              "std": 0.0856508644041958,
+              "min": 0.48941248655319214,
+              "max": 0.8895063996315002,
+              "n_samples": 50
+            },
+            "neutrality_balance": {
+              "mean": 0.5553645157814026,
+              "std": 0.08799233812504403,
+              "min": 0.36490774154663086,
+              "max": 0.719756007194519,
+              "n_samples": 50
+            },
+            "policy_approval": {
+              "mean": 0.6502301341295242,
+              "std": 0.08079263560121419,
+              "min": 0.40001437067985535,
+              "max": 0.7919198274612427,
+              "n_samples": 50
+            }
+          }
+        }
+      ],
+      "overall_stats": {
+        "perspective_representation": {
+          "mean": 0.6270880154768625,
+          "std": 0.006006674762519574,
+          "min": 0.4514712989330292,
+          "max": 0.8296894431114197,
+          "n_samples": 150
+        },
+        "informativeness": {
+          "mean": 0.6471988012393316,
+          "std": 0.017580836163045815,
+          "min": 0.42559635639190674,
+          "max": 0.8895063996315002,
+          "n_samples": 150
+        },
+        "neutrality_balance": {
+          "mean": 0.546040926973025,
+          "std": 0.01804344678482652,
+          "min": 0.36490774154663086,
+          "max": 0.7378274202346802,
+          "n_samples": 150
+        },
+        "policy_approval": {
+          "mean": 0.6064102266232171,
+          "std": 0.031994630491037165,
+          "min": 0.33996376395225525,
+          "max": 0.7934362888336182,
+          "n_samples": 150
+        }
+      }
+    }
+  ]
+}
