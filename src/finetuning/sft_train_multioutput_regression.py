@@ -304,6 +304,7 @@ def read_jsonl(path: Path) -> List[Dict[str, Any]]:
 
 
 def split_train_eval(data: List[Dict[str, Any]], eval_ratio: float, seed: int) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """Simple random split of data into train and eval sets."""
     rng = np.random.default_rng(seed)
     idx = np.arange(len(data))
     rng.shuffle(idx)
@@ -366,12 +367,16 @@ def compute_metrics(eval_pred, use_normalization=True):
     metrics["corr_mean_spearman"] = float(np.mean(spearmans)) if spearmans else 0.0
     metrics["corr_mean_pearson"] = float(np.mean(pearsons)) if pearsons else 0.0
     
-    # Note: ordering accuracy is computed separately in CustomTrainer.evaluate()
-    # due to its complexity requiring access to the full evaluation dataset
+    # Note: ordering accuracy and difference correlation are computed separately in CustomTrainer.evaluate()
+    # due to their complexity requiring access to the full evaluation dataset
     # Add placeholder values to ensure they appear in logs
     metrics["ordering_acc_overall"] = 0.0
+    metrics["diff_corr_pearson_overall"] = 0.0
+    metrics["diff_corr_spearman_overall"] = 0.0
     for key in TARGET_KEYS:
         metrics[f"ordering_acc_{key}"] = 0.0
+        metrics[f"diff_corr_pearson_{key}"] = 0.0
+        metrics[f"diff_corr_spearman_{key}"] = 0.0
     
     return metrics
 
@@ -380,32 +385,50 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
     """Compute ordering accuracy for summaries with the same question and opinion"""
     model.eval()
     
-    # Group samples by question + opinion combination to find pairs with same question and opinion
-    question_opinion_groups = {}
+    # Group samples by opinion (comment) only - since same opinion with different questions still makes valid pairs
+    opinion_groups = {}
     all_samples = []
     
     # Collect all samples with their indices
     for i in range(len(eval_dataset)):
         sample = eval_dataset[i]
-        question = eval_dataset.records[i].get("question", "")
         comment = eval_dataset.records[i].get("comment", "")
+        question = eval_dataset.records[i].get("question", "")
         
-        # Create a unique key combining question and opinion
-        key = f"{question}|||{comment}"
+        # Use opinion as the key for grouping
+        key = comment  # Group by opinion only
         
-        if key not in question_opinion_groups:
-            question_opinion_groups[key] = []
-        question_opinion_groups[key].append((i, sample))
+        if key not in opinion_groups:
+            opinion_groups[key] = []
+        opinion_groups[key].append({
+            'idx': i,
+            'sample': sample,
+            'question': question,
+            'comment': comment
+        })
         all_samples.append((i, sample))
     
-    # Find groups with at least 2 samples (same question and opinion)
-    valid_groups = {k: v for k, v in question_opinion_groups.items() if len(v) >= 2}
+    # Find groups with at least 2 samples (same opinion)
+    valid_groups = {k: v for k, v in opinion_groups.items() if len(v) >= 2}
     
     if not valid_groups:
-        print("No groups with same question and opinion found for ordering evaluation")
-        return {"ordering_acc_overall": 0.0}
+        print("No groups with same opinion found for ordering evaluation")
+        return {"ordering_acc_overall": 0.0, "diff_corr_overall": 0.0}
     
-    print(f"Found {len(valid_groups)} question-opinion groups with multiple samples")
+    print(f"Found {len(valid_groups)} opinion groups with multiple samples")
+    
+    # Also report question-opinion combinations for more detailed analysis
+    question_opinion_pairs = {}
+    for opinion, samples in valid_groups.items():
+        for sample_info in samples:
+            qo_key = f"{sample_info['question']}|||{opinion}"
+            if qo_key not in question_opinion_pairs:
+                question_opinion_pairs[qo_key] = 0
+            question_opinion_pairs[qo_key] += 1
+    
+    qo_pairs_with_multiple = sum(1 for count in question_opinion_pairs.values() if count >= 2)
+    print(f"  - {qo_pairs_with_multiple} question-opinion pairs with >=2 samples")
+    print(f"  - Total pairs for comparison: {sum(len(v)*(len(v)-1)//2 for v in valid_groups.values())}")
     
     # Get predictions for all samples
     all_preds = []
@@ -448,31 +471,44 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
     print(f"Prediction range: min={all_preds.min():.4f}, max={all_preds.max():.4f}, mean={all_preds.mean():.4f}")
     print(f"Label range: min={all_labels.min():.4f}, max={all_labels.max():.4f}, mean={all_labels.mean():.4f}")
     
-    # Calculate ordering accuracy for each dimension
+    # Calculate ordering accuracy and difference correlation for each dimension
     ordering_accs = {}
+    diff_correlations = {}
     
     for dim_idx, key in enumerate(TARGET_KEYS):
         correct_pairs = 0
         total_pairs = 0
         
-        for samples in valid_groups.values():
+        # Collect differences for correlation calculation
+        pred_diffs = []
+        label_diffs = []
+        
+        for opinion, samples in valid_groups.items():
             if len(samples) < 2:
                 continue
                 
             # Get all pairs within this opinion group
             for i in range(len(samples)):
                 for j in range(i + 1, len(samples)):
-                    idx1, _ = samples[i]
-                    idx2, _ = samples[j]
+                    sample1 = samples[i]
+                    sample2 = samples[j]
+                    idx1 = sample1['idx']
+                    idx2 = sample2['idx']
                     
                     # Find corresponding predictions
                     pred1_idx = all_indices.index(idx1)
                     pred2_idx = all_indices.index(idx2)
                     
-                    pred1_score = all_preds[pred1_idx, dim_idx]
-                    pred2_score = all_preds[pred2_idx, dim_idx]
-                    label1_score = all_labels[pred1_idx, dim_idx]
-                    label2_score = all_labels[pred2_idx, dim_idx]
+                    pred1_score = all_preds[pred1_idx][dim_idx]
+                    pred2_score = all_preds[pred2_idx][dim_idx]
+                    label1_score = all_labels[pred1_idx][dim_idx]
+                    label2_score = all_labels[pred2_idx][dim_idx]
+                    
+                    # Calculate differences for correlation
+                    pred_diff = pred1_score - pred2_score
+                    label_diff = label1_score - label2_score
+                    pred_diffs.append(pred_diff)
+                    label_diffs.append(label_diff)
                     
                     # Check if ordering is correct
                     # If label1 > label2, then pred1 should > pred2
@@ -494,6 +530,25 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
             print(f"Ordering accuracy for {key}: {acc:.4f} ({correct_pairs}/{total_pairs})")
         else:
             ordering_accs[f"ordering_acc_{key}"] = 0.0
+        
+        # Calculate difference correlation
+        if len(pred_diffs) > 1 and len(label_diffs) > 1:
+            try:
+                # Pearson correlation of differences
+                from scipy.stats import pearsonr, spearmanr
+                pearson_corr, _ = pearsonr(label_diffs, pred_diffs)
+                spearman_corr, _ = spearmanr(label_diffs, pred_diffs)
+                
+                diff_correlations[f"diff_corr_pearson_{key}"] = float(pearson_corr)
+                diff_correlations[f"diff_corr_spearman_{key}"] = float(spearman_corr)
+                print(f"Difference correlation for {key}: Pearson={pearson_corr:.4f}, Spearman={spearman_corr:.4f}")
+            except Exception as e:
+                print(f"Could not compute difference correlation for {key}: {e}")
+                diff_correlations[f"diff_corr_pearson_{key}"] = 0.0
+                diff_correlations[f"diff_corr_spearman_{key}"] = 0.0
+        else:
+            diff_correlations[f"diff_corr_pearson_{key}"] = 0.0
+            diff_correlations[f"diff_corr_spearman_{key}"] = 0.0
     
     # Overall ordering accuracy (average across dimensions)
     if ordering_accs:
@@ -503,7 +558,27 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
     else:
         ordering_accs["ordering_acc_overall"] = 0.0
     
-    return ordering_accs
+    # Overall difference correlation (average across dimensions)
+    pearson_diff_corrs = [diff_correlations[f"diff_corr_pearson_{k}"] for k in TARGET_KEYS 
+                          if f"diff_corr_pearson_{k}" in diff_correlations and diff_correlations[f"diff_corr_pearson_{k}"] != 0.0]
+    spearman_diff_corrs = [diff_correlations[f"diff_corr_spearman_{k}"] for k in TARGET_KEYS 
+                           if f"diff_corr_spearman_{k}" in diff_correlations and diff_correlations[f"diff_corr_spearman_{k}"] != 0.0]
+    
+    if pearson_diff_corrs:
+        diff_correlations["diff_corr_pearson_overall"] = float(np.mean(pearson_diff_corrs))
+        print(f"Overall difference correlation (Pearson): {diff_correlations['diff_corr_pearson_overall']:.4f}")
+    else:
+        diff_correlations["diff_corr_pearson_overall"] = 0.0
+    
+    if spearman_diff_corrs:
+        diff_correlations["diff_corr_spearman_overall"] = float(np.mean(spearman_diff_corrs))
+        print(f"Overall difference correlation (Spearman): {diff_correlations['diff_corr_spearman_overall']:.4f}")
+    else:
+        diff_correlations["diff_corr_spearman_overall"] = 0.0
+    
+    # Combine results
+    results = {**ordering_accs, **diff_correlations}
+    return results
 
 
 def ensemble_evaluate(model_path: str, eval_dataset: Dataset, tokenizer, device='cuda') -> Dict[str, Any]:
@@ -654,9 +729,9 @@ def evaluate_correlations(trainer: Trainer, eval_dataset: Dataset, wandb_enabled
     print(f"  Mean MAE:      {results['mae_mean']:.4f}")
     print("="*50)
     
-    # Compute ordering accuracy for summaries with same opinion
+    # Compute ordering accuracy and difference correlation for summaries with same opinion
     print("\n" + "="*50)
-    print("Ordering Accuracy Analysis")
+    print("Ordering Accuracy & Difference Correlation Analysis")
     print("="*50)
     
     try:
@@ -664,14 +739,26 @@ def evaluate_correlations(trainer: Trainer, eval_dataset: Dataset, wandb_enabled
         ordering_results = compute_ordering_accuracy(eval_dataset, trainer.model, device)
         results.update(ordering_results)
         
-        print(f"Overall ordering accuracy: {ordering_results.get('ordering_acc_overall', 0.0):.4f}")
+        print(f"\nOrdering Accuracy:")
+        print(f"  Overall: {ordering_results.get('ordering_acc_overall', 0.0):.4f}")
         for key in TARGET_KEYS:
             acc_key = f"ordering_acc_{key}"
             if acc_key in ordering_results:
-                print(f"Ordering accuracy for {key}: {ordering_results[acc_key]:.4f}")
+                print(f"  {key}: {ordering_results[acc_key]:.4f}")
+        
+        print(f"\nDifference Correlation:")
+        print(f"  Overall (Pearson): {ordering_results.get('diff_corr_pearson_overall', 0.0):.4f}")
+        print(f"  Overall (Spearman): {ordering_results.get('diff_corr_spearman_overall', 0.0):.4f}")
+        for key in TARGET_KEYS:
+            pearson_key = f"diff_corr_pearson_{key}"
+            spearman_key = f"diff_corr_spearman_{key}"
+            if pearson_key in ordering_results:
+                print(f"  {key}: Pearson={ordering_results[pearson_key]:.4f}, Spearman={ordering_results[spearman_key]:.4f}")
     except Exception as e:
         print(f"Error computing ordering accuracy: {e}")
         results["ordering_acc_overall"] = 0.0
+        results["diff_corr_pearson_overall"] = 0.0
+        results["diff_corr_spearman_overall"] = 0.0
     
     # Optional WANDB log
     if wandb_enabled:
@@ -714,12 +801,18 @@ class CustomTrainer(Trainer):
                     metrics[metric_key] = value
                     print(f"  Added {metric_key}: {value}")
                     
-                print(f"\nOrdering Accuracy Results:")
-                print(f"  Overall: {ordering_results.get('ordering_acc_overall', 0.0):.4f}")
+                print(f"\nOrdering Accuracy & Difference Correlation Results:")
+                print(f"  Ordering Accuracy Overall: {ordering_results.get('ordering_acc_overall', 0.0):.4f}")
+                print(f"  Difference Correlation (Pearson) Overall: {ordering_results.get('diff_corr_pearson_overall', 0.0):.4f}")
+                print(f"  Difference Correlation (Spearman) Overall: {ordering_results.get('diff_corr_spearman_overall', 0.0):.4f}")
                 for key in TARGET_KEYS:
                     acc_key = f"ordering_acc_{key}"
+                    diff_pearson_key = f"diff_corr_pearson_{key}"
+                    diff_spearman_key = f"diff_corr_spearman_{key}"
                     if acc_key in ordering_results:
-                        print(f"  {key}: {ordering_results[acc_key]:.4f}")
+                        print(f"  {key} - Ordering: {ordering_results[acc_key]:.4f}")
+                    if diff_pearson_key in ordering_results:
+                        print(f"  {key} - Diff Corr: Pearson={ordering_results[diff_pearson_key]:.4f}, Spearman={ordering_results[diff_spearman_key]:.4f}")
                 
                 # Debug: Verify what was added to metrics
                 print(f"\nDebug: Verifying metrics after addition:")
@@ -745,8 +838,12 @@ class CustomTrainer(Trainer):
                 print(f"Error computing ordering accuracy: {e}")
                 # Add zero values to maintain consistent metrics structure
                 metrics[f"{metric_key_prefix}_ordering_acc_overall"] = 0.0
+                metrics[f"{metric_key_prefix}_diff_corr_pearson_overall"] = 0.0
+                metrics[f"{metric_key_prefix}_diff_corr_spearman_overall"] = 0.0
                 for key in TARGET_KEYS:
                     metrics[f"{metric_key_prefix}_ordering_acc_{key}"] = 0.0
+                    metrics[f"{metric_key_prefix}_diff_corr_pearson_{key}"] = 0.0
+                    metrics[f"{metric_key_prefix}_diff_corr_spearman_{key}"] = 0.0
         
         # Debug: Print final metrics keys
         ordering_keys = [k for k in metrics.keys() if 'ordering_acc' in k]
@@ -782,6 +879,19 @@ class PeriodicEvalCallback(TrainerCallback):
             except Exception:
                 pass
         return control
+
+
+def set_seed(seed: int):
+    """Set random seeds for reproducibility"""
+    import random
+    import numpy as np
+    import torch
+    
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
 
 def main():
@@ -821,6 +931,9 @@ def main():
                         help="Disable normalization and use original label range [-1, 7] directly")
 
     args = parser.parse_args()
+    
+    # Set random seeds for reproducibility and proper shuffling
+    set_seed(args.seed)
 
     data_path = Path(args.data)
     if not data_path.exists():
@@ -851,6 +964,12 @@ def main():
     
     train_recs, eval_recs = split_train_eval(data, args.eval_ratio, args.seed)
     print(f"\nTrain: {len(train_recs)}, Eval: {len(eval_recs)}")
+    
+    # Ensure training data is properly shuffled
+    import random
+    random.seed(args.seed)
+    random.shuffle(train_recs)
+    print(f"✓ Training data shuffled (seed={args.seed})")
 
     tokenizer = AutoTokenizer.from_pretrained(args.model, use_fast=True)
     if tokenizer.pad_token is None and tokenizer.eos_token is not None:
