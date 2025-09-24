@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-可视化标注数据分布
-- Binary questions (scale_1, scale_2): 4个配对比较问题
-- 5-scale questions (scale_1 到 scale_5): 4个评分问题
+Visualize annotation data distributions
+- Binary questions (scale_1, scale_2): 4 pairwise comparison questions
+- 5-scale questions (scale_1 to scale_5): 4 rating questions
 """
 
 import pandas as pd
@@ -10,19 +10,22 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-# 设置中文字体和样式
-plt.rcParams['font.sans-serif'] = ['DejaVu Sans', 'SimHei', 'Arial Unicode MS']
+# Set font and style
+plt.rcParams['font.sans-serif'] = ['DejaVu Sans', 'Arial']
 plt.rcParams['axes.unicode_minus'] = False
 sns.set_style("whitegrid")
 plt.rcParams['figure.figsize'] = (16, 12)
 
+# Unified color palette for all plots
+UNIFIED_COLORS = plt.cm.Set3(np.linspace(0, 1, 5))
+
 def _short_option_label(option: str) -> str:
-    """将选项标题缩短以适配坐标轴显示。"""
+    """Shorten option titles to fit axis display."""
     if option is None:
         return ""
     text = str(option)
     low = text.lower()
-    # 常见模式映射
+    # Common pattern mappings
     patterns = [
         ("not represented", "Not"),
         ("slightly represented", "Slightly"),
@@ -45,18 +48,18 @@ def _short_option_label(option: str) -> str:
     for pat, rep in patterns:
         if pat in low:
             return rep
-    # 通用裁剪：遇到 em dash/短横说明的，取前半部分
+    # Generic cropping: for em dash/dash descriptions, take the first part
     for sep in [" — ", " - ", "–", "—"]:
         if sep in text:
             head = text.split(sep)[0].strip()
             if len(head) >= 1:
                 text = head
                 break
-    # 最终长度限制
+    # Final length limit
     return (text[:16] + "…") if len(text) > 17 else text
 
 def _scale_order_patterns(question: str):
-    """给定问题文本，返回该题对应的有序选项模式（从低到高）。"""
+    """Given question text, return the corresponding ordered option patterns (from low to high)."""
     q = (question or "").lower()
     if "perspective represented" in q or "to what extent" in q:
         return [
@@ -103,7 +106,7 @@ def _scale_rank(question: str, option_text: str) -> int:
     return 999
 
 def _comparison_rank(option_text: str) -> int:
-    """比较题固定顺序：A much → A slightly → Both → B slightly → B much。"""
+    """Fixed order for comparison questions: A much → A slightly → Both → B slightly → B much."""
     low = (option_text or "").lower()
     if "a is much" in low:
         return 0
@@ -118,9 +121,9 @@ def _comparison_rank(option_text: str) -> int:
     return 999
 
 def load_data():
-    """加载标注数据（优先 full_augment，若不存在则回退到 full）"""
-    path_augment = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
-    path_full = '/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full/annotated_instances.csv'
+    """Load annotation data (prefer full_augment, fallback to full if not exists)"""
+    path_augment = 'annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
+    path_full = 'annotation/summary-rating/annotation_output/full/annotated_instances.csv'
     try:
         df = pd.read_csv(path_augment)
         print(f"Loaded {len(df)} annotation records (full_augment)")
@@ -131,7 +134,7 @@ def load_data():
         return df
 
 def get_binary_columns(df):
-    """获取比较问题对应的列（新版：问题:::选项）。返回 {question: [cols...]}"""
+    """Get columns corresponding to comparison questions (new format: question:::option). Returns {question: [cols...]}"""
     questions = [
         "Which summary is more representative of your perspective?",
         "Which summary is more informative?", 
@@ -145,7 +148,7 @@ def get_binary_columns(df):
     return binary_cols
 
 def get_5scale_columns(df):
-    """获取5级量表问题对应的列（新版：问题:::选项）。返回 {question: [cols...]}"""
+    """Get columns corresponding to 5-scale questions (new format: question:::option). Returns {question: [cols...]}"""
     questions = [
         "To what extent is your perspective represented in this response?",
         "How informative is this summary?",
@@ -159,14 +162,22 @@ def get_5scale_columns(df):
     return scale_cols
 
 def plot_binary_distributions(df, binary_cols):
-    """绘制比较题（新版5选项）的分布图：按“问题:::选项”列统计每个选项的计数。"""
+    """Plot distributions for comparison questions (new 5-option format): count each option by "question:::option" columns."""
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
     axes = axes.flatten()
+    
+    # Define dimension titles for comparison questions
+    dimension_titles = [
+        "Representiveness",
+        "Informativeness", 
+        "Neutrality",
+        "Policy Approval"
+    ]
     
     for idx, (question, cols) in enumerate(binary_cols.items()):
         ax = axes[idx]
         
-        # 统计每个选项的非空计数
+        # Count non-null values for each option
         option_counts = {}
         for col in cols:
             if col in df.columns:
@@ -174,25 +185,24 @@ def plot_binary_distributions(df, binary_cols):
                 option_counts[option] = int(df[col].notna().sum())
         
         if option_counts:
-            # 固定顺序而非按数量排序
+            # Fixed order rather than sorting by count
             items = list(option_counts.items())
             items_sorted = sorted(items, key=lambda t: (_comparison_rank(t[0]), t[0]))
             ordered_options = [opt for opt, _ in items_sorted]
             ordered_values = [option_counts[opt] for opt in ordered_options]
             
-            # 绘制柱状图
+            # Plot bar chart
             bars = ax.bar(range(len(ordered_values)), ordered_values, 
-                         color=plt.cm.Set2(np.linspace(0, 1, len(ordered_values))), alpha=0.7, edgecolor='black')
+                         color=UNIFIED_COLORS[:len(ordered_values)], alpha=0.7, edgecolor='black')
             
             ax.set_xticks(range(len(ordered_options)))
             ax.set_xticklabels(ordered_options, rotation=45, ha='right')
             ax.set_ylabel('Count')
             
-            # 简化标题
-            short_title = question.replace("Which summary ", "").replace("?", "")[:40] + "..."
-            ax.set_title(f'Comparison: {short_title}', fontsize=11, pad=10)
+            # Use standardized dimension title
+            ax.set_title(f'Comparison: {dimension_titles[idx]}', fontsize=11, pad=10)
             
-            # 在柱子上显示数值
+            # Display values on bars
             for bar in bars:
                 height = bar.get_height()
                 ax.text(bar.get_x() + bar.get_width()/2., height + height*0.01,
@@ -200,22 +210,30 @@ def plot_binary_distributions(df, binary_cols):
             
             ax.grid(True, alpha=0.3)
         else:
-            ax.set_title(f'No data: {question[:40]}...', fontsize=11)
+            ax.set_title(f'No data: {dimension_titles[idx]}', fontsize=11)
     
     plt.tight_layout()
-    plt.savefig('/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/notebooks/binary_distributions.png', 
+    plt.savefig('annotation/summary-rating/notebooks/binary_distributions.pdf', 
                 dpi=300, bbox_inches='tight')
     plt.show()
 
 def plot_5scale_distributions(df, scale_cols):
-    """绘制5级量表题的分布图：按“问题:::选项”列统计各选项计数。"""
+    """Plot distributions for 5-scale questions: count each option by "question:::option" columns."""
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
     axes = axes.flatten()
+    
+    # Define dimension titles for 5-scale questions
+    dimension_titles = [
+        "Representiveness",
+        "Informativeness",
+        "Neutrality", 
+        "Policy Approval"
+    ]
     
     for idx, (question, cols) in enumerate(scale_cols.items()):
         ax = axes[idx]
         
-        # 统计每个选项的非空计数
+        # Count non-null values for each option
         option_counts = {}
         for col in cols:
             if col in df.columns:
@@ -223,15 +241,15 @@ def plot_5scale_distributions(df, scale_cols):
                 option_counts[option] = int(df[col].notna().sum())
         
         if option_counts:
-            # 按题型定义的刻度顺序排序（找不到匹配则排在末尾）
+            # Sort by scale order defined for question type (unmatched items go to end)
             items = list(option_counts.items())
             items_sorted = sorted(items, key=lambda t: (_scale_rank(question, t[0]), t[0]))
             ordered_options = [opt for opt, _ in items_sorted]
             ordered_values = [option_counts[opt] for opt in ordered_options]
             
-            # 绘制柱状图
+            # Plot bar chart
             bars = ax.bar(range(len(ordered_values)), ordered_values,
-                         color=plt.cm.viridis(np.linspace(0, 1, len(ordered_values))), alpha=0.7, edgecolor='black')
+                         color=UNIFIED_COLORS[:len(ordered_values)], alpha=0.7, edgecolor='black')
             
             ax.set_xticks(range(len(ordered_options)))
             short_labels = [ _short_option_label(x) for x in ordered_options ]
@@ -239,21 +257,10 @@ def plot_5scale_distributions(df, scale_cols):
             ax.set_ylabel('Count')
             ax.set_xlabel('Scale Rating')
             
-            # 简化标题
-            if "To what extent" in question:
-                short_title = "Perspective Representation"
-            elif "How informative" in question:
-                short_title = "Informativeness"
-            elif "neutral and balanced" in question:
-                short_title = "Neutrality & Balance"
-            elif "approve" in question:
-                short_title = "Policy Maker Approval"
-            else:
-                short_title = question[:30] + "..."
-                
-            ax.set_title(f'5-Scale: {short_title}', fontsize=11, pad=10)
+            # Use standardized dimension title
+            ax.set_title(f'5-Scale: {dimension_titles[idx]}', fontsize=11, pad=10)
             
-            # 在柱子上显示数值
+            # Display values on bars
             for bar in bars:
                 height = bar.get_height()
                 ax.text(bar.get_x() + bar.get_width()/2., height + height*0.01,
@@ -261,15 +268,15 @@ def plot_5scale_distributions(df, scale_cols):
             
             ax.grid(True, alpha=0.3)
         else:
-            ax.set_title(f'No data: {question[:30]}...', fontsize=11)
+            ax.set_title(f'No data: {dimension_titles[idx]}', fontsize=11)
     
     plt.tight_layout()
-    plt.savefig('/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/notebooks/5scale_distributions.png', 
+    plt.savefig('annotation/summary-rating/notebooks/5scale_distributions.pdf', 
                 dpi=300, bbox_inches='tight')
     plt.show()
 
 def print_data_summary(df, binary_cols, scale_cols):
-    """打印数据摘要"""
+    """Print data summary"""
     print("="*60)
     print("DATA SUMMARY")
     print("="*60)
@@ -293,33 +300,33 @@ def print_data_summary(df, binary_cols, scale_cols):
         print(f"  {question[:50]}... : {total_responses} responses")
 
 def main():
-    """主函数"""
+    """Main function"""
     print("Loading and visualizing annotation data...")
     
-    # 加载数据
+    # Load data
     df = load_data()
     
-    # 获取问题列名（按当前数据动态匹配列）
+    # Get question column names (dynamically match columns based on current data)
     binary_cols = get_binary_columns(df)
     scale_cols = get_5scale_columns(df)
     
-    # 打印数据摘要
+    # Print data summary
     print_data_summary(df, binary_cols, scale_cols)
     
     print(f"\nGenerating visualizations...")
     
-    # 绘制binary问题分布
+    # Plot binary question distributions
     print("Plotting binary distributions...")
     plot_binary_distributions(df, binary_cols)
     
-    # 绘制5-scale问题分布  
+    # Plot 5-scale question distributions  
     print("Plotting 5-scale distributions...")
     plot_5scale_distributions(df, scale_cols)
     
     print("Visualization complete!")
     print("Saved plots:")
-    print("  - binary_distributions.png")
-    print("  - 5scale_distributions.png")
+    print("  - binary_distributions.pdf")
+    print("  - 5scale_distributions.pdf")
 
 if __name__ == "__main__":
     main()
