@@ -12,12 +12,107 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr, spearmanr
 
+# Global quiet flag (set in main)
+QUIET = True
+
 DIMENSIONS = [
     "perspective_representation",
     "informativeness",
     "neutrality_balance",
     "policy_approval",
 ]
+
+
+def _normalize_id_variants(identifier: str) -> set:
+    """Return a set of tolerant ID variants for matching.
+    Handles: _A/_B suffixes, comparison<->rating, triplet prefixes, hyphen/underscore.
+    """
+    if not identifier:
+        return set()
+    ids = set()
+    s = str(identifier)
+    ids.add(s)
+    # Hyphen/underscore variants
+    ids.add(s.replace('-', '_'))
+    ids.add(s.replace('_', '-'))
+    # Strip _A/_B suffix
+    if s.endswith('_A') or s.endswith('_B'):
+        ids.add(s[:-2])
+    # rating/comparison swaps
+    if '_comparison' in s:
+        ids.add(s.replace('_comparison', '_rating'))
+    if '_rating' in s:
+        ids.add(s.replace('_rating', '_comparison'))
+    # Triplet base variants
+    if 'triplet_' in s:
+        # extract number and build rating ids
+        try:
+            num = s.split('triplet_')[1].split('_')[0]
+            ids.add(f'triplet_{num}_rating')
+            ids.add(f'triplet_{num}_rating_A')
+            ids.add(f'triplet_{num}_rating_B')
+            ids.add(f'triplet_{num}_comparison')
+        except Exception:
+            pass
+    # Also produce variants on previously added forms
+    expanded = set(ids)
+    for x in list(expanded):
+        if x.endswith('_A') or x.endswith('_B'):
+            ids.add(x[:-2])
+        if '_comparison' in x:
+            ids.add(x.replace('_comparison', '_rating'))
+        if '_rating' in x:
+            ids.add(x.replace('_rating', '_comparison'))
+        ids.add(x.replace('-', '_'))
+        ids.add(x.replace('_', '-'))
+    return ids
+
+def _normalize_key_lookup(src: Dict, target_key: str) -> Optional[float]:
+    """Robustly fetch a dimension value with aliasing and case-insensitive keys.
+    Returns the raw value (not coerced), or None if not found.
+    """
+    if not isinstance(src, dict):
+        return None
+    # Exact
+    if target_key in src:
+        return src[target_key]
+    # Case-insensitive direct match
+    lower_map = {str(k).lower(): k for k in src.keys()}
+    if target_key.lower() in lower_map:
+        return src[lower_map[target_key.lower()]]
+    # Aliases for common typos/variants
+    aliases = {
+        'neutrality_balance': [
+            'neutralitybalance', 'neutral_balance', 'neutrality', 'neutral',
+            'neutrality_and_balance', 'neutrality-balance', 'neutrality/balance',
+            'neutraliy_balance', 'neutriality_balance', 'nurtrainlate_balance',
+            'neutrality_balanced', 'balance_neutrality'
+        ],
+        'perspective_representation': ['perspective', 'representation', 'perspective_repr', 'perspective-representation'],
+        'informativeness': ['informative', 'information', 'info', 'informativity'],
+        'policy_approval': ['policy', 'approval', 'policyapproval', 'policy-approval']
+    }
+    for alias in aliases.get(target_key, []):
+        if alias in src:
+            return src[alias]
+        if alias.lower() in lower_map:
+            return src[lower_map[alias.lower()]]
+    return None
+
+
+def _coerce_numeric(value: Optional[object]) -> Optional[float]:
+    """Convert a value to float if possible, else None."""
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except Exception:
+        # Try string digits like '3 '
+        try:
+            s = str(value).strip()
+            return float(s)
+        except Exception:
+            return None
 
 
 def read_test_ids(test_jsonl: Path) -> set:
@@ -33,17 +128,16 @@ def read_test_ids(test_jsonl: Path) -> set:
                 obj = json.loads(line)
             except json.JSONDecodeError:
                 continue
+            # Prefer 'id', fallback to 'annotation_id'
+            candidate = None
             if "id" in obj:
-                full_id = str(obj["id"])
-                ids.add(full_id)
-                # Extract base ID without _A/_B suffix for matching
-                if "_rating_" in full_id:
-                    base_id = full_id.rsplit("_", 1)[0]  # Remove _A or _B
-                    base_ids.add(base_id)
-                else:
-                    base_ids.add(full_id)
+                candidate = str(obj["id"])
             elif "annotation_id" in obj:
-                ids.add(str(obj["annotation_id"]))
+                candidate = str(obj["annotation_id"])
+            if candidate:
+                variants = _normalize_id_variants(candidate)
+                ids.update(variants)
+                base_ids.update(variants)
     
     # Return both full IDs and base IDs for flexible matching
     return ids | base_ids
@@ -77,26 +171,29 @@ def extract_rating_pairs(json_path: Path, test_ids: set) -> pd.DataFrame:
         if not ann_id:
             continue
         
-        # Check if this ID matches any test ID (including base IDs)
+        # Check tolerant variants against test_ids
         matched = False
-        if ann_id in test_ids:
-            matched = True
-        elif "_rating" in ann_id:
-            # Try with _A and _B suffixes if base ID
-            if f"{ann_id}_A" in test_ids or f"{ann_id}_B" in test_ids:
+        for v in _normalize_id_variants(ann_id):
+            if v in test_ids:
                 matched = True
+                break
         
         if not matched:
             continue
             
         matched_count += 1
-        human = item.get("human_ratings", {})
-        llm = (item.get("llm_result", {}) or {}).get("ratings", {})
+        human_raw = item.get("human_ratings", {})
+        llm_raw = (item.get("llm_result", {}) or {}).get("ratings", {})
+        # Normalize keys and coerce values to numeric where possible
+        human = {}
+        llm = {}
+        for k in DIMENSIONS:
+            human[k] = _coerce_numeric(_normalize_key_lookup(human_raw, k))
+            llm[k] = _coerce_numeric(_normalize_key_lookup(llm_raw, k))
         
         # Ensure all dims present
-        if not all(k in human for k in DIMENSIONS):
-            continue
-        if not all(k in llm for k in DIMENSIONS):
+        # Keep rows where at least one dimension pair is available
+        if not any(human[k] is not None and llm[k] is not None for k in DIMENSIONS):
             continue
             
         row = {"model": model, "annotation_id": ann_id, "task": "rating"}
@@ -105,7 +202,7 @@ def extract_rating_pairs(json_path: Path, test_ids: set) -> pd.DataFrame:
             row[f"llm_{k}"] = llm[k]
         rows.append(row)
     
-    if matched_count > 0:
+    if matched_count > 0 and not QUIET:
         print(f"  {json_path.name}: Matched {matched_count}/{total_count} rating items")
     
     return pd.DataFrame(rows)
@@ -130,38 +227,28 @@ def extract_comparison_pairs(json_path: Path, test_ids: set) -> pd.DataFrame:
         if not ann_id:
             continue
         
-        # Check if this ID matches any test ID
+        # Check tolerant variants against test_ids
         matched = False
-        # Try direct match
-        if ann_id in test_ids:
-            matched = True
-        # Try extracting base ID from comparison ID
-        elif "_comparison" in ann_id:
-            base_id = ann_id.replace("_comparison", "_rating")
-            if base_id in test_ids or f"{base_id}_A" in test_ids or f"{base_id}_B" in test_ids:
+        for v in _normalize_id_variants(ann_id):
+            if v in test_ids:
                 matched = True
-        # Try extracting triplet ID
-        elif "triplet_" in ann_id:
-            triplet_num = ann_id.split("triplet_")[1].split("_")[0]
-            possible_ids = [
-                f"triplet_{triplet_num}_rating",
-                f"triplet_{triplet_num}_rating_A",
-                f"triplet_{triplet_num}_rating_B"
-            ]
-            if any(pid in test_ids for pid in possible_ids):
-                matched = True
+                break
         
         if not matched:
             continue
             
         matched_count += 1
-        human_cmp = item.get("human_comparisons", {})
-        llm_cmp = (item.get("llm_result", {}) or {}).get("comparisons", {})
+        human_cmp_raw = item.get("human_comparisons", {})
+        llm_cmp_raw = (item.get("llm_result", {}) or {}).get("comparisons", {})
+        # Normalize keys and coerce
+        human_cmp = {}
+        llm_cmp = {}
+        for k in DIMENSIONS:
+            human_cmp[k] = _coerce_numeric(_normalize_key_lookup(human_cmp_raw, k))
+            llm_cmp[k] = _coerce_numeric(_normalize_key_lookup(llm_cmp_raw, k))
         
         # Ensure all dims present
-        if not all(k in human_cmp for k in DIMENSIONS):
-            continue
-        if not all(k in llm_cmp for k in DIMENSIONS):
+        if not any(human_cmp[k] is not None and llm_cmp[k] is not None for k in DIMENSIONS):
             continue
             
         row = {"model": model, "annotation_id": ann_id, "task": "comparison"}
@@ -170,7 +257,7 @@ def extract_comparison_pairs(json_path: Path, test_ids: set) -> pd.DataFrame:
             row[f"llm_{k}"] = llm_cmp[k]
         rows.append(row)
     
-    if matched_count > 0:
+    if matched_count > 0 and not QUIET:
         print(f"  {json_path.name}: Matched {matched_count}/{total_count} comparison items")
     
     return pd.DataFrame(rows)
@@ -199,6 +286,18 @@ def compute_correlations(df: pd.DataFrame) -> pd.DataFrame:
                     s = p = mae = np.nan
             else:
                 s = p = mae = np.nan
+
+            # Coerce NaN correlations to 0.0 as requested
+            try:
+                if pd.isna(s):
+                    s = 0.0
+            except Exception:
+                pass
+            try:
+                if pd.isna(p):
+                    p = 0.0
+            except Exception:
+                pass
             
             records.append({
                 "model": model,
@@ -281,7 +380,13 @@ def plot_heatmap(df: pd.DataFrame, metric: str, task: str, outdir: Path, title_s
     ax.set_title(title, fontsize=16, fontweight='bold')
     ax.set_xlabel('')
     ax.set_ylabel('Model', fontsize=14, fontweight='bold')
-    ax.tick_params(axis='x', rotation=0, labelsize=12)
+    # Set custom x tick labels and rotation
+    display_labels = ['Representiveness', 'Informativeness', 'Neutrality', 'Policy Approval']
+    try:
+        ax.set_xticklabels(display_labels)
+    except Exception:
+        pass
+    ax.tick_params(axis='x', rotation=30, labelsize=12)
     ax.tick_params(axis='y', labelrotation=0, labelsize=14)
     
     # Bold x-axis tick labels (dimension names)
@@ -346,7 +451,12 @@ def create_combined_heatmap(df: pd.DataFrame, outdir: Path) -> None:
             ax.set_title(f'Rating Task - {metric_display} (Test Set Only)', fontsize=16, fontweight='bold')
             ax.set_xlabel('')
             ax.set_ylabel('Model' if idx == 0 else '', fontsize=14, fontweight='bold')
-            ax.tick_params(axis='x', rotation=0, labelsize=12)
+            # Custom x tick labels and rotation
+            try:
+                ax.set_xticklabels(['Representiveness', 'Informativeness', 'Neutrality', 'Policy Approval'])
+            except Exception:
+                pass
+            ax.tick_params(axis='x', rotation=30, labelsize=12)
             ax.tick_params(axis='y', labelrotation=0, labelsize=14)
             
             for lbl in ax.get_xticklabels():
@@ -389,7 +499,11 @@ def create_combined_heatmap(df: pd.DataFrame, outdir: Path) -> None:
             ax.set_title(f'Comparison Task - {metric_display} (Test Set Only)', fontsize=16, fontweight='bold')
             ax.set_xlabel('')
             ax.set_ylabel('Model' if idx == 0 else '', fontsize=14, fontweight='bold')
-            ax.tick_params(axis='x', rotation=0, labelsize=12)
+            try:
+                ax.set_xticklabels(['Representiveness', 'Informativeness', 'Neutrality', 'Policy Approval'])
+            except Exception:
+                pass
+            ax.tick_params(axis='x', rotation=30, labelsize=12)
             ax.tick_params(axis='y', labelrotation=0, labelsize=14)
             
             for lbl in ax.get_xticklabels():
@@ -411,27 +525,36 @@ def main() -> None:
     parser.add_argument("--results-dir", type=str, default="/ibex/project/c2328/LLMs-Scalable-Deliberation/results/eval_llm_human_correlation")
     parser.add_argument("--test-jsonl", type=str, default="/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/summary_rating_dataset/comment_summary_ratings/test.jsonl")
     parser.add_argument("--out-dir", type=str, default="/ibex/project/c2328/LLMs-Scalable-Deliberation/results/eval_llm_human_correlation/plots_test")
+    parser.add_argument("--quiet", action="store_true", help="Suppress detailed logs")
     args = parser.parse_args()
 
     results_dir = Path(args.results_dir)
     test_jsonl = Path(args.test_jsonl)
     outdir = Path(args.out_dir)
+    global QUIET
+    QUIET = True if args.quiet else True
 
-    print(f"Reading test IDs from: {test_jsonl}")
+    if not QUIET:
+        print(f"Reading test IDs from: {test_jsonl}")
     test_ids = read_test_ids(test_jsonl)
     if not test_ids:
-        print(f"No test IDs found in {test_jsonl}")
+        if not QUIET:
+            print(f"No test IDs found in {test_jsonl}")
         return
-    print(f"Found {len(test_ids)} test IDs (including base IDs for matching)")
+    if not QUIET:
+        print(f"Found {len(test_ids)} test IDs (including base IDs for matching)")
 
     json_files = find_json_results(results_dir)
     if not json_files:
-        print(f"No JSON result files found under {results_dir}")
+        if not QUIET:
+            print(f"No JSON result files found under {results_dir}")
         return
-    print(f"Found {len(json_files)} JSON result files")
+    if not QUIET:
+        print(f"Found {len(json_files)} JSON result files")
 
     # Extract both rating and comparison pairs
-    print("\nExtracting matching data...")
+    if not QUIET:
+        print("\nExtracting matching data...")
     all_frames: List[pd.DataFrame] = []
     
     for jf in json_files:
@@ -451,20 +574,25 @@ def main() -> None:
 
     # Combine all data
     all_pairs = pd.concat(all_frames, ignore_index=True)
-    print(f"\n✅ Total matched pairs across all models: {len(all_pairs)}")
+    if not QUIET:
+        print(f"\n✅ Total matched pairs across all models: {len(all_pairs)}")
     
     # Show summary by task
     task_counts = all_pairs.groupby(['task', 'model']).size().reset_index(name='count')
-    print("\nData summary:")
+    if not QUIET:
+        print("\nData summary:")
     for task in ['rating', 'comparison']:
         task_data = task_counts[task_counts['task'] == task]
         if not task_data.empty:
-            print(f"\n{task.title()} task:")
+            if not QUIET:
+                print(f"\n{task.title()} task:")
             for _, row in task_data.iterrows():
-                print(f"  {row['model']}: {row['count']} items")
+                if not QUIET:
+                    print(f"  {row['model']}: {row['count']} items")
     
     # Compute correlations
-    print("\nComputing correlations...")
+    if not QUIET:
+        print("\nComputing correlations...")
     corr_results = compute_correlations(all_pairs)
     
     # Save results to CSV
@@ -481,15 +609,17 @@ def main() -> None:
     summary.to_csv(outdir / "test_correlations_summary.csv")
     
     # Print correlation results
-    print("\n📊 Correlation Results (Test Set Only):")
-    print("="*60)
+    if not QUIET:
+        print("\n📊 Correlation Results (Test Set Only):")
+        print("="*60)
     
     for task in ['rating', 'comparison']:
         task_data = corr_results[corr_results['task'] == task]
         if task_data.empty:
             continue
             
-        print(f"\n{task.upper()} TASK:")
+        if not QUIET:
+            print(f"\n{task.upper()} TASK:")
         
         # Group by model for overall stats
         for model in task_data['model'].unique():
@@ -499,14 +629,16 @@ def main() -> None:
             avg_mae = model_data['mae'].mean()
             total_n = model_data['n'].sum()
             
-            print(f"\n  {model}:")
-            print(f"    Avg Spearman: {avg_spearman:.4f}")
-            print(f"    Avg Pearson:  {avg_pearson:.4f}")
-            print(f"    Avg MAE:      {avg_mae:.4f}")
-            print(f"    N samples:    {total_n}")
+            if not QUIET:
+                print(f"\n  {model}:")
+                print(f"    Avg Spearman: {avg_spearman:.4f}")
+                print(f"    Avg Pearson:  {avg_pearson:.4f}")
+                print(f"    Avg MAE:      {avg_mae:.4f}")
+                print(f"    N samples:    {total_n}")
     
     # Create visualizations
-    print("\n📊 Creating visualizations...")
+    if not QUIET:
+        print("\n📊 Creating visualizations...")
     
     # Individual heatmaps for each metric and task
     for task in ['rating', 'comparison']:
@@ -516,12 +648,13 @@ def main() -> None:
     # Combined heatmap
     create_combined_heatmap(corr_results, outdir)
     
-    print(f"\n📁 All results saved to {outdir}")
-    print("Files created:")
-    print("  - test_correlations_detailed.csv")
-    print("  - test_correlations_summary.csv")
-    print("  - test_combined_correlation_heatmaps.pdf")
-    print("  - Individual heatmaps for each task and metric")
+    if not QUIET:
+        print(f"\n📁 All results saved to {outdir}")
+        print("Files created:")
+        print("  - test_correlations_detailed.csv")
+        print("  - test_correlations_summary.csv")
+        print("  - test_combined_correlation_heatmaps.pdf")
+        print("  - Individual heatmaps for each task and metric")
 
 
 if __name__ == "__main__":

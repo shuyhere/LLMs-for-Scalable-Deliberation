@@ -13,6 +13,7 @@ import torch
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 from collections import Counter
+import math
 
 # Add project root to path
 project_root = str(Path(__file__).parent.parent.parent)
@@ -259,6 +260,91 @@ def calculate_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]:
     # Average dimension accuracy
     avg_dimension_accuracy = sum(dimension_accuracies.values()) / len(dimensions) if dimensions else 0.0
     
+    # Correlations between predicted and ground-truth values
+    def to_float(value: Any) -> Optional[float]:
+        if value is None:
+            return None
+        # Direct numeric
+        if isinstance(value, (int, float)):
+            try:
+                if math.isfinite(float(value)):
+                    return float(value)
+            except Exception:
+                return None
+            return None
+        # String numeric
+        if isinstance(value, str):
+            v = value.strip()
+            # Common categorical aliases mapping
+            alias_map = {
+                'yes': 1.0, 'no': 0.0,
+                'true': 1.0, 'false': 0.0,
+                'positive': 1.0, 'negative': -1.0,
+                'neutral': 0.0
+            }
+            lower_v = v.lower()
+            if lower_v in alias_map:
+                return alias_map[lower_v]
+            try:
+                return float(v)
+            except Exception:
+                return None
+        # Unsupported types
+        return None
+
+    def safe_pearson(xs: List[float], ys: List[float]) -> Optional[float]:
+        if len(xs) < 2:
+            return None
+        # Check variance
+        if all(x == xs[0] for x in xs) or all(y == ys[0] for y in ys):
+            return None
+        try:
+            import numpy as np
+            r = np.corrcoef(np.array(xs, dtype=float), np.array(ys, dtype=float))[0, 1]
+            if np.isnan(r):
+                return None
+            return float(r)
+        except Exception:
+            return None
+
+    def safe_spearman(xs: List[float], ys: List[float]) -> Optional[float]:
+        try:
+            from scipy.stats import spearmanr
+        except Exception:
+            return None
+        if len(xs) < 2:
+            return None
+        try:
+            r, _ = spearmanr(xs, ys)
+            if r is None or (isinstance(r, float) and (math.isnan(r) or math.isinf(r))):
+                return None
+            return float(r)
+        except Exception:
+            return None
+
+    dimension_correlations: Dict[str, Dict[str, Optional[float]]]= {}
+    for dim in dimensions:
+        xs: List[float] = []
+        ys: List[float] = []
+        for result in results:
+            pred = result.get('prediction', {})
+            gt = result.get('ground_truth', {})
+            if not isinstance(pred, dict) or not isinstance(gt, dict):
+                continue
+            if dim in pred and dim in gt:
+                x = to_float(pred[dim])
+                y = to_float(gt[dim])
+                if x is not None and y is not None:
+                    xs.append(x)
+                    ys.append(y)
+        pearson = safe_pearson(xs, ys)
+        spearman = safe_spearman(xs, ys)
+        dimension_correlations[dim] = {
+            'pearson': pearson,
+            'spearman': spearman,
+            'count': len(xs)
+        }
+
     return {
         'total_samples': total_samples,
         'valid_predictions': valid_predictions,
@@ -268,7 +354,8 @@ def calculate_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]:
         'dimension_accuracies': dimension_accuracies,
         'dimension_correct': dimension_correct,
         'dimension_total': dimension_total,
-        'valid_prediction_rate': valid_predictions / total_samples if total_samples > 0 else 0.0
+        'valid_prediction_rate': valid_predictions / total_samples if total_samples > 0 else 0.0,
+        'dimension_correlations': dimension_correlations
     }
 
 
