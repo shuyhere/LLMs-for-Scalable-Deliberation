@@ -3,7 +3,7 @@ import argparse
 import json
 import os
 import random
-from typing import Iterable, List, Tuple, Union
+from typing import Iterable, List, Tuple
 
 
 def read_json_or_jsonl(path: str) -> Tuple[List[dict], str]:
@@ -84,7 +84,6 @@ def split_paired_items(items: List[dict], train_ratio: float, seed: int) -> Tupl
     # Split pairs (not individual items)
     split_index = int(len(pair_ids) * train_ratio)
     train_pair_ids = set(pair_ids[:split_index])
-    test_pair_ids = set(pair_ids[split_index:])
     
     # Collect items from train/test pairs
     train_items: List[dict] = []
@@ -121,6 +120,76 @@ def split_paired_items(items: List[dict], train_ratio: float, seed: int) -> Tupl
     return train_items, test_items
 
 
+def split_by_question(items: List[dict], train_ratio: float, seed: int) -> Tuple[List[dict], List[dict], List[dict]]:
+    """Split data by question: one question for OOD test, rest split into train/test keeping pairs together."""
+    rng = random.Random(seed)
+    
+    # Group items by question
+    questions = {}
+    for item in items:
+        question = item.get("question", "")
+        if question not in questions:
+            questions[question] = []
+        questions[question].append(item)
+    
+    question_list = list(questions.keys())
+    print(f"Found {len(question_list)} unique questions")
+    
+    if len(question_list) < 2:
+        raise ValueError("Need at least 2 questions for OOD split")
+    
+    # Randomly select one question for OOD test
+    ood_question = rng.choice(question_list)
+    ood_items = questions[ood_question]
+    
+    # Use remaining questions for in-distribution split
+    remaining_questions = [q for q in question_list if q != ood_question]
+    remaining_items = []
+    for q in remaining_questions:
+        remaining_items.extend(questions[q])
+    
+    print(f"OOD question: '{ood_question[:50]}...' ({len(ood_items)} items)")
+    print(f"Remaining questions: {len(remaining_questions)} ({len(remaining_items)} items)")
+    
+    # Split remaining items into train/test while keeping pairs together
+    # First, group by pairs (opinion/comment)
+    pairs = group_items_by_pairs(remaining_items)
+    pair_ids = list(pairs.keys())
+    
+    print(f"Found {len(pairs)} pairs in remaining data")
+    
+    # Shuffle pair order
+    rng.shuffle(pair_ids)
+    
+    # Split pairs (not individual items)
+    split_index = int(len(pair_ids) * train_ratio)
+    train_pair_ids = set(pair_ids[:split_index])
+    
+    # Collect items from train/test pairs
+    train_items: List[dict] = []
+    test_items: List[dict] = []
+    
+    for pair_id in pair_ids:
+        pair_items = pairs[pair_id]
+        # Shuffle items within each pair
+        rng.shuffle(pair_items)
+        if pair_id in train_pair_ids:
+            train_items.extend(pair_items)
+        else:
+            test_items.extend(pair_items)
+    
+    # Final shuffle to mix up the order
+    rng.shuffle(train_items)
+    rng.shuffle(test_items)
+    
+    # Also ensure OOD items are shuffled
+    rng.shuffle(ood_items)
+    
+    print(f"Train pairs: {len(train_pair_ids)}, Test pairs: {len(pair_ids) - len(train_pair_ids)}")
+    
+    return train_items, test_items, ood_items
+
+
 def split_items(items: List[dict], train_ratio: float, seed: int) -> Tuple[List[dict], List[dict]]:
     """Main split function that handles both paired and unpaired data."""
     # Check if data appears to be paired (has common pair identifiers)
@@ -149,11 +218,12 @@ def split_items(items: List[dict], train_ratio: float, seed: int) -> Tuple[List[
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Split a JSON/JSONL dataset into 70/30 train/test.")
+    parser = argparse.ArgumentParser(description="Split a JSON/JSONL dataset into train/test sets.")
     parser.add_argument("input", type=str, help="Path to input .json or .jsonl file")
-    parser.add_argument("--train_ratio", type=float, default=0.7, help="Train split ratio (default: 0.7)")
-    parser.add_argument("--seed", type=int, default=6666, help="Random seed for shuffling (default: 42)")
+    parser.add_argument("--train_ratio", type=float, default=0.8, help="Train split ratio for in-distribution data (default: 0.8)")
+    parser.add_argument("--seed", type=int, default=6666, help="Random seed for shuffling (default: 6666)")
     parser.add_argument("--output_dir", type=str, default=None, help="Optional output directory. If not set, a sibling folder named after the input basename will be created next to the input file.")
+    parser.add_argument("--ood", action="store_true", help="Enable OOD split: one question for OOD test, rest split into train/test")
     args = parser.parse_args()
 
     input_path = os.path.abspath(args.input)
@@ -162,25 +232,56 @@ def main() -> None:
     base_dir = os.path.dirname(input_path)
     base_name = os.path.splitext(os.path.basename(input_path))[0]
     output_dir = args.output_dir or os.path.join(base_dir, base_name)
+    
+    # Add _ood suffix if OOD mode is enabled
+    if args.ood:
+        output_dir = output_dir + "_ood"
+    
     os.makedirs(output_dir, exist_ok=True)
 
-    train_items, test_items = split_items(items, args.train_ratio, args.seed)
-
-    if fmt == "jsonl":
-        train_path = os.path.join(output_dir, "train.jsonl")
-        test_path = os.path.join(output_dir, "test.jsonl")
-        write_jsonl(train_path, train_items)
-        write_jsonl(test_path, test_items)
+    if args.ood:
+        # OOD split: train, test (in-distribution), ood_test
+        train_items, test_items, ood_items = split_by_question(items, args.train_ratio, args.seed)
+        
+        if fmt == "jsonl":
+            train_path = os.path.join(output_dir, "train.jsonl")
+            test_path = os.path.join(output_dir, "test.jsonl")
+            ood_path = os.path.join(output_dir, "ood_test.jsonl")
+            write_jsonl(train_path, train_items)
+            write_jsonl(test_path, test_items)
+            write_jsonl(ood_path, ood_items)
+        else:
+            train_path = os.path.join(output_dir, "train.json")
+            test_path = os.path.join(output_dir, "test.json")
+            ood_path = os.path.join(output_dir, "ood_test.json")
+            write_json(train_path, train_items)
+            write_json(test_path, test_items)
+            write_json(ood_path, ood_items)
+        
+        print(f"Input: {input_path}")
+        print(f"Total: {len(items)} | Train: {len(train_items)} | Test: {len(test_items)} | OOD Test: {len(ood_items)}")
+        print(f"Saved: {train_path}")
+        print(f"Saved: {test_path}")
+        print(f"Saved: {ood_path}")
     else:
-        train_path = os.path.join(output_dir, "train.json")
-        test_path = os.path.join(output_dir, "test.json")
-        write_json(train_path, train_items)
-        write_json(test_path, test_items)
-
-    print(f"Input: {input_path}")
-    print(f"Total: {len(items)} | Train: {len(train_items)} | Test: {len(test_items)}")
-    print(f"Saved: {train_path}")
-    print(f"Saved: {test_path}")
+        # Standard split: train, test
+        train_items, test_items = split_items(items, args.train_ratio, args.seed)
+        
+        if fmt == "jsonl":
+            train_path = os.path.join(output_dir, "train.jsonl")
+            test_path = os.path.join(output_dir, "test.jsonl")
+            write_jsonl(train_path, train_items)
+            write_jsonl(test_path, test_items)
+        else:
+            train_path = os.path.join(output_dir, "train.json")
+            test_path = os.path.join(output_dir, "test.json")
+            write_json(train_path, train_items)
+            write_json(test_path, test_items)
+        
+        print(f"Input: {input_path}")
+        print(f"Total: {len(items)} | Train: {len(train_items)} | Test: {len(test_items)}")
+        print(f"Saved: {train_path}")
+        print(f"Saved: {test_path}")
 
 
 if __name__ == "__main__":

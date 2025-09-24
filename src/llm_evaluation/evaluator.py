@@ -16,7 +16,7 @@ class SummaryEvaluator:
     A class to evaluate how well comments are represented in summaries using LLM models.
     """
     
-    def __init__(self, model: str = "gpt-4o-mini", system_prompt: str = "You are a helpful assistant", temperature: float = 0.7):
+    def __init__(self, model: str = "gpt-4o-mini", system_prompt: str = "You are a helpful assistant", temperature: float = 0.7, verbose: bool = False):
         """
         Initialize the evaluator.
         
@@ -29,6 +29,7 @@ class SummaryEvaluator:
         self.system_prompt = system_prompt
         self.temperature = temperature
         self.client = LanguageModel(model_name=model, temperature=temperature)
+        self.verbose = verbose
     
     def evaluate_comment_representation(self, summary: str, comment: str) -> Dict[str, Any]:
         """
@@ -43,8 +44,9 @@ class SummaryEvaluator:
         """
         prompt = EvaluationPrompt(summary=summary, comment=comment, system_prompt=self.system_prompt)
         system_prompt, user_input = prompt.summary_evaluation_prompt_from_comments()
-        print(f"System prompt: {system_prompt}")
-        print(f"User input: {user_input}")
+        if self.verbose:
+            print(f"System prompt: {system_prompt}")
+            print(f"User input: {user_input}")
         
         # Call the language model
         response = self.client.chat_completion(system_prompt=system_prompt, input_text=user_input)

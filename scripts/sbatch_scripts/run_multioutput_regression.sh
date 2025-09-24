@@ -4,10 +4,10 @@
 PROJECT_DIR="/ibex/project/c2328/LLMs-Scalable-Deliberation"
 
 # Data parameters
-# DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings.jsonl"
-DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/split_data/train.jsonl"
+DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings.jsonl"
+# DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/split_data/train.jsonl"
 MODEL_NAME="microsoft/deberta-v3-base"
-OUTPUT_DIR="$PROJECT_DIR/checkpoints_f0923/deberta_regression_base_evaluate_v3_pair_split_argument_sigmoid"
+OUTPUT_DIR="$PROJECT_DIR/checkpoints_f0923/deberta_regression_base_evaluate_pair_split_argument_v8"
 
 # Training parameters
 MAX_LENGTH=4096
@@ -15,37 +15,37 @@ TRAIN_BATCH_SIZE=8
 EVAL_BATCH_SIZE=8
 NUM_EPOCHS=30
 LEARNING_RATE=4e-5
-WEIGHT_DECAY=0.001
+WEIGHT_DECAY=0.01
 WARMUP_RATIO=0.15
-EVAL_RATIO=0.05
+EVAL_RATIO=0.16
 SEED=42
-EVAL_EVERY_STEPS=25
+EVAL_EVERY_STEPS=20
 
 
 # System parameters
 TIME="12:00:00"  
 MEMORY="32G"    
 CPUS=8          
-LOG_DIR="$PROJECT_DIR/logs/multioutput_regression_base_f0923_evaluate_deberta-v3-base_pair_split_argument_sigmoid_v3"
+LOG_DIR="$PROJECT_DIR/logs/multioutput_regression_base_f0923_evaluate_deberta-v3-base_pair_split_argument_v8"
 GPUS_LINE="#SBATCH --gres=gpu:a100:1"
 
 # Wandb parameters
 WANDB_PROJECT="llm_comment_summary_regression_deberta-v3-base_f0923"
-WANDB_RUN_NAME="new_regression_deberta-v3-base_f0923_evaluate_deberta-v3-base_pair_split_argument_sigmoid_v3"
+WANDB_RUN_NAME="new_regression_deberta-v3-base_f0923_evaluate_deberta-v3-base_pair_split_argument_v8"
 
 # Advanced training parameters
-GRADIENT_CLIP=1.5
+GRADIENT_CLIP=1.0
 LABEL_SMOOTHING=0.0
-DROPOUT=0.15
+DROPOUT=0.1
 LR_SCHEDULER="linear"
 
 # Data augmentation parameters
-AUGMENT=true
+AUGMENT=false
 AUGMENT_PROB=0.3
 
 # Model parameters
 USE_TANH=false
-USE_SIGMOID=true
+USE_SIGMOID=false
 USE_RELU=false
 USE_LEAKY_RELU=false
 USE_ELU=false
@@ -110,7 +110,7 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --augment)
-            AUGMENT=true
+            AUGMENT=false
             shift
             ;;
         --use-tanh)

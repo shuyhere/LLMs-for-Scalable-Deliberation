@@ -413,8 +413,11 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
     
     if not valid_groups:
         print("No groups with same opinion found for ordering evaluation")
-        return {"ordering_acc_overall": 0.0, "diff_corr_overall": 0.0}
+        return {"ordering_acc_overall": 0.0, "diff_corr_pearson_overall": 0.0, "diff_corr_spearman_overall": 0.0,
+                "num_records": float(len(eval_dataset)), "num_opinion_groups": 0.0, "num_pairs": 0.0}
     
+    # Pre-compute total comparable pairs across all valid groups (nC2 per group)
+    total_pairs_all = int(sum((len(samples) * (len(samples) - 1)) // 2 for samples in valid_groups.values()))
     print(f"Found {len(valid_groups)} opinion groups with multiple samples")
     
     # Also report question-opinion combinations for more detailed analysis
@@ -428,50 +431,48 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
     
     qo_pairs_with_multiple = sum(1 for count in question_opinion_pairs.values() if count >= 2)
     print(f"  - {qo_pairs_with_multiple} question-opinion pairs with >=2 samples")
-    print(f"  - Total pairs for comparison: {sum(len(v)*(len(v)-1)//2 for v in valid_groups.values())}")
+    print(f"  - Total pairs for comparison (all opinions): {total_pairs_all}")
     
-    # Get predictions for all samples
+    # Run model inference over all samples to get predictions
+    from torch.utils.data import DataLoader
+    import torch
+    
+    # Use the same data collator as in training to handle variable-length sequences
+    from transformers import AutoTokenizer
+    tokenizer = eval_dataset.tokenizer
+    collator = RegressionDataCollator(tokenizer=tokenizer)
+    
+    loader = DataLoader(eval_dataset, batch_size=16, shuffle=False, collate_fn=collator)
     all_preds = []
     all_labels = []
-    all_indices = []
+    all_indices = list(range(len(eval_dataset)))
     
     with torch.no_grad():
-        for i, sample in all_samples:
-            # Prepare input - convert to tensors if they're lists
-            input_ids = sample["input_ids"]
-            attention_mask = sample["attention_mask"]
-            labels = sample["labels"]
-            
-            # Convert to tensors if they're lists
-            if isinstance(input_ids, list):
-                input_ids = torch.tensor(input_ids)
-            if isinstance(attention_mask, list):
-                attention_mask = torch.tensor(attention_mask)
-            if isinstance(labels, list):
-                labels = torch.tensor(labels)
-            
-            # Add batch dimension and move to device
-            input_ids = input_ids.unsqueeze(0).to(device)
-            attention_mask = attention_mask.unsqueeze(0).to(device)
-            labels = labels.unsqueeze(0).to(device)
-            
-            # Get prediction
-            outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-            pred = outputs["logits"].cpu().numpy()[0]  # (4,)
-            label = labels.cpu().numpy()[0]  # (4,)
-            
-            all_preds.append(pred)
-            all_labels.append(label)
-            all_indices.append(i)
+        for batch in loader:
+            inputs = {k: v.to(device) for k, v in batch.items() if k != 'labels'}
+            labels = batch['labels'].cpu().numpy()
+            outputs = model(**inputs)
+            logits = outputs['logits'].detach().cpu().numpy()
+            all_preds.append(logits)
+            all_labels.append(labels)
     
-    all_preds = np.array(all_preds)  # (N, 4)
-    all_labels = np.array(all_labels)  # (N, 4)
+    import numpy as np
+    all_preds = np.concatenate(all_preds, axis=0)
+    all_labels = np.concatenate(all_labels, axis=0)
     
-    # Debug: Print prediction and label ranges
-    print(f"Prediction range: min={all_preds.min():.4f}, max={all_preds.max():.4f}, mean={all_preds.mean():.4f}")
-    print(f"Label range: min={all_labels.min():.4f}, max={all_labels.max():.4f}, mean={all_labels.mean():.4f}")
+    # Check if the model uses normalization and denormalize if needed
+    # The predictions and labels are in [0, 1] range if normalized
+    use_normalization = hasattr(eval_dataset, 'normalize') and eval_dataset.normalize
+    if use_normalization:
+        print(f"  - Using normalized scale, denormalizing for ordering accuracy...")
+        # Denormalize predictions and labels from [0, 1] to [-1, 7]
+        all_preds_denorm = denormalize_score(all_preds)
+        all_labels_denorm = denormalize_score(all_labels)
+    else:
+        print(f"  - Using original scale [-1, 7] for ordering accuracy...")
+        all_preds_denorm = all_preds
+        all_labels_denorm = all_labels
     
-    # Calculate ordering accuracy and difference correlation for each dimension
     ordering_accs = {}
     diff_correlations = {}
     
@@ -486,7 +487,7 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
         for opinion, samples in valid_groups.items():
             if len(samples) < 2:
                 continue
-                
+            
             # Get all pairs within this opinion group
             for i in range(len(samples)):
                 for j in range(i + 1, len(samples)):
@@ -499,10 +500,11 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
                     pred1_idx = all_indices.index(idx1)
                     pred2_idx = all_indices.index(idx2)
                     
-                    pred1_score = all_preds[pred1_idx][dim_idx]
-                    pred2_score = all_preds[pred2_idx][dim_idx]
-                    label1_score = all_labels[pred1_idx][dim_idx]
-                    label2_score = all_labels[pred2_idx][dim_idx]
+                    # Use denormalized scores for ordering comparison
+                    pred1_score = all_preds_denorm[pred1_idx][dim_idx]
+                    pred2_score = all_preds_denorm[pred2_idx][dim_idx]
+                    label1_score = all_labels_denorm[pred1_idx][dim_idx]
+                    label2_score = all_labels_denorm[pred2_idx][dim_idx]
                     
                     # Calculate differences for correlation
                     pred_diff = pred1_score - pred2_score
@@ -511,52 +513,39 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
                     label_diffs.append(label_diff)
                     
                     # Check if ordering is correct
-                    # If label1 > label2, then pred1 should > pred2
-                    if label1_score > label2_score:
+                    # Use a threshold that makes sense for the [-1, 7] scale
+                    threshold = 0.2 if not use_normalization else 0.025  # Adjust threshold based on scale
+                    
+                    if abs(label_diff) < threshold:
+                        # Labels are essentially equal, predictions should be close too
+                        if abs(pred_diff) < threshold * 2:  # Allow slightly more tolerance for predictions
+                            correct_pairs += 1
+                    elif label1_score > label2_score:
                         if pred1_score > pred2_score:
                             correct_pairs += 1
                     elif label1_score < label2_score:
                         if pred1_score < pred2_score:
                             correct_pairs += 1
-                    else:  # label1 == label2, predictions should be close
-                        if abs(pred1_score - pred2_score) < 0.05:
-                            correct_pairs += 1
                     
                     total_pairs += 1
         
-        if total_pairs > 0:
-            acc = correct_pairs / total_pairs
-            ordering_accs[f"ordering_acc_{key}"] = float(acc)
-            print(f"Ordering accuracy for {key}: {acc:.4f} ({correct_pairs}/{total_pairs})")
-        else:
-            ordering_accs[f"ordering_acc_{key}"] = 0.0
+        # Compute accuracy and correlations per dimension
+        acc = (correct_pairs / total_pairs) if total_pairs > 0 else 0.0
+        ordering_accs[f"ordering_acc_{key}"] = float(acc)
         
-        # Calculate difference correlation
-        if len(pred_diffs) > 1 and len(label_diffs) > 1:
-            try:
-                # Pearson correlation of differences
-                from scipy.stats import pearsonr, spearmanr
-                pearson_corr, _ = pearsonr(label_diffs, pred_diffs)
-                spearman_corr, _ = spearmanr(label_diffs, pred_diffs)
-                
-                diff_correlations[f"diff_corr_pearson_{key}"] = float(pearson_corr)
-                diff_correlations[f"diff_corr_spearman_{key}"] = float(spearman_corr)
-                print(f"Difference correlation for {key}: Pearson={pearson_corr:.4f}, Spearman={spearman_corr:.4f}")
-            except Exception as e:
-                print(f"Could not compute difference correlation for {key}: {e}")
-                diff_correlations[f"diff_corr_pearson_{key}"] = 0.0
-                diff_correlations[f"diff_corr_spearman_{key}"] = 0.0
+        if len(pred_diffs) >= 2 and len(label_diffs) >= 2:
+            from scipy.stats import pearsonr, spearmanr
+            pearson_corr = pearsonr(pred_diffs, label_diffs)[0]
+            spearman_corr = spearmanr(pred_diffs, label_diffs)[0]
+            diff_correlations[f"diff_corr_pearson_{key}"] = float(pearson_corr)
+            diff_correlations[f"diff_corr_spearman_{key}"] = float(spearman_corr)
         else:
             diff_correlations[f"diff_corr_pearson_{key}"] = 0.0
             diff_correlations[f"diff_corr_spearman_{key}"] = 0.0
     
-    # Overall ordering accuracy (average across dimensions)
-    if ordering_accs:
-        overall_acc = np.mean(list(ordering_accs.values()))
-        ordering_accs["ordering_acc_overall"] = float(overall_acc)
-        print(f"Overall ordering accuracy: {overall_acc:.4f}")
-    else:
-        ordering_accs["ordering_acc_overall"] = 0.0
+    # Overall ordering accuracy (average across dimensions where defined)
+    valid_accs = [ordering_accs[f"ordering_acc_{k}"] for k in TARGET_KEYS if f"ordering_acc_{k}" in ordering_accs]
+    ordering_accs["ordering_acc_overall"] = float(np.mean(valid_accs)) if valid_accs else 0.0
     
     # Overall difference correlation (average across dimensions)
     pearson_diff_corrs = [diff_correlations[f"diff_corr_pearson_{k}"] for k in TARGET_KEYS 
@@ -576,8 +565,11 @@ def compute_ordering_accuracy(eval_dataset: Dataset, model, device='cuda') -> Di
     else:
         diff_correlations["diff_corr_spearman_overall"] = 0.0
     
-    # Combine results
+    # Combine results and include dataset stats
     results = {**ordering_accs, **diff_correlations}
+    results["num_records"] = float(len(eval_dataset))
+    results["num_opinion_groups"] = float(len(valid_groups))
+    results["num_pairs"] = float(total_pairs_all)
     return results
 
 
@@ -774,34 +766,79 @@ def evaluate_correlations(trainer: Trainer, eval_dataset: Dataset, wandb_enabled
 class CustomTrainer(Trainer):
     """Custom trainer that computes ordering accuracy during evaluation"""
     
-    def __init__(self, eval_dataset_for_ordering=None, **kwargs):
-        # Remove our custom parameter before passing to parent
+    def __init__(self, eval_dataset_for_ordering=None, eval_datasets=None, **kwargs):
+        # Remove our custom parameters before passing to parent
         if 'eval_dataset_for_ordering' in kwargs:
             eval_dataset_for_ordering = kwargs.pop('eval_dataset_for_ordering')
+        if 'eval_datasets' in kwargs:
+            eval_datasets = kwargs.pop('eval_datasets')
         super().__init__(**kwargs)
         self.eval_dataset_for_ordering = eval_dataset_for_ordering
+        self.eval_datasets = eval_datasets or {}  # Dict of {prefix: dataset}
     
     def evaluate(self, eval_dataset=None, ignore_keys=None, metric_key_prefix="eval"):
-        # Call parent evaluate method
-        metrics = super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
+        # If we have multiple eval datasets and this is a regular eval call during training
+        if self.eval_datasets and eval_dataset is None and metric_key_prefix == "eval":
+            all_metrics = {}
+            
+            # Evaluate on each dataset
+            for prefix, dataset in self.eval_datasets.items():
+                print(f"\n[Step {self.state.global_step}] Evaluating on {prefix} dataset...")
+                metrics = super().evaluate(dataset, ignore_keys, prefix)
+                all_metrics.update(metrics)
+                
+                # Compute ordering accuracy for this dataset
+                dataset_for_ordering = dataset
+                
+                # Add ordering accuracy if a dataset is available
+                if dataset_for_ordering is not None:
+                    try:
+                        device = next(self.model.parameters()).device
+                        ordering_results = compute_ordering_accuracy(dataset_for_ordering, self.model, device)
+                        
+                        # Add ordering accuracy to metrics with the current prefix
+                        for key, value in ordering_results.items():
+                            metric_key = f"{prefix}_{key}"
+                            all_metrics[metric_key] = value
+                            
+                    except Exception as e:
+                        print(f"Error computing ordering accuracy: {e}")
+                        # Add zero values to maintain consistent metrics structure
+                        all_metrics[f"{prefix}_ordering_acc_overall"] = 0.0
+                        all_metrics[f"{prefix}_diff_corr_pearson_overall"] = 0.0
+                        all_metrics[f"{prefix}_diff_corr_spearman_overall"] = 0.0
+                
+                # Print summary for this dataset
+                print(f"\n[{prefix}] Results:")
+                print(f"  MAE: {all_metrics.get(f'{prefix}_mae_overall', 0.0):.4f}")
+                print(f"  Spearman: {all_metrics.get(f'{prefix}_corr_mean_spearman', 0.0):.4f}")
+                print(f"  Pearson: {all_metrics.get(f'{prefix}_corr_mean_pearson', 0.0):.4f}")
+                print(f"  Ordering Acc: {all_metrics.get(f'{prefix}_ordering_acc_overall', 0.0):.4f}")
+                print(f"  Diff Corr (P): {all_metrics.get(f'{prefix}_diff_corr_pearson_overall', 0.0):.4f}")
+                print(f"  Diff Corr (S): {all_metrics.get(f'{prefix}_diff_corr_spearman_overall', 0.0):.4f}")
+            
+            return all_metrics
+        else:
+            # Single dataset evaluation (for final evaluation or specific dataset)
+            metrics = super().evaluate(eval_dataset, ignore_keys, metric_key_prefix)
+            
+            # Choose dataset for ordering metrics
+            dataset_for_ordering = eval_dataset if eval_dataset is not None else self.eval_dataset_for_ordering
         
-        print(f"\nDebug: CustomTrainer.evaluate() called with metric_key_prefix='{metric_key_prefix}'")
-        print(f"Debug: eval_dataset_for_ordering is {'not None' if self.eval_dataset_for_ordering is not None else 'None'}")
-        
-        # Add ordering accuracy if eval_dataset is available
-        if self.eval_dataset_for_ordering is not None:
+        # Add ordering accuracy if a dataset is available
+        if dataset_for_ordering is not None:
             try:
                 device = next(self.model.parameters()).device
-                ordering_results = compute_ordering_accuracy(self.eval_dataset_for_ordering, self.model, device)
+                ordering_results = compute_ordering_accuracy(dataset_for_ordering, self.model, device)
                 
-                # Add ordering accuracy to metrics with eval_ prefix
-                print(f"\nDebug: Adding ordering accuracy to metrics...")
+                # Add ordering accuracy to metrics with the current prefix (eval_/ood_/in_dist_)
+                print(f"\nDebug: Adding ordering accuracy to metrics with prefix '{metric_key_prefix}_'...")
                 for key, value in ordering_results.items():
                     metric_key = f"{metric_key_prefix}_{key}"
                     metrics[metric_key] = value
                     print(f"  Added {metric_key}: {value}")
                     
-                print(f"\nOrdering Accuracy & Difference Correlation Results:")
+                print(f"\nOrdering Accuracy & Difference Correlation Results ({metric_key_prefix}):")
                 print(f"  Ordering Accuracy Overall: {ordering_results.get('ordering_acc_overall', 0.0):.4f}")
                 print(f"  Difference Correlation (Pearson) Overall: {ordering_results.get('diff_corr_pearson_overall', 0.0):.4f}")
                 print(f"  Difference Correlation (Spearman) Overall: {ordering_results.get('diff_corr_spearman_overall', 0.0):.4f}")
@@ -859,10 +896,11 @@ class CustomTrainer(Trainer):
 
 
 class PeriodicEvalCallback(TrainerCallback):
-    def __init__(self, eval_dataset: Dataset, every_steps: int, wandb_enabled: bool = False):
+    def __init__(self, eval_dataset: Dataset, every_steps: int, wandb_enabled: bool = False, metric_key_prefix: str = "eval"):
         self.eval_dataset = eval_dataset
         self.every_steps = max(1, int(every_steps))
         self.wandb_enabled = wandb_enabled
+        self.metric_key_prefix = metric_key_prefix
 
     def on_step_end(self, _args, state, control, **kwargs):
         if state.global_step > 0 and (state.global_step % self.every_steps == 0):
@@ -871,13 +909,18 @@ class PeriodicEvalCallback(TrainerCallback):
             trainer = kwargs.get("trainer", None)
             if trainer is None:
                 return control
-            metrics = trainer.evaluate(self.eval_dataset)
-            print(f"\n[Periodic Eval @ step {state.global_step}] {metrics}")
-            # Also compute correlations
-            try:
-                evaluate_correlations(trainer, self.eval_dataset, wandb_enabled=self.wandb_enabled)
-            except Exception:
-                pass
+            
+            print(f"\n[Periodic Eval @ step {state.global_step}] Evaluating on {self.metric_key_prefix} dataset...")
+            metrics = trainer.evaluate(self.eval_dataset, metric_key_prefix=self.metric_key_prefix)
+            
+            # Print key metrics
+            print(f"[{self.metric_key_prefix}] Step {state.global_step} Results:")
+            print(f"  - MAE: {metrics.get(f'{self.metric_key_prefix}_mae_overall', 0.0):.4f}")
+            print(f"  - Spearman: {metrics.get(f'{self.metric_key_prefix}_corr_mean_spearman', 0.0):.4f}")
+            print(f"  - Pearson: {metrics.get(f'{self.metric_key_prefix}_corr_mean_pearson', 0.0):.4f}")
+            print(f"  - Ordering Acc: {metrics.get(f'{self.metric_key_prefix}_ordering_acc_overall', 0.0):.4f}")
+            print(f"  - Diff Corr (P): {metrics.get(f'{self.metric_key_prefix}_diff_corr_pearson_overall', 0.0):.4f}")
+            print(f"  - Diff Corr (S): {metrics.get(f'{self.metric_key_prefix}_diff_corr_spearman_overall', 0.0):.4f}")
         return control
 
 
@@ -929,6 +972,10 @@ def main():
                         help="Learning rate scheduler type")
     parser.add_argument("--no-normalize", action="store_true", 
                         help="Disable normalization and use original label range [-1, 7] directly")
+    parser.add_argument("--ood-test", type=str, default=None,
+                        help="Path to OOD test dataset (e.g., ood_test.jsonl)")
+    parser.add_argument("--in-dist-test", type=str, default=None,
+                        help="Path to in-distribution test dataset (e.g., test.jsonl)")
 
     args = parser.parse_args()
     
@@ -962,8 +1009,45 @@ def main():
             values = np.array(all_scores[key])
             print(f"{key}: min={values.min():.2f}, max={values.max():.2f}, mean={values.mean():.2f}")
     
-    train_recs, eval_recs = split_train_eval(data, args.eval_ratio, args.seed)
-    print(f"\nTrain: {len(train_recs)}, Eval: {len(eval_recs)}")
+    # Check if separate test datasets are provided
+    has_separate_tests = args.ood_test is not None or args.in_dist_test is not None
+    
+    if has_separate_tests:
+        print("\n🔍 Using Separate Test Datasets")
+        # Use full training data for training (no splitting)
+        train_recs = data
+        print(f"✅ Training on FULL dataset: {len(train_recs)} records (no train/test split)")
+        
+        # Load separate test datasets
+        eval_recs = []
+        ood_recs = []
+        
+        if args.in_dist_test:
+            in_dist_path = Path(args.in_dist_test)
+            if in_dist_path.exists():
+                eval_recs = read_jsonl(in_dist_path)
+                print(f"✅ Loaded in-distribution test: {len(eval_recs)} records from {in_dist_path}")
+            else:
+                print(f"⚠️ Warning: In-distribution test file not found: {in_dist_path}")
+        
+        if args.ood_test:
+            ood_path = Path(args.ood_test)
+            if ood_path.exists():
+                ood_recs = read_jsonl(ood_path)
+                print(f"✅ Loaded OOD test: {len(ood_recs)} records from {ood_path}")
+            else:
+                print(f"⚠️ Warning: OOD test file not found: {ood_path}")
+        
+        if not eval_recs and not ood_recs:
+            print("❌ Error: No valid test datasets found")
+            return
+            
+    else:
+        # Standard mode: split data into train/eval when no separate tests provided
+        print("\n📊 Standard Mode: Splitting data into train/eval")
+        train_recs, eval_recs = split_train_eval(data, args.eval_ratio, args.seed)
+        print(f"Train: {len(train_recs)}, Eval: {len(eval_recs)}")
+        ood_recs = []
     
     # Ensure training data is properly shuffled
     import random
@@ -988,11 +1072,24 @@ def main():
         augment=args.augment, augment_prob=args.augment_prob,
         normalize=use_normalization
     )
-    eval_ds = CommentSummaryRatingsDataset(
-        eval_recs, tokenizer, args.max_len, 
-        augment=False,
-        normalize=use_normalization
-    )
+    
+    # Create evaluation datasets
+    eval_ds = None
+    ood_ds = None
+    
+    if eval_recs:
+        eval_ds = CommentSummaryRatingsDataset(
+            eval_recs, tokenizer, args.max_len, 
+            augment=False,
+            normalize=use_normalization
+        )
+    
+    if ood_recs:
+        ood_ds = CommentSummaryRatingsDataset(
+            ood_recs, tokenizer, args.max_len, 
+            augment=False,
+            normalize=use_normalization
+        )
 
     model = MultiOutputRegressor(
         args.model,
@@ -1015,6 +1112,7 @@ def main():
         report_backends = ["wandb"]
 
     # Enhanced training arguments with warmup and weight decay
+    # When we have separate test sets, disable default eval and use callbacks instead
     training_args = TrainingArguments(
         output_dir=args.out,
         learning_rate=args.lr,
@@ -1026,14 +1124,14 @@ def main():
         save_total_limit=3,
         logging_steps=10,
         seed=args.seed,
-        do_eval=True,
-        eval_strategy="steps",
-        eval_steps=args.eval_every_steps,
+        do_eval=True,  # Always enable eval
+        eval_strategy="steps",  # Always use steps strategy
+        eval_steps=args.eval_every_steps,  # Always use eval_every_steps
         save_steps=max(100, args.eval_every_steps),
         report_to=report_backends,
         remove_unused_columns=False,
-        load_best_model_at_end=True,
-        metric_for_best_model="corr_mean_spearman",
+        load_best_model_at_end=False if has_separate_tests else True,  # Disable auto-loading for multi-dataset to handle manually
+        metric_for_best_model="eval_corr_mean_spearman" if not has_separate_tests else None,
         greater_is_better=True,
         gradient_accumulation_steps=2,  # Effective batch size = batch * 2
         fp16=True,  # Use mixed precision training
@@ -1056,21 +1154,34 @@ def main():
     def compute_metrics_wrapper(eval_pred):
         return compute_metrics(eval_pred, use_normalization=use_normalization)
     
+    # Prepare eval datasets for training
+    eval_datasets_dict = {}
+    if has_separate_tests:
+        # When we have separate test sets, use multi-dataset evaluation
+        if eval_ds is not None:
+            eval_datasets_dict['in_dist'] = eval_ds
+            print(f"✓ Will evaluate on in-distribution test set during training ({len(eval_ds)} samples)")
+        if ood_ds is not None:
+            eval_datasets_dict['ood'] = ood_ds
+            print(f"✓ Will evaluate on OOD test set during training ({len(ood_ds)} samples)")
+        primary_eval_ds = eval_ds if eval_ds is not None else ood_ds  # Use one for default metrics
+        default_eval_for_callbacks = primary_eval_ds
+    else:
+        # Standard mode: use the split eval dataset
+        primary_eval_ds = eval_ds if eval_ds is not None else ood_ds
+        default_eval_for_callbacks = primary_eval_ds
+        eval_datasets_dict = {}  # No multi-dataset eval in standard mode
+    
     trainer = CustomTrainer(
         model=model,
         args=training_args,
         train_dataset=train_ds,
-        eval_dataset=eval_ds,
+        eval_dataset=primary_eval_ds,  # Single dataset for compatibility
         data_collator=collator,
         compute_metrics=compute_metrics_wrapper,
-        eval_dataset_for_ordering=eval_ds,  # Pass eval dataset for ordering accuracy
+        eval_dataset_for_ordering=default_eval_for_callbacks,  # Pass dataset for ordering accuracy
+        eval_datasets=eval_datasets_dict if has_separate_tests else None,  # Pass multiple datasets
     )
-
-    # Add periodic evaluation callback (compatible with older transformers)
-    try:
-        trainer.add_callback(PeriodicEvalCallback(eval_ds, args.eval_every_steps, wandb_enabled=(report_backends == ["wandb"])) )
-    except Exception:
-        pass
     
     # Add WANDB callback for better evaluation logging
     if args.wandb and report_backends == ["wandb"]:
@@ -1088,27 +1199,141 @@ def main():
     print("FINAL EVALUATION")
     print("="*60)
     
-    metrics = trainer.evaluate()
+    # When we have separate test datasets, evaluate on both
+    if has_separate_tests:
+        # In-Distribution Evaluation
+        if eval_ds is not None:
+            print(f"\n📈 IN-DISTRIBUTION TEST EVALUATION:")
+            print("="*40)
+            
+            # Evaluate on in-distribution dataset
+            in_dist_metrics = trainer.evaluate(eval_ds, metric_key_prefix="in_dist")
+            
+            print("\n✅ In-Distribution Results:")
+            print(f"Overall MAE: {in_dist_metrics.get('in_dist_mae_overall', 0.0):.4f}")
+            print(f"Mean Spearman correlation: {in_dist_metrics.get('in_dist_corr_mean_spearman', 0.0):.4f}")
+            print(f"Mean Pearson correlation: {in_dist_metrics.get('in_dist_corr_mean_pearson', 0.0):.4f}")
+            print(f"\n📊 Ordering Accuracy: {in_dist_metrics.get('in_dist_ordering_acc_overall', 0.0):.4f}")
+            print(f"Difference Correlation (Pearson): {in_dist_metrics.get('in_dist_diff_corr_pearson_overall', 0.0):.4f}")
+            print(f"Difference Correlation (Spearman): {in_dist_metrics.get('in_dist_diff_corr_spearman_overall', 0.0):.4f}")
+            
+            print("\nPer-dimension Results:")
+            for key in TARGET_KEYS:
+                spearman = in_dist_metrics.get(f'in_dist_corr_{key}_spearman', 0.0)
+                pearson = in_dist_metrics.get(f'in_dist_corr_{key}_pearson', 0.0)
+                mae = in_dist_metrics.get(f'in_dist_mae_{key}', 0.0)
+                ordering = in_dist_metrics.get(f'in_dist_ordering_acc_{key}', 0.0)
+                diff_p = in_dist_metrics.get(f'in_dist_diff_corr_pearson_{key}', 0.0)
+                diff_s = in_dist_metrics.get(f'in_dist_diff_corr_spearman_{key}', 0.0)
+                print(f"{key}:")
+                print(f"  - Correlations: Spearman={spearman:.4f}, Pearson={pearson:.4f}")
+                print(f"  - MAE: {mae:.4f}")
+                print(f"  - Ordering Acc: {ordering:.4f}")
+                print(f"  - Diff Corr: Pearson={diff_p:.4f}, Spearman={diff_s:.4f}")
+            
+            # Additional correlation analysis
+            print("\nRunning detailed In-Distribution correlation analysis...")
+            in_dist_results = evaluate_correlations(trainer, eval_ds, wandb_enabled=(report_backends == ["wandb"]))
+            
+        # OOD Evaluation
+        if ood_ds is not None:
+            print(f"\n🔍 OUT-OF-DISTRIBUTION (OOD) TEST EVALUATION:")
+            print("="*40)
+            
+            # Evaluate on OOD dataset
+            ood_metrics = trainer.evaluate(ood_ds, metric_key_prefix="ood")
+            
+            print("\n✅ OOD Results:")
+            print(f"Overall MAE: {ood_metrics.get('ood_mae_overall', 0.0):.4f}")
+            print(f"Mean Spearman correlation: {ood_metrics.get('ood_corr_mean_spearman', 0.0):.4f}")
+            print(f"Mean Pearson correlation: {ood_metrics.get('ood_corr_mean_pearson', 0.0):.4f}")
+            print(f"\n📊 Ordering Accuracy: {ood_metrics.get('ood_ordering_acc_overall', 0.0):.4f}")
+            print(f"Difference Correlation (Pearson): {ood_metrics.get('ood_diff_corr_pearson_overall', 0.0):.4f}")
+            print(f"Difference Correlation (Spearman): {ood_metrics.get('ood_diff_corr_spearman_overall', 0.0):.4f}")
+            
+            print("\nPer-dimension Results:")
+            for key in TARGET_KEYS:
+                spearman = ood_metrics.get(f'ood_corr_{key}_spearman', 0.0)
+                pearson = ood_metrics.get(f'ood_corr_{key}_pearson', 0.0)
+                mae = ood_metrics.get(f'ood_mae_{key}', 0.0)
+                ordering = ood_metrics.get(f'ood_ordering_acc_{key}', 0.0)
+                diff_p = ood_metrics.get(f'ood_diff_corr_pearson_{key}', 0.0)
+                diff_s = ood_metrics.get(f'ood_diff_corr_spearman_{key}', 0.0)
+                print(f"{key}:")
+                print(f"  - Correlations: Spearman={spearman:.4f}, Pearson={pearson:.4f}")
+                print(f"  - MAE: {mae:.4f}")
+                print(f"  - Ordering Acc: {ordering:.4f}")
+                print(f"  - Diff Corr: Pearson={diff_p:.4f}, Spearman={diff_s:.4f}")
+            
+            # Additional correlation analysis
+            print("\nRunning detailed OOD correlation analysis...")
+            ood_results = evaluate_correlations(trainer, ood_ds, wandb_enabled=(report_backends == ["wandb"]))
+            
+    else:
+        # Standard evaluation mode (when no separate test datasets)
+        if primary_eval_ds is not None:
+            print(f"\n📊 Evaluating on Test Set:")
+            metrics = trainer.evaluate()
+            
+            print("\n✅ Final Results:")
+            print(f"Overall MAE: {metrics.get('eval_mae_overall', 0.0):.4f}")
+            print(f"Mean Spearman correlation: {metrics.get('eval_corr_mean_spearman', 0.0):.4f}")
+            print(f"Mean Pearson correlation: {metrics.get('eval_corr_mean_pearson', 0.0):.4f}")
+            print(f"\n📊 Ordering Accuracy: {metrics.get('eval_ordering_acc_overall', 0.0):.4f}")
+            print(f"Difference Correlation (Pearson): {metrics.get('eval_diff_corr_pearson_overall', 0.0):.4f}")
+            print(f"Difference Correlation (Spearman): {metrics.get('eval_diff_corr_spearman_overall', 0.0):.4f}")
+            
+            print("\nPer-dimension Results:")
+            for key in TARGET_KEYS:
+                spearman = metrics.get(f'eval_corr_{key}_spearman', 0.0)
+                pearson = metrics.get(f'eval_corr_{key}_pearson', 0.0)
+                mae = metrics.get(f'eval_mae_{key}', 0.0)
+                ordering = metrics.get(f'eval_ordering_acc_{key}', 0.0)
+                diff_p = metrics.get(f'eval_diff_corr_pearson_{key}', 0.0)
+                diff_s = metrics.get(f'eval_diff_corr_spearman_{key}', 0.0)
+                print(f"{key}:")
+                print(f"  - Correlations: Spearman={spearman:.4f}, Pearson={pearson:.4f}")
+                print(f"  - MAE: {mae:.4f}")
+                print(f"  - Ordering Acc: {ordering:.4f}")
+                print(f"  - Diff Corr: Pearson={diff_p:.4f}, Spearman={diff_s:.4f}")
+            
+            print("\nRunning final correlation analysis...")
+            final_results = evaluate_correlations(trainer, primary_eval_ds, wandb_enabled=(report_backends == ["wandb"]))
     
-    print("\nFinal Results:")
-    print(f"Overall MAE: {metrics.get('eval_mae_overall', 'N/A'):.4f}")
-    print(f"Mean Spearman correlation: {metrics.get('eval_corr_mean_spearman', 'N/A'):.4f}")
-    print(f"Mean Pearson correlation: {metrics.get('eval_corr_mean_pearson', 'N/A'):.4f}")
-    
-    print("\nPer-dimension Results:")
-    for key in TARGET_KEYS:
-        spearman = metrics.get(f'eval_corr_{key}_spearman', 'N/A')
-        pearson = metrics.get(f'eval_corr_{key}_pearson', 'N/A')
-        mae = metrics.get(f'eval_mae_{key}', 'N/A')
-        if spearman != 'N/A':
-            print(f"{key}: Spearman={spearman:.4f}, Pearson={pearson:.4f}, MAE={mae:.4f}")
-    
-    print("\nRunning final correlation analysis...")
-    final_results = evaluate_correlations(trainer, eval_ds, wandb_enabled=(report_backends == ["wandb"]))
-    
-    print("\nSummary of Final Correlations:")
-    for key in TARGET_KEYS:
-        print(f"{key}: Spearman={final_results.get(f'spearman_{key}', 0):.4f}, Pearson={final_results.get(f'pearson_{key}', 0):.4f}")
+    # Print summary table for easier comparison
+    if has_separate_tests:
+        print("\n" + "="*80)
+        print("SUMMARY TABLE")
+        print("="*80)
+        print(f"{'Metric':<40} {'In-Dist':<20} {'OOD':<20}")
+        print("-"*80)
+        
+        if eval_ds is not None and 'in_dist_metrics' in locals():
+            in_dist_vals = in_dist_metrics
+        else:
+            in_dist_vals = {}
+        
+        if ood_ds is not None and 'ood_metrics' in locals():
+            ood_vals = ood_metrics
+        else:
+            ood_vals = {}
+        
+        # Overall metrics
+        metrics_to_show = [
+            ("Overall MAE", "mae_overall"),
+            ("Mean Spearman Correlation", "corr_mean_spearman"),
+            ("Mean Pearson Correlation", "corr_mean_pearson"),
+            ("Overall Ordering Accuracy", "ordering_acc_overall"),
+            ("Overall Diff Corr (Pearson)", "diff_corr_pearson_overall"),
+            ("Overall Diff Corr (Spearman)", "diff_corr_spearman_overall"),
+        ]
+        
+        for display_name, metric_key in metrics_to_show:
+            in_dist_val = in_dist_vals.get(f'in_dist_{metric_key}', 0.0)
+            ood_val = ood_vals.get(f'ood_{metric_key}', 0.0)
+            print(f"{display_name:<40} {in_dist_val:<20.4f} {ood_val:<20.4f}")
+        
+        print("="*80)
 
 
 if __name__ == "__main__":

@@ -23,8 +23,10 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Tuple
 import numpy as np
+import csv
+import os
 
 # Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent.parent))
@@ -48,12 +50,14 @@ def evaluate_summary_on_comments(
     question: str,
     summary: str,
     comments: List[Dict[str, Any]]
-) -> Dict[str, Any]:
+) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """
     Evaluate a single summary against all comments for a topic.
     
     Returns:
-        Dictionary with mean and std for each dimension
+        (stats, per_comment_records)
+        - stats: Dictionary with mean and std for each dimension
+        - per_comment_records: List of {comment_index, predictions...}
     """
     # Collect predictions for all comments
     all_predictions = {
@@ -62,10 +66,13 @@ def evaluate_summary_on_comments(
         "neutrality_balance": [],
         "policy_approval": []
     }
+    per_comment_records: List[Dict[str, Any]] = []
     
     # Evaluate summary against each comment
     for comment_data in comments:
         comment_text = comment_data.get("comment", "")
+        comment_index = comment_data.get("index")
+        is_minority = comment_data.get("is_minority")
         
         try:
             result = evaluator.evaluate_single(
@@ -78,6 +85,16 @@ def evaluate_summary_on_comments(
             for dim in all_predictions.keys():
                 if dim in result["predictions"]:
                     all_predictions[dim].append(result["predictions"][dim])
+            per_comment_records.append({
+                "comment_index": comment_index,
+                "is_minority": is_minority,
+                **{k: result["predictions"].get(k) for k in [
+                    "perspective_representation",
+                    "informativeness",
+                    "neutrality_balance",
+                    "policy_approval"
+                ]}
+            })
                     
         except Exception as e:
             print(f"  Warning: Failed to evaluate comment: {e}")
@@ -104,7 +121,7 @@ def evaluate_summary_on_comments(
                 "n_samples": 0
             }
     
-    return stats
+    return stats, per_comment_records
 
 
 def process_topic(
@@ -114,7 +131,8 @@ def process_topic(
     sample_size: int,
     summary_base_dir: Path,
     comments_dir: Path,
-    n_summaries: int = 3
+    n_summaries: int = 3,
+    per_comment_csv: Path = None
 ) -> Dict[str, Any]:
     """
     Process all summaries for a specific topic.
@@ -127,6 +145,7 @@ def process_topic(
         summary_base_dir: Base directory for summaries
         comments_dir: Directory containing comment datasets
         n_summaries: Number of summary samples to evaluate (default 3)
+        per_comment_csv: Optional path to append per-comment predictions CSV
     
     Returns:
         Dictionary with evaluation results for this topic
@@ -152,6 +171,63 @@ def process_topic(
     comments = all_comments[:sample_size] if sample_size < len(all_comments) else all_comments
     
     print(f"  Loaded {len(all_comments)} total comments, using first {len(comments)} for evaluation (sample_size={sample_size})")
+    
+    # Prepare CSV writer if needed
+    csv_writer = None
+    csv_file_handle = None
+    if per_comment_csv is not None:
+        csv_headers = [
+            "topic",
+            "model",
+            "sample_size",
+            "summary_index",
+            "summary_file",
+            "comment_index",
+            "is_minority",
+            "perspective_representation",
+            "informativeness",
+            "neutrality_balance",
+            "policy_approval",
+        ]
+        per_comment_csv.parent.mkdir(parents=True, exist_ok=True)
+        file_exists = per_comment_csv.exists()
+
+        # Auto-upgrade existing CSV missing 'is_minority'
+        if file_exists:
+            try:
+                with per_comment_csv.open("r", encoding="utf-8") as fh:
+                    first_line = fh.readline().strip()
+                has_is_minority = "is_minority" in [h.strip() for h in first_line.split(",")]
+                if not has_is_minority and first_line:
+                    tmp_path = per_comment_csv.with_suffix(per_comment_csv.suffix + ".upgraded")
+                    with per_comment_csv.open("r", encoding="utf-8") as rf, tmp_path.open("w", newline="", encoding="utf-8") as wf:
+                        reader = csv.DictReader(rf)
+                        writer = csv.DictWriter(wf, fieldnames=csv_headers)
+                        writer.writeheader()
+                        for row in reader:
+                            # Preserve known fields; fill missing with None
+                            writer.writerow({
+                                "topic": row.get("topic"),
+                                "model": row.get("model"),
+                                "sample_size": row.get("sample_size"),
+                                "summary_index": row.get("summary_index"),
+                                "summary_file": row.get("summary_file"),
+                                "comment_index": row.get("comment_index"),
+                                "is_minority": None,
+                                "perspective_representation": row.get("perspective_representation"),
+                                "informativeness": row.get("informativeness"),
+                                "neutrality_balance": row.get("neutrality_balance"),
+                                "policy_approval": row.get("policy_approval"),
+                            })
+                    os.replace(tmp_path, per_comment_csv)
+            except Exception:
+                # If upgrade fails, fall back to creating a new file next
+                file_exists = False
+
+        csv_file_handle = per_comment_csv.open("a", newline="", encoding="utf-8")
+        csv_writer = csv.DictWriter(csv_file_handle, fieldnames=csv_headers)
+        if not file_exists:
+            csv_writer.writeheader()
     
     # Process each summary sample
     for i in range(1, n_summaries + 1):
@@ -192,7 +268,7 @@ def process_topic(
         print(f"  Evaluating summary {i}/{n_summaries}...")
         
         # Evaluate this summary against the selected comments
-        stats = evaluate_summary_on_comments(
+        stats, per_comment = evaluate_summary_on_comments(
             evaluator=evaluator,
             question=question,
             summary=summary_text,
@@ -205,6 +281,25 @@ def process_topic(
             "summary_length": len(summary_text),
             "evaluation_stats": stats
         })
+
+        # Append per-comment rows to CSV if requested
+        if csv_writer is not None and per_comment:
+            for row in per_comment:
+                csv_writer.writerow({
+                    "topic": topic_name,
+                    "model": model_name,
+                    "sample_size": sample_size,
+                    "summary_index": i,
+                    "summary_file": str(summary_file),
+                    "comment_index": row.get("comment_index"),
+                    "is_minority": row.get("is_minority"),
+                    "perspective_representation": row.get("perspective_representation"),
+                    "informativeness": row.get("informativeness"),
+                    "neutrality_balance": row.get("neutrality_balance"),
+                    "policy_approval": row.get("policy_approval"),
+                })
+    if csv_file_handle is not None:
+        csv_file_handle.close()
     
     # Calculate overall statistics across all summaries
     if results["summaries"]:
@@ -277,12 +372,15 @@ def main():
                         help="Output file path for results")
     parser.add_argument("--device", type=str, default="cuda",
                         help="Device to run model on (cuda or cpu)")
+    parser.add_argument("--per-comment-csv", type=str, default="",
+                        help="Optional CSV file to append per-comment predictions (with comment_index)")
     
     args = parser.parse_args()
     
     # Convert paths
     summary_dir = Path(args.summary_dir)
     comments_dir = Path(args.comments_dir)
+    per_comment_csv = Path(args.per_comment_csv) if args.per_comment_csv else None
     
     # Initialize evaluator
     print(f"Loading DeBERTa model from: {args.model_path}")
@@ -334,7 +432,8 @@ def main():
                         sample_size=sample_size,
                         summary_base_dir=summary_dir,
                         comments_dir=comments_dir,
-                        n_summaries=args.n_summaries
+                        n_summaries=args.n_summaries,
+                        per_comment_csv=per_comment_csv
                     )
                     
                     all_results["results"].append(result)
@@ -358,6 +457,8 @@ def main():
         json.dump(all_results, f, indent=2, ensure_ascii=False)
     
     print(f"\nResults saved to: {output_path}")
+    if per_comment_csv:
+        print(f"Per-comment CSV appended to: {per_comment_csv}")
     
     # Print summary statistics
     print("\n" + "="*60)

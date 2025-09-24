@@ -11,10 +11,12 @@ DEFAULT_EVAL_MODEL_PATH="$PROJECT_DIR/checkpoints/deberta_regression_base_final_
 
 # Available models and sample sizes
 
-AVAILABLE_MODELS=("gpt-5-mini" "gpt-5" "web-rev-claude-sonnet-4-20250514" "gemini-2.5-flash" "deepseek-reasoner" "grok-4-latest" "TA/openai/gpt-oss-120b" "TA/openai/gpt-oss-20b" "qwen3-0.6b" "qwen3-1.7b" "qwen3-4b" "qwen3-8b" "qwen3-14b" "qwen3-30b-a3b" "qwen3-235b-a22b" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro" "deepseek-reasoner")
+AVAILABLE_MODELS=("gpt-5" "web-rev-claude-sonnet-4-20250514" "gemini-2.5-flash" "deepseek-reasoner" "grok-4-latest" "TA/openai/gpt-oss-120b" "TA/openai/gpt-oss-20b" "qwen3-4b" "qwen3-8b" "qwen3-14b" "qwen3-30b-a3b" "qwen3-235b-a22b" "qwen3-32b" "web-rev-claude-opus-4-20250514" "deepseek-chat" "gemini-2.5-pro" "deepseek-reasoner" "gpt-4o-mini")
 
+# AVAILABLE_MODELS=("gpt-5-mini" )
+# AVAILABLE_MODELS=("gpt-4o-mini")
 
-AVAILABLE_SIZES=(10 20 30 50 70 90 120 160 200 240 300)
+AVAILABLE_SIZES=(500 1000)
 
 # Parse command line arguments
 EVAL_MODEL_PATH="$DEFAULT_EVAL_MODEL_PATH"
@@ -82,7 +84,7 @@ if [[ ! -d "$EVAL_MODEL_PATH" ]]; then
 fi
 
 # Create necessary directories
-BASE_OUTPUT_DIR="$PROJECT_DIR/results/regression_evaluation"
+BASE_OUTPUT_DIR="$PROJECT_DIR/results/regression_evaluation_scaled"
 LOG_DIR="$PROJECT_DIR/logs/regression_evaluation"
 mkdir -p "$LOG_DIR"
 
@@ -130,7 +132,7 @@ for MODEL_NAME in "${SELECTED_MODELS[@]}"; do
 cd $PROJECT_DIR
 
 echo "=========================================="
-echo "Starting regression evaluation at \$(date)"
+echo "Starting regression evaluation at \\$(date)"
 echo "Model: $MODEL_NAME"
 echo "Sample Size: $SAMPLE_SIZE"
 echo "Eval Model: $EVAL_MODEL_PATH"
@@ -140,19 +142,21 @@ echo "=========================================="
 source .venv/bin/activate
 
 # Run batch evaluation script
-python scripts/batch_regression_evaluate.py \\
-    --model-path "$EVAL_MODEL_PATH" \\
-    --summary-dir "$PROJECT_DIR/results/summary_model_for_evaluation" \\
-    --comments-dir "$PROJECT_DIR/datasets/annotation_V0_V1_dataset" \\
-    --model-names "$MODEL_NAME" \\
-    --sample-sizes $SAMPLE_SIZE \\
-    --n-summaries 3 \\
-    --output "${OUTPUT_DIR}/evaluation_results.json" \\
+python scripts/batch_regression_evaluate.py \
+    --model-path "$EVAL_MODEL_PATH" \
+    --summary-dir "$PROJECT_DIR/results/summary_model_for_evaluation_scaled" \
+    --comments-dir "$PROJECT_DIR/datasets/minority" \
+    --model-names "$MODEL_NAME" \
+    --sample-sizes $SAMPLE_SIZE \
+    --n-summaries 3 \
+    --output "${OUTPUT_DIR}/evaluation_results.json" \
+    --per-comment-csv "${OUTPUT_DIR}/per_comment_scores.csv" \
     --device cuda
 
 echo "=========================================="
-echo "Evaluation completed at \$(date)"
+echo "Evaluation completed at \\$(date)"
 echo "Results saved to: ${OUTPUT_DIR}/evaluation_results.json"
+echo "Per-comment scores saved to: ${OUTPUT_DIR}/per_comment_scores.csv"
 echo "=========================================="
 EOF
         
@@ -182,6 +186,7 @@ echo "Results will be saved to:"
 for MODEL_NAME in "${SELECTED_MODELS[@]}"; do
     for SAMPLE_SIZE in "${SELECTED_SIZES[@]}"; do
         echo "  ${BASE_OUTPUT_DIR}/${MODEL_NAME}/${SAMPLE_SIZE}/evaluation_results.json"
+        echo "  ${BASE_OUTPUT_DIR}/${MODEL_NAME}/${SAMPLE_SIZE}/per_comment_scores.csv"
     done
 done
 echo "=========================================="
