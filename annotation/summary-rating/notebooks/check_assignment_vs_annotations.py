@@ -57,12 +57,12 @@ def main():
     parser = argparse.ArgumentParser(description="Check assigned vs annotated pairs")
     parser.add_argument(
         "--assignment",
-        default="/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/task_assignment.json",
+        default="/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_ablation/task_assignment.json",
         help="Path to task_assignment.json",
     )
     parser.add_argument(
         "--annotations",
-        default="/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv",
+        default="/home/ec2-user/LLMs-Scalable-Deliberation/annotation/summary-rating/annotation_output/full_ablation/annotated_instances.csv",
         help="Path to annotated_instances.csv",
     )
     args = parser.parse_args()

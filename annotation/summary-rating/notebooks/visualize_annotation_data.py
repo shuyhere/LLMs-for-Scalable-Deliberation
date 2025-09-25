@@ -143,7 +143,7 @@ def _short_comparison_label(option: str) -> str:
 
 def load_data():
     """Load annotation data (prefer full_augment, fallback to full if not exists)"""
-    path_augment = 'annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
+    path_augment = 'annotation/summary-rating/annotation_output/full_ablation/annotated_instances.csv'
     path_full = 'annotation/summary-rating/annotation_output/full/annotated_instances.csv'
     try:
         df = pd.read_csv(path_augment)
