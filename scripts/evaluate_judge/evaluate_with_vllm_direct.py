@@ -196,19 +196,84 @@ class DirectVLLMEvaluator:
         return results
 
 
-def load_test_data(file_path: str) -> List[Dict[str, Any]]:
-    """Load test data from JSONL file"""
-    data = []
-    with open(file_path, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.strip()
-            if line:
+def _build_instruction_from_item(item: Dict[str, Any]) -> Optional[str]:
+    """Construct an instruction from domain fields if Alpaca fields are absent."""
+    q = item.get('question')
+    c = item.get('comment')
+    s = item.get('summary')
+    if not (q and c and s):
+        return None
+    # Ask the model to output a strict JSON with the four dimensions
+    return (
+        "You are a judge. Read the question, the annotator's opinion, and the summary. "
+        "Rate the summary on four dimensions with integer scores in [1,5].\n\n"
+        f"Question: {q}\n"
+        f"Annotator opinion: {c}\n"
+        f"Summary: {s}\n\n"
+        "Return ONLY a JSON object with exactly these keys: "
+        "perspective_representation, informativeness, neutrality_balance, policy_approval. "
+        "Example: {\"perspective_representation\": 3, \"informativeness\": 4, \"neutrality_balance\": 3, \"policy_approval\": 2}"
+    )
+
+
+def _extract_ground_truth_from_item(item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    # Prefer standard fields
+    for key in ('output', 'labels', 'scores', 'rating_scores', 'targets'):
+        if key in item:
+            val = item[key]
+            if isinstance(val, str):
                 try:
-                    data.append(json.loads(line))
-                except json.JSONDecodeError as e:
-                    print(f"Warning: Failed to parse line: {line[:100]}...")
+                    j = json.loads(val)
+                    if isinstance(j, dict):
+                        return j
+                except Exception:
+                    pass
+            if isinstance(val, dict):
+                return val
+    return None
+
+
+def load_test_data(file_path: str) -> List[Dict[str, Any]]:
+    """Load test data from JSONL or JSON and ensure each item has instruction/output."""
+    path = Path(file_path)
+    raw_items: List[Dict[str, Any]] = []
+
+    # Try JSONL first
+    try:
+        with path.open('r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
                     continue
-    return data
+                raw_items.append(json.loads(line))
+    except Exception:
+        # Fallback: try parsing as a single JSON array or object
+        try:
+            obj = json.loads(path.read_text(encoding='utf-8'))
+            if isinstance(obj, list):
+                raw_items = [x for x in obj if isinstance(x, dict)]
+            elif isinstance(obj, dict):
+                raw_items = [obj]
+            else:
+                raw_items = []
+        except Exception:
+            print(f"Error: cannot parse test file: {file_path}")
+            return []
+
+    norm_items: List[Dict[str, Any]] = []
+    for it in raw_items:
+        # Prefer explicit prompt/instruction from the dataset
+        instr = it.get('instruction') or it.get('prompt')
+        if not instr:
+            instr = _build_instruction_from_item(it)
+        gt = _extract_ground_truth_from_item(it)
+        norm_items.append({
+            **it,
+            'instruction': instr or '',
+            'output': json.dumps(gt, ensure_ascii=False) if isinstance(gt, dict) else it.get('output', '')
+        })
+
+    return norm_items
 
 
 def calculate_metrics(results: List[Dict[str, Any]]) -> Dict[str, Any]:

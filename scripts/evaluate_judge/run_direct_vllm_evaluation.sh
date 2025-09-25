@@ -14,7 +14,7 @@ export CUDA_LAUNCH_BLOCKING=1
 
 # Model and data paths
 MODEL_PATH="/ibex/project/c2328/sft_tools/LLaMA-Factory/saves/qwen3_4b/full/deliberation_sft_rating"
-TEST_PATH="/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/sft_annotation_format_full_augment/rating_alpaca_min_split/test.jsonl"
+TEST_PATH="/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/ood_test/rating_supervised.jsonl"
 OUTPUT_FILE="/ibex/project/c2328/LLMs-Scalable-Deliberation/evaluation_results_direct.json"
 
 # Create output directory if it doesn't exist
