@@ -120,6 +120,27 @@ def _comparison_rank(option_text: str) -> int:
         return 4
     return 999
 
+def _short_comparison_label(option: str) -> str:
+    """Shorten comparison option labels for x-axis display."""
+    if option is None:
+        return ""
+    text = str(option).lower()
+    
+    # Common comparison patterns
+    if "a is much" in text:
+        return "A Much Better"
+    if "a is slightly" in text:
+        return "A Slightly Better"
+    if "both are about the same" in text or "both about the same" in text:
+        return "About the Same"
+    if "b is slightly" in text:
+        return "B Slightly Better"
+    if "b is much" in text:
+        return "B Much Better"
+    
+    # Fallback: truncate long text
+    return (str(option)[:15] + "...") if len(str(option)) > 15 else str(option)
+
 def load_data():
     """Load annotation data (prefer full_augment, fallback to full if not exists)"""
     path_augment = 'annotation/summary-rating/annotation_output/full_augment/annotated_instances.csv'
@@ -196,11 +217,12 @@ def plot_binary_distributions(df, binary_cols):
                          color=UNIFIED_COLORS[:len(ordered_values)], alpha=0.7, edgecolor='black')
             
             ax.set_xticks(range(len(ordered_options)))
-            ax.set_xticklabels(ordered_options, rotation=45, ha='right')
-            ax.set_ylabel('Count')
+            short_labels = [_short_comparison_label(x) for x in ordered_options]
+            ax.set_xticklabels(short_labels, rotation=45, ha='right', fontsize=14, fontweight='bold')
+            ax.set_ylabel('Count', fontsize=16, fontweight='bold')
             
             # Use standardized dimension title
-            ax.set_title(f'Comparison: {dimension_titles[idx]}', fontsize=11, pad=10)
+            ax.set_title(f'{dimension_titles[idx]}', fontsize=14, pad=10, fontweight='bold')
             
             # Display values on bars
             for bar in bars:
@@ -210,7 +232,7 @@ def plot_binary_distributions(df, binary_cols):
             
             ax.grid(True, alpha=0.3)
         else:
-            ax.set_title(f'No data: {dimension_titles[idx]}', fontsize=11)
+            ax.set_title(f'No data: {dimension_titles[idx]}', fontsize=14, fontweight='bold')
     
     plt.tight_layout()
     plt.savefig('annotation/summary-rating/notebooks/binary_distributions.pdf', 
@@ -253,12 +275,11 @@ def plot_5scale_distributions(df, scale_cols):
             
             ax.set_xticks(range(len(ordered_options)))
             short_labels = [ _short_option_label(x) for x in ordered_options ]
-            ax.set_xticklabels(short_labels, rotation=0)
-            ax.set_ylabel('Count')
-            ax.set_xlabel('Scale Rating')
+            ax.set_xticklabels(short_labels, rotation=45, ha='right', fontsize=14, fontweight='bold')
+            ax.set_ylabel('Count', fontsize=16, fontweight='bold')
             
             # Use standardized dimension title
-            ax.set_title(f'5-Scale: {dimension_titles[idx]}', fontsize=11, pad=10)
+            ax.set_title(f'{dimension_titles[idx]}', fontsize=14, pad=10, fontweight='bold')
             
             # Display values on bars
             for bar in bars:
@@ -268,7 +289,7 @@ def plot_5scale_distributions(df, scale_cols):
             
             ax.grid(True, alpha=0.3)
         else:
-            ax.set_title(f'No data: {dimension_titles[idx]}', fontsize=11)
+            ax.set_title(f'No data: {dimension_titles[idx]}', fontsize=14, fontweight='bold')
     
     plt.tight_layout()
     plt.savefig('annotation/summary-rating/notebooks/5scale_distributions.pdf', 
