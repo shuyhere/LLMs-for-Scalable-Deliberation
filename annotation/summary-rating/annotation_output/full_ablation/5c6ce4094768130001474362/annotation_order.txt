@@ -1,0 +1,5 @@
+Summary-Rating-intro.html
+triplet_64_question
+triplet_64_rating
+triplet_64_comparison
+Summary-Rating-end.html
