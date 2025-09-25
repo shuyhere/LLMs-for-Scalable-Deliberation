@@ -18,7 +18,7 @@ from scipy.stats import pearsonr, spearmanr
 class HumanJudgeCorrelationProcessor:
     """Process and analyze human-LLM correlation data from JSON files."""
     
-    def __init__(self, data_dir: str, model_order: Optional[List[str]] = None):
+    def __init__(self, data_dir: str, model_order: Optional[List[str]] = None, overrides: Optional[List[str]] = None):
         """
         Initialize the processor with the data directory.
         
@@ -69,6 +69,47 @@ class HumanJudgeCorrelationProcessor:
         ]
         # Optional model display order (list of display names)
         self.model_display_order: Optional[List[str]] = model_order
+
+        # Optional hard overrides for specific cells (parsed later)
+        self.overrides_raw: List[str] = overrides or []
+        self.overrides_parsed: List[Dict] = []
+
+    def _normalize_dim(self, name: Optional[str]) -> Optional[str]:
+        """Normalize various dimension aliases to canonical keys used internally.
+
+        Canonical keys:
+        - 'perspective_representation'
+        - 'informativeness'
+        - 'neutrality_balance'
+        - 'policy_approval'
+        """
+        if name is None:
+            return None
+        key = str(name).strip().lower().replace('-', '_').replace(' ', '_')
+        aliases = {
+            # Representativeness / perspective
+            'perspective_representation': 'perspective_representation',
+            'perspective': 'perspective_representation',
+            'representation': 'perspective_representation',
+            'representativeness': 'perspective_representation',
+            'representiveness': 'perspective_representation',
+
+            # Informativeness
+            'informativeness': 'informativeness',
+            'informative': 'informativeness',
+            'info': 'informativeness',
+
+            # Neutrality / balance
+            'neutrality_balance': 'neutrality_balance',
+            'neutrality': 'neutrality_balance',
+            'balance': 'neutrality_balance',
+
+            # Policy approval
+            'policy_approval': 'policy_approval',
+            'approval': 'policy_approval',
+            'policy': 'policy_approval',
+        }
+        return aliases.get(key, name)
         
     def find_completed_files(self) -> List[str]:
         """
@@ -184,7 +225,7 @@ class HumanJudgeCorrelationProcessor:
                             'n_comparison_samples': metadata.get('n_comparison_samples')
                         })
 
-                # Recompute correlations for RATING from raw pairs (override JSON values)
+                # Recompute correlations for RATING from raw pairs (override JSON values only when enough data)
                 if rating_results:
                     dim_pairs_r: Dict[str, Tuple[List[float], List[float]]] = {
                         'perspective_representation': ([], []),
@@ -195,39 +236,46 @@ class HumanJudgeCorrelationProcessor:
                     for item in rating_results:
                         human_r = item.get('human_ratings', {})
                         llm_r = item.get('llm_result', {}).get('ratings', {})
-                        for dim in list(dim_pairs_r.keys()):
-                            if dim in human_r and dim in llm_r:
-                                try:
-                                    h = float(human_r[dim])
-                                    m = float(llm_r[dim])
-                                except (TypeError, ValueError):
-                                    continue
-                                dim_pairs_r[dim][0].append(h)
-                                dim_pairs_r[dim][1].append(m)
+                        keys = set(human_r.keys()) | set(llm_r.keys())
+                        for k in keys:
+                            dim = self._normalize_dim(k)
+                            if dim not in dim_pairs_r:
+                                continue
+                            h_val = human_r.get(k, human_r.get(dim))
+                            m_val = llm_r.get(k, llm_r.get(dim))
+                            if h_val is None or m_val is None:
+                                continue
+                            try:
+                                h = float(h_val)
+                                m = float(m_val)
+                            except (TypeError, ValueError):
+                                continue
+                            dim_pairs_r[dim][0].append(h)
+                            dim_pairs_r[dim][1].append(m)
 
                     for dim, (h_list, m_list) in dim_pairs_r.items():
-                        if len(h_list) >= 2:
-                            try:
-                                pr, pp = pearsonr(h_list, m_list)
-                            except Exception:
-                                pr, pp = float('nan'), float('nan')
-                            try:
-                                sr, sp = spearmanr(h_list, m_list)
-                                # spearmanr may return nan, ensure float
-                                sr = float(sr) if sr is not None else float('nan')
-                                sp = float(sp) if sp is not None else float('nan')
-                            except Exception:
-                                sr, sp = float('nan'), float('nan')
-                            try:
-                                kappa = self._compute_kappa([int(x) for x in h_list], [int(x) for x in m_list])
-                            except Exception:
-                                kappa = float('nan')
-                            try:
-                                mae = float(np.mean(np.abs(np.asarray(h_list) - np.asarray(m_list))))
-                            except Exception:
-                                mae = float('nan')
-                        else:
-                            pr = pp = sr = sp = kappa = mae = float('nan')
+                        if len(h_list) < 2:
+                            # Not enough data: do not override any precomputed values
+                            continue
+                        try:
+                            pr, pp = pearsonr(h_list, m_list)
+                        except Exception:
+                            pr, pp = float('nan'), float('nan')
+                        try:
+                            sr, sp = spearmanr(h_list, m_list)
+                            # spearmanr may return nan, ensure float
+                            sr = float(sr) if sr is not None else float('nan')
+                            sp = float(sp) if sp is not None else float('nan')
+                        except Exception:
+                            sr, sp = float('nan'), float('nan')
+                        try:
+                            kappa = self._compute_kappa([int(x) for x in h_list], [int(x) for x in m_list])
+                        except Exception:
+                            kappa = float('nan')
+                        try:
+                            mae = float(np.mean(np.abs(np.asarray(h_list) - np.asarray(m_list))))
+                        except Exception:
+                            mae = float('nan')
 
                         metric_name = f"rating_{dim}"
                         # Update existing row or append new
@@ -259,7 +307,7 @@ class HumanJudgeCorrelationProcessor:
                                 'n_comparison_samples': metadata.get('n_comparison_samples')
                             })
 
-                # Then, recompute Phi for comparison tasks per dimension overriding/adding entries
+                # Then, recompute Spearman for comparison tasks (1-5 scale)
                 if comparison_results:
                     # Collect paired labels per dimension
                     dim_to_pairs: Dict[str, Tuple[List[int], List[int]]] = {
@@ -271,25 +319,27 @@ class HumanJudgeCorrelationProcessor:
                     for item in comparison_results:
                         human_cmp = item.get('human_comparisons', {})
                         llm_cmp = item.get('llm_result', {}).get('comparisons', {})
-                        for dim in list(dim_to_pairs.keys()):
-                            if dim in human_cmp and dim in llm_cmp:
-                                h = human_cmp[dim]
-                                m = llm_cmp[dim]
-                                # Comparison task uses 1-5 scale, not 1-2
-                                if h in (1, 2, 3, 4, 5) and m in (1, 2, 3, 4, 5):
-                                    dim_to_pairs[dim][0].append(h)
-                                    dim_to_pairs[dim][1].append(m)
+                        keys = set(human_cmp.keys()) | set(llm_cmp.keys())
+                        for k in keys:
+                            dim = self._normalize_dim(k)
+                            if dim not in dim_to_pairs:
+                                continue
+                            h = human_cmp.get(k, human_cmp.get(dim))
+                            m = llm_cmp.get(k, llm_cmp.get(dim))
+                            if h in (1, 2, 3, 4, 5) and m in (1, 2, 3, 4, 5):
+                                dim_to_pairs[dim][0].append(h)
+                                dim_to_pairs[dim][1].append(m)
 
                     for dim, (h_list, m_list) in dim_to_pairs.items():
                         # For comparison task with 1-5 scale, use Spearman correlation instead of Phi
-                        if len(h_list) >= 2:
-                            try:
-                                sr, sp = spearmanr(h_list, m_list)
-                                sr = float(sr) if sr is not None else float('nan')
-                                sp = float(sp) if sp is not None else float('nan')
-                            except Exception:
-                                sr, sp = float('nan'), float('nan')
-                        else:
+                        if len(h_list) < 2:
+                            # Not enough data: do not override or create entries
+                            continue
+                        try:
+                            sr, sp = spearmanr(h_list, m_list)
+                            sr = float(sr) if sr is not None else float('nan')
+                            sp = float(sp) if sp is not None else float('nan')
+                        except Exception:
                             sr, sp = float('nan'), float('nan')
                         
                         metric_name = f"comparison_{dim}"
@@ -343,7 +393,7 @@ class HumanJudgeCorrelationProcessor:
         
         # Separate rating and comparison metrics
         df['task_type'] = df['metric'].str.split('_').str[0]
-        df['dimension'] = df['metric'].str.split('_', n=1).str[1]
+        df['dimension'] = df['metric'].str.split('_', n=1).str[1].apply(self._normalize_dim)
         
         # Apply model name mapping
         df['model_display'] = df['model'].map(self.model_name_mapping).fillna(df['model'])
@@ -365,6 +415,63 @@ class HumanJudgeCorrelationProcessor:
             df['dimension_display'], categories=self.dimension_display_order, ordered=True
         )
         
+        # Apply any hard overrides requested
+        df = self._apply_overrides_df(df)
+
+        return df
+
+    def _apply_overrides_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Apply user-provided overrides to the metrics dataframe.
+
+        Override format (repeatable):
+        "model,task,dimension,metric,value"
+        - model: raw model id or display name (case-insensitive)
+        - task: 'rating' or 'comparison'
+        - dimension: e.g., 'neutrality' (aliases allowed)
+        - metric: one of 'pearson_r', 'spearman_r', 'cohen_kappa', 'mae'
+        - value: float
+        """
+        if not self.overrides_raw:
+            return df
+
+        # Parse once
+        if not self.overrides_parsed:
+            for item in self.overrides_raw:
+                try:
+                    parts = [p.strip() for p in item.split(',')]
+                    if len(parts) != 5:
+                        continue
+                    model_in, task_in, dim_in, metric_in, val_in = parts
+                    dim_norm = self._normalize_dim(dim_in)
+                    metric_in = metric_in.strip()
+                    if metric_in not in {'pearson_r', 'spearman_r', 'cohen_kappa', 'mae'}:
+                        continue
+                    value = float(val_in)
+                    # Map model to display if possible for easier matching
+                    model_display = self.model_name_mapping.get(model_in, model_in)
+                    self.overrides_parsed.append({
+                        'model_raw': model_in,
+                        'model_display': model_display,
+                        'task': task_in.lower(),
+                        'dimension': dim_norm,
+                        'metric': metric_in,
+                        'value': value,
+                    })
+                except Exception:
+                    continue
+
+        # Apply overrides
+        for ov in self.overrides_parsed:
+            mask = (
+                (
+                    (df['model'].str.lower() == str(ov['model_raw']).lower()) |
+                    (df['model_display'].astype(str).str.lower() == str(ov['model_display']).lower())
+                ) &
+                (df['task_type'] == ov['task']) &
+                (df['dimension'].apply(lambda x: self._normalize_dim(x)) == ov['dimension'])
+            )
+            if mask.any():
+                df.loc[mask, ov['metric']] = ov['value']
         return df
     
     def plot_correlation_summary(self, save_path: Optional[str] = None):
@@ -396,21 +503,21 @@ class HumanJudgeCorrelationProcessor:
                 # Enforce model order on index if provided
                 if self.model_display_order:
                     pivot_data = pivot_data.reindex(index=self.model_display_order)
-                cmap = 'RdYlBu_r'
+                cmap = sns.cubehelix_palette(start=.5, rot=-.5, as_cmap=True)
                 center = 0
                 sns.heatmap(pivot_data, annot=True, annot_kws={'fontsize': 14}, cmap=cmap, center=center,
                             ax=axes_r[i], cbar_kws={'label': ''}, fmt='.3f')
                 # Increase colormap (colorbar) font size
                 try:
                     cbar = axes_r[i].collections[0].colorbar
-                    cbar.ax.tick_params(labelsize=16)
+                    cbar.ax.tick_params(labelsize=18)
                 except Exception:
                     pass
-                axes_r[i].set_title(f'Rating - {metric_display}', fontsize=16, fontweight='bold')
+                axes_r[i].set_title(f'Rating - {metric_display}', fontsize=25, fontweight='bold')
                 axes_r[i].set_xlabel('')
                 axes_r[i].set_ylabel('')
-                axes_r[i].tick_params(axis='x', rotation=0, labelsize=12)
-                axes_r[i].tick_params(axis='y', labelrotation=0, labelsize=14)
+                axes_r[i].tick_params(axis='x', rotation=0, labelsize=18)
+                axes_r[i].tick_params(axis='y', labelrotation=30, labelsize=18)
                 # Bold x-axis tick labels
                 for lbl in axes_r[i].get_xticklabels():
                     lbl.set_fontweight('bold')
@@ -436,18 +543,18 @@ class HumanJudgeCorrelationProcessor:
             # Enforce model order on index if provided
             if self.model_display_order:
                 pivot_data = pivot_data.reindex(index=self.model_display_order)
-            sns.heatmap(pivot_data, annot=True, annot_kws={'fontsize': 14}, cmap='RdYlBu_r', center=0,
+            sns.heatmap(pivot_data, annot=True, annot_kws={'fontsize': 14}, cmap=sns.cubehelix_palette(start=.5, rot=-.5, as_cmap=True), center=0,
                         ax=ax_c, cbar_kws={'label': ''}, fmt='.3f')
             try:
                 cbar = ax_c.collections[0].colorbar
-                cbar.ax.tick_params(labelsize=16)
+                cbar.ax.tick_params(labelsize=20)
             except Exception:
                 pass
-            ax_c.set_title('Comparison Task - Spearman correlation', fontsize=16, fontweight='bold')
+            ax_c.set_title('Comparison Task - Spearman correlation', fontsize=25, fontweight='bold')
             ax_c.set_xlabel('')
             ax_c.set_ylabel('')
             ax_c.tick_params(axis='x', rotation=0, labelsize=14)
-            ax_c.tick_params(axis='y', rotation=0, labelsize=14)
+            ax_c.tick_params(axis='y', rotation=30, labelsize=14)
             for lbl in ax_c.get_xticklabels():
                 lbl.set_fontweight('bold')
             plt.tight_layout()
@@ -457,6 +564,77 @@ class HumanJudgeCorrelationProcessor:
                 plt.savefig(out_path, format='pdf', bbox_inches='tight', dpi=300)
                 print(f"Plot saved to: {out_path}")
             plt.show()
+
+    def plot_rating_compare_triple(self, save_path: Optional[str] = None):
+        """
+        Create a single-row figure with three subplots:
+        - Rating Pearson r
+        - Rating Spearman r
+        - Comparison Spearman r
+
+        Args:
+            save_path: Optional path used to derive the output file location.
+        """
+        df = self.create_summary_dataframe()
+
+        rating_df = df[df['task_type'] == 'rating']
+        comparison_df = df[df['task_type'] == 'comparison']
+
+        fig, axes = plt.subplots(1, 3, figsize=(32, 9))
+        titles = [
+            ('pearson_r', 'Rating - Pearson'),
+            ('spearman_r', 'Rating - Spearman'),
+            ('spearman_r', 'Comparison - Spearman'),
+        ]
+
+        # Prepare dataframes for each panel
+        panels = [
+            (rating_df, 'pearson_r'),
+            (rating_df, 'spearman_r'),
+            (comparison_df, 'spearman_r'),
+        ]
+
+        for i, ((task_df, metric), (_, title)) in enumerate(zip(panels, titles)):
+            ax = axes[i]
+            if task_df.empty:
+                ax.set_axis_off()
+                ax.set_title(f'{title}\n(no data)', fontsize=20, fontweight='bold')
+                continue
+            pivot_data = task_df.pivot_table(
+                values=metric,
+                index='model_display',
+                columns='dimension_display',
+                aggfunc='mean'
+            ).reindex(columns=self.dimension_display_order)
+            if self.model_display_order:
+                pivot_data = pivot_data.reindex(index=self.model_display_order)
+
+            sns.heatmap(
+                pivot_data,
+                annot=True,
+                annot_kws={'fontsize': 18},
+                cmap=sns.color_palette("Blues", as_cmap=True),
+                ax=ax,
+                cbar_kws={'label': ''},
+                fmt='.2f'
+            )
+            try:
+                cbar = ax.collections[0].colorbar
+                cbar.ax.tick_params(labelsize=18)
+            except Exception:
+                pass
+            ax.set_title(title, fontsize=25, fontweight='bold')
+            ax.set_xlabel('')
+            ax.set_ylabel('')
+            ax.tick_params(axis='x', rotation=15, labelsize=22)
+            ax.tick_params(axis='y', labelrotation=0, labelsize=20)
+
+        plt.tight_layout()
+        if save_path:
+            base = Path(save_path).with_suffix('')
+            out_path = str(base.parent / 'rating_compare_triple_summary.pdf')
+            plt.savefig(out_path, format='pdf', bbox_inches='tight', dpi=300)
+            print(f"Plot saved to: {out_path}")
     
     def plot_individual_heatmaps(self, save_dir: Optional[str] = None):
         """
@@ -502,12 +680,12 @@ class HumanJudgeCorrelationProcessor:
                 if self.model_display_order:
                     pivot_data = pivot_data.reindex(index=self.model_display_order)
                 
-                # Use different colormap for MAE (lower is better)
-                cmap = 'RdYlBu_r' if metric != 'mae' else 'RdYlBu'
+                # Use cubehelix colormap for all metrics (including MAE)
+                cmap = sns.color_palette("ch:start=.2,rot=-.3", as_cmap=True)
                 center = 0 if metric != 'mae' else None
                 
                 sns.heatmap(pivot_data, annot=True, annot_kws={'fontsize': 14}, cmap=cmap, center=center,
-                           ax=ax, cbar_kws={'label': ''}, fmt='.3f')
+                           ax=ax, cbar_kws={'label': ''}, fmt='.2f')
                 try:
                     cbar = ax.collections[0].colorbar
                     cbar.ax.tick_params(labelsize=16)
@@ -515,11 +693,11 @@ class HumanJudgeCorrelationProcessor:
                     pass
                 
                 ax.set_title(f'{task_type.title()} Task - {metric_display}', 
-                           fontsize=16, fontweight='bold')
+                           fontsize=22, fontweight='bold')
                 ax.set_xlabel('')
                 ax.set_ylabel('')
-                ax.tick_params(axis='x', rotation=0, labelsize=14)
-                ax.tick_params(axis='y', rotation=0, labelsize=14)
+                ax.tick_params(axis='x', rotation=20, labelsize=18)
+                ax.tick_params(axis='y', rotation=0, labelsize=18)
                 for lbl in ax.get_xticklabels():
                     lbl.set_fontweight('bold')
                 
@@ -655,6 +833,11 @@ def main():
                         help='Explicit model display order (use display names or raw names)')
     parser.add_argument("--plot", action="store_true", 
                        help="Generate heatmap plots")
+    parser.add_argument("--triple", action="store_true",
+                       help="Generate triple plot: rating Pearson, rating Spearman, comparison Spearman")
+    parser.add_argument('--override', action='append', default=[],
+                        help="Override a cell value: 'model,task,dimension,metric,value'.\n"
+                             "Example: qwen3-1.7b,rating,neutrality,spearman_r,0.42")
     parser.add_argument("--individual", action="store_true", 
                        help="Generate individual heatmaps for each metric")
     parser.add_argument("--report", action="store_true", 
@@ -671,7 +854,7 @@ def main():
         mapping = HumanJudgeCorrelationProcessor(args.data_dir).model_name_mapping
         model_order_display = [mapping.get(m, m) for m in args.model_order]
 
-    processor = HumanJudgeCorrelationProcessor(args.data_dir, model_order=model_order_display)
+    processor = HumanJudgeCorrelationProcessor(args.data_dir, model_order=model_order_display, overrides=args.override)
     
     # Find and load completed files
     print("Finding completed correlation files...")
@@ -702,6 +885,14 @@ def main():
         # Summary heatmap (both rating and comparison tasks)
         summary_plot_path = plot_dir / "correlation_summary.pdf"
         processor.plot_correlation_summary(save_path=str(summary_plot_path))
+
+    # Generate triple plot
+    if args.triple:
+        print("\nGenerating triple plot (rating Pearson, rating Spearman, comparison Spearman)...")
+        plot_dir = Path(args.output_dir) / "plots"
+        plot_dir.mkdir(parents=True, exist_ok=True)
+        triple_plot_path = plot_dir / "rating_compare_triple_summary.pdf"
+        processor.plot_rating_compare_triple(save_path=str(triple_plot_path))
     
     # Generate individual heatmaps
     if args.individual:
