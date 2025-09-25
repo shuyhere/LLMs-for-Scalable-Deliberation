@@ -1,0 +1,1911 @@
+{
+  "assigned": {
+    "Summary-Rating-intro.html": 0,
+    "Summary-Rating-end.html": 0,
+    "triplet_0_question": [
+      "611bef869f91f800ad3b193e"
+    ],
+    "triplet_0_rating": [
+      "611bef869f91f800ad3b193e"
+    ],
+    "triplet_0_comparison": [
+      "611bef869f91f800ad3b193e"
+    ],
+    "triplet_1_question": [
+      "63d228d74dc841d4559ad87d"
+    ],
+    "triplet_1_rating": [
+      "63d228d74dc841d4559ad87d"
+    ],
+    "triplet_1_comparison": [
+      "63d228d74dc841d4559ad87d"
+    ],
+    "triplet_2_question": [
+      "64b1fcf39321437ac4ebaa8f"
+    ],
+    "triplet_2_rating": [
+      "64b1fcf39321437ac4ebaa8f"
+    ],
+    "triplet_2_comparison": [
+      "64b1fcf39321437ac4ebaa8f"
+    ],
+    "triplet_3_question": [
+      "5f09c6321e9e02256121e4d6"
+    ],
+    "triplet_3_rating": [
+      "5f09c6321e9e02256121e4d6"
+    ],
+    "triplet_3_comparison": [
+      "5f09c6321e9e02256121e4d6"
+    ],
+    "triplet_4_question": [
+      "5c3164e528d82100018160c8"
+    ],
+    "triplet_4_rating": [
+      "5c3164e528d82100018160c8"
+    ],
+    "triplet_4_comparison": [
+      "5c3164e528d82100018160c8"
+    ],
+    "triplet_5_question": [
+      "5daa226125a3890016e53b07"
+    ],
+    "triplet_5_rating": [
+      "5daa226125a3890016e53b07"
+    ],
+    "triplet_5_comparison": [
+      "5daa226125a3890016e53b07"
+    ],
+    "triplet_6_question": [
+      "5d51ffd641a6aa0019ca73df"
+    ],
+    "triplet_6_rating": [
+      "5d51ffd641a6aa0019ca73df"
+    ],
+    "triplet_6_comparison": [
+      "5d51ffd641a6aa0019ca73df"
+    ],
+    "triplet_7_question": [
+      "5f1cc767c8e0fc581cae1afa"
+    ],
+    "triplet_7_rating": [
+      "5f1cc767c8e0fc581cae1afa"
+    ],
+    "triplet_7_comparison": [
+      "5f1cc767c8e0fc581cae1afa"
+    ],
+    "triplet_8_question": [
+      "62877d5f6a054e53313ac916"
+    ],
+    "triplet_8_rating": [
+      "62877d5f6a054e53313ac916"
+    ],
+    "triplet_8_comparison": [
+      "62877d5f6a054e53313ac916"
+    ],
+    "triplet_10_question": [
+      "5f16fa8069dc2901cd1e0b05"
+    ],
+    "triplet_10_rating": [
+      "5f16fa8069dc2901cd1e0b05"
+    ],
+    "triplet_10_comparison": [
+      "5f16fa8069dc2901cd1e0b05"
+    ],
+    "triplet_11_question": [
+      "5e8a1827052175000938eb91"
+    ],
+    "triplet_11_rating": [
+      "5e8a1827052175000938eb91"
+    ],
+    "triplet_11_comparison": [
+      "5e8a1827052175000938eb91"
+    ],
+    "triplet_12_question": [
+      "66fc24d3c455b3269b484198"
+    ],
+    "triplet_12_rating": [
+      "66fc24d3c455b3269b484198"
+    ],
+    "triplet_12_comparison": [
+      "66fc24d3c455b3269b484198"
+    ],
+    "triplet_13_question": [
+      "5d62886927a84f00010fbbb4"
+    ],
+    "triplet_13_rating": [
+      "5d62886927a84f00010fbbb4"
+    ],
+    "triplet_13_comparison": [
+      "5d62886927a84f00010fbbb4"
+    ],
+    "triplet_14_question": [
+      "5f3153a6180dcf0d8dd72a45"
+    ],
+    "triplet_14_rating": [
+      "5f3153a6180dcf0d8dd72a45"
+    ],
+    "triplet_14_comparison": [
+      "5f3153a6180dcf0d8dd72a45"
+    ],
+    "triplet_15_question": [
+      "60ea75cf7853c36527784467"
+    ],
+    "triplet_15_rating": [
+      "60ea75cf7853c36527784467"
+    ],
+    "triplet_15_comparison": [
+      "60ea75cf7853c36527784467"
+    ],
+    "triplet_16_question": [
+      "56e6a66af6ed900006a5867c"
+    ],
+    "triplet_16_rating": [
+      "56e6a66af6ed900006a5867c"
+    ],
+    "triplet_16_comparison": [
+      "56e6a66af6ed900006a5867c"
+    ],
+    "triplet_17_question": [
+      "5e614c386ee9b3017b83e4bc"
+    ],
+    "triplet_17_rating": [
+      "5e614c386ee9b3017b83e4bc"
+    ],
+    "triplet_17_comparison": [
+      "5e614c386ee9b3017b83e4bc"
+    ],
+    "triplet_19_question": [
+      "66e338fdb7c3533a966f0153"
+    ],
+    "triplet_19_rating": [
+      "66e338fdb7c3533a966f0153"
+    ],
+    "triplet_19_comparison": [
+      "66e338fdb7c3533a966f0153"
+    ],
+    "triplet_20_question": [
+      "582c71a66ef28c00019a1068"
+    ],
+    "triplet_20_rating": [
+      "582c71a66ef28c00019a1068"
+    ],
+    "triplet_20_comparison": [
+      "582c71a66ef28c00019a1068"
+    ],
+    "triplet_21_question": [
+      "662692c1abc4830626fccb23"
+    ],
+    "triplet_21_rating": [
+      "662692c1abc4830626fccb23"
+    ],
+    "triplet_21_comparison": [
+      "662692c1abc4830626fccb23"
+    ],
+    "triplet_22_question": [
+      "65f8caa8238a933fdf42f4c3"
+    ],
+    "triplet_22_rating": [
+      "65f8caa8238a933fdf42f4c3"
+    ],
+    "triplet_22_comparison": [
+      "65f8caa8238a933fdf42f4c3"
+    ],
+    "triplet_23_question": [
+      "615e420a23219efe3427a367"
+    ],
+    "triplet_23_rating": [
+      "615e420a23219efe3427a367"
+    ],
+    "triplet_23_comparison": [
+      "615e420a23219efe3427a367"
+    ],
+    "triplet_24_question": [
+      "6018a5c0e1600b187ccb8693"
+    ],
+    "triplet_24_rating": [
+      "6018a5c0e1600b187ccb8693"
+    ],
+    "triplet_24_comparison": [
+      "6018a5c0e1600b187ccb8693"
+    ],
+    "triplet_25_question": [
+      "5c57631a47a04100010da795"
+    ],
+    "triplet_25_rating": [
+      "5c57631a47a04100010da795"
+    ],
+    "triplet_25_comparison": [
+      "5c57631a47a04100010da795"
+    ],
+    "triplet_26_question": [
+      "5eb52896e034073a7b8aa981"
+    ],
+    "triplet_26_rating": [
+      "5eb52896e034073a7b8aa981"
+    ],
+    "triplet_26_comparison": [
+      "5eb52896e034073a7b8aa981"
+    ],
+    "triplet_27_question": [
+      "667e0253d6563ab8acaf5803"
+    ],
+    "triplet_27_rating": [
+      "667e0253d6563ab8acaf5803"
+    ],
+    "triplet_27_comparison": [
+      "667e0253d6563ab8acaf5803"
+    ],
+    "triplet_28_question": [
+      "660dfdbf38c53adaea9899d8"
+    ],
+    "triplet_28_rating": [
+      "660dfdbf38c53adaea9899d8"
+    ],
+    "triplet_28_comparison": [
+      "660dfdbf38c53adaea9899d8"
+    ],
+    "triplet_29_question": [
+      "5c304ead89f0350001766c7d"
+    ],
+    "triplet_29_rating": [
+      "5c304ead89f0350001766c7d"
+    ],
+    "triplet_29_comparison": [
+      "5c304ead89f0350001766c7d"
+    ],
+    "triplet_30_question": [
+      "631542cace8d3c032e1acbd0"
+    ],
+    "triplet_30_rating": [
+      "631542cace8d3c032e1acbd0"
+    ],
+    "triplet_30_comparison": [
+      "631542cace8d3c032e1acbd0"
+    ],
+    "triplet_31_question": [
+      "55ecd6ff748092000daa9f5f"
+    ],
+    "triplet_31_rating": [
+      "55ecd6ff748092000daa9f5f"
+    ],
+    "triplet_31_comparison": [
+      "55ecd6ff748092000daa9f5f"
+    ],
+    "triplet_32_question": [
+      "5dc6159c0a493f4829f22c2f"
+    ],
+    "triplet_32_rating": [
+      "5dc6159c0a493f4829f22c2f"
+    ],
+    "triplet_32_comparison": [
+      "5dc6159c0a493f4829f22c2f"
+    ],
+    "triplet_33_question": [
+      "6658a399fb065bf3ad36038d"
+    ],
+    "triplet_33_rating": [
+      "6658a399fb065bf3ad36038d"
+    ],
+    "triplet_33_comparison": [
+      "6658a399fb065bf3ad36038d"
+    ],
+    "triplet_34_question": [
+      "669ed78c9c9a103bc2a0e5c5"
+    ],
+    "triplet_34_rating": [
+      "669ed78c9c9a103bc2a0e5c5"
+    ],
+    "triplet_34_comparison": [
+      "669ed78c9c9a103bc2a0e5c5"
+    ],
+    "triplet_35_question": [
+      "677c0682ec510c0693fc5790"
+    ],
+    "triplet_35_rating": [
+      "677c0682ec510c0693fc5790"
+    ],
+    "triplet_35_comparison": [
+      "677c0682ec510c0693fc5790"
+    ],
+    "triplet_36_question": [
+      "5f0ec8be70489322b9cb26f1"
+    ],
+    "triplet_36_rating": [
+      "5f0ec8be70489322b9cb26f1"
+    ],
+    "triplet_36_comparison": [
+      "5f0ec8be70489322b9cb26f1"
+    ],
+    "triplet_37_question": [
+      "668c6c4fb184937d7728fbee"
+    ],
+    "triplet_37_rating": [
+      "668c6c4fb184937d7728fbee"
+    ],
+    "triplet_37_comparison": [
+      "668c6c4fb184937d7728fbee"
+    ],
+    "triplet_39_question": [
+      "678d49a64ff6ba5590a2cd19"
+    ],
+    "triplet_39_rating": [
+      "678d49a64ff6ba5590a2cd19"
+    ],
+    "triplet_39_comparison": [
+      "678d49a64ff6ba5590a2cd19"
+    ],
+    "triplet_40_question": [
+      "66aa9db2e0895b60eb87fb75"
+    ],
+    "triplet_40_rating": [
+      "66aa9db2e0895b60eb87fb75"
+    ],
+    "triplet_40_comparison": [
+      "66aa9db2e0895b60eb87fb75"
+    ],
+    "triplet_41_question": [
+      "6719f154126a51146461288b"
+    ],
+    "triplet_41_rating": [
+      "6719f154126a51146461288b"
+    ],
+    "triplet_41_comparison": [
+      "6719f154126a51146461288b"
+    ],
+    "triplet_42_question": [
+      "5ddd37e3317259000b1e6083"
+    ],
+    "triplet_42_rating": [
+      "5ddd37e3317259000b1e6083"
+    ],
+    "triplet_42_comparison": [
+      "5ddd37e3317259000b1e6083"
+    ],
+    "triplet_43_question": [
+      "60a72221b1eb879f1f8a9d25"
+    ],
+    "triplet_43_rating": [
+      "60a72221b1eb879f1f8a9d25"
+    ],
+    "triplet_43_comparison": [
+      "60a72221b1eb879f1f8a9d25"
+    ],
+    "triplet_44_question": [
+      "66f3112a95dd87cfc72a7d31"
+    ],
+    "triplet_44_rating": [
+      "66f3112a95dd87cfc72a7d31"
+    ],
+    "triplet_44_comparison": [
+      "66f3112a95dd87cfc72a7d31"
+    ],
+    "triplet_45_question": [
+      "671104a3b307bee2953cb286"
+    ],
+    "triplet_45_rating": [
+      "671104a3b307bee2953cb286"
+    ],
+    "triplet_45_comparison": [
+      "671104a3b307bee2953cb286"
+    ],
+    "triplet_46_question": [
+      "6650a07f83dde5b6da54d674"
+    ],
+    "triplet_46_rating": [
+      "6650a07f83dde5b6da54d674"
+    ],
+    "triplet_46_comparison": [
+      "6650a07f83dde5b6da54d674"
+    ],
+    "triplet_47_question": [
+      "55884c0dfdf99b4020ba0a1b"
+    ],
+    "triplet_47_rating": [
+      "55884c0dfdf99b4020ba0a1b"
+    ],
+    "triplet_47_comparison": [
+      "55884c0dfdf99b4020ba0a1b"
+    ],
+    "triplet_48_question": [
+      "60171277d472ae2062db3a35"
+    ],
+    "triplet_48_rating": [
+      "60171277d472ae2062db3a35"
+    ],
+    "triplet_48_comparison": [
+      "60171277d472ae2062db3a35"
+    ],
+    "triplet_49_question": [
+      "570bc1ffb9b52b00102db939"
+    ],
+    "triplet_49_rating": [
+      "570bc1ffb9b52b00102db939"
+    ],
+    "triplet_49_comparison": [
+      "570bc1ffb9b52b00102db939"
+    ],
+    "triplet_51_question": [
+      "65d53cf473e1b96ac92b5f33"
+    ],
+    "triplet_51_rating": [
+      "65d53cf473e1b96ac92b5f33"
+    ],
+    "triplet_51_comparison": [
+      "65d53cf473e1b96ac92b5f33"
+    ],
+    "triplet_52_question": [
+      "67195ce0322d3935df36e8be"
+    ],
+    "triplet_52_rating": [
+      "67195ce0322d3935df36e8be"
+    ],
+    "triplet_52_comparison": [
+      "67195ce0322d3935df36e8be"
+    ],
+    "triplet_53_question": [
+      "68c191781a7cd5276cc47498"
+    ],
+    "triplet_53_rating": [
+      "68c191781a7cd5276cc47498"
+    ],
+    "triplet_53_comparison": [
+      "68c191781a7cd5276cc47498"
+    ],
+    "triplet_54_question": [
+      "609c6cc79875c8f0ba5d2242"
+    ],
+    "triplet_54_rating": [
+      "609c6cc79875c8f0ba5d2242"
+    ],
+    "triplet_54_comparison": [
+      "609c6cc79875c8f0ba5d2242"
+    ],
+    "triplet_55_question": [
+      "5e937e8e4d246b6b4162ae72"
+    ],
+    "triplet_55_rating": [
+      "5e937e8e4d246b6b4162ae72"
+    ],
+    "triplet_55_comparison": [
+      "5e937e8e4d246b6b4162ae72"
+    ],
+    "triplet_56_question": [
+      "5a74d7f717ef3500016ff92a"
+    ],
+    "triplet_56_rating": [
+      "5a74d7f717ef3500016ff92a"
+    ],
+    "triplet_56_comparison": [
+      "5a74d7f717ef3500016ff92a"
+    ],
+    "triplet_57_question": [
+      "664ea84948502b2b93edd5c0"
+    ],
+    "triplet_57_rating": [
+      "664ea84948502b2b93edd5c0"
+    ],
+    "triplet_57_comparison": [
+      "664ea84948502b2b93edd5c0"
+    ],
+    "triplet_58_question": [
+      "67ad27dea19c84fec0002b17"
+    ],
+    "triplet_58_rating": [
+      "67ad27dea19c84fec0002b17"
+    ],
+    "triplet_58_comparison": [
+      "67ad27dea19c84fec0002b17"
+    ],
+    "triplet_59_question": [
+      "5e2be6efe179572183644844"
+    ],
+    "triplet_59_rating": [
+      "5e2be6efe179572183644844"
+    ],
+    "triplet_59_comparison": [
+      "5e2be6efe179572183644844"
+    ],
+    "triplet_60_question": [
+      "5e0857276aab7c17f7e21662"
+    ],
+    "triplet_60_rating": [
+      "5e0857276aab7c17f7e21662"
+    ],
+    "triplet_60_comparison": [
+      "5e0857276aab7c17f7e21662"
+    ],
+    "triplet_61_question": [
+      "561feb34ed6e5a0005c7ee0b"
+    ],
+    "triplet_61_rating": [
+      "561feb34ed6e5a0005c7ee0b"
+    ],
+    "triplet_61_comparison": [
+      "561feb34ed6e5a0005c7ee0b"
+    ],
+    "triplet_62_question": [
+      "6142583049e8aba35814f68a"
+    ],
+    "triplet_62_rating": [
+      "6142583049e8aba35814f68a"
+    ],
+    "triplet_62_comparison": [
+      "6142583049e8aba35814f68a"
+    ],
+    "triplet_63_question": [
+      "60ea33a0aa4adc67c2299f20"
+    ],
+    "triplet_63_rating": [
+      "60ea33a0aa4adc67c2299f20"
+    ],
+    "triplet_63_comparison": [
+      "60ea33a0aa4adc67c2299f20"
+    ],
+    "triplet_64_question": [
+      "5c6ce4094768130001474362"
+    ],
+    "triplet_64_rating": [
+      "5c6ce4094768130001474362"
+    ],
+    "triplet_64_comparison": [
+      "5c6ce4094768130001474362"
+    ],
+    "triplet_65_question": [
+      "57309f6b30a556000fecdd47"
+    ],
+    "triplet_65_rating": [
+      "57309f6b30a556000fecdd47"
+    ],
+    "triplet_65_comparison": [
+      "57309f6b30a556000fecdd47"
+    ],
+    "triplet_66_question": [
+      "5c5fc78e96dff400013607a5"
+    ],
+    "triplet_66_rating": [
+      "5c5fc78e96dff400013607a5"
+    ],
+    "triplet_66_comparison": [
+      "5c5fc78e96dff400013607a5"
+    ],
+    "triplet_67_question": [
+      "628e5150b3ccb8a00918c44e"
+    ],
+    "triplet_67_rating": [
+      "628e5150b3ccb8a00918c44e"
+    ],
+    "triplet_67_comparison": [
+      "628e5150b3ccb8a00918c44e"
+    ],
+    "triplet_68_question": [
+      "5c560b6fccb08c0001e134a8"
+    ],
+    "triplet_68_rating": [
+      "5c560b6fccb08c0001e134a8"
+    ],
+    "triplet_68_comparison": [
+      "5c560b6fccb08c0001e134a8"
+    ],
+    "triplet_69_question": [
+      "66f4352fdbefea82e40806c7"
+    ],
+    "triplet_69_rating": [
+      "66f4352fdbefea82e40806c7"
+    ],
+    "triplet_69_comparison": [
+      "66f4352fdbefea82e40806c7"
+    ],
+    "triplet_70_question": [
+      "5e0f69380fb798000a199566"
+    ],
+    "triplet_70_rating": [
+      "5e0f69380fb798000a199566"
+    ],
+    "triplet_70_comparison": [
+      "5e0f69380fb798000a199566"
+    ],
+    "triplet_71_question": [
+      "5ef3fb8de991b819644d21b2"
+    ],
+    "triplet_71_rating": [
+      "5ef3fb8de991b819644d21b2"
+    ],
+    "triplet_71_comparison": [
+      "5ef3fb8de991b819644d21b2"
+    ],
+    "triplet_72_question": [
+      "660d539e1544872f4d7fbd61"
+    ],
+    "triplet_72_rating": [
+      "660d539e1544872f4d7fbd61"
+    ],
+    "triplet_72_comparison": [
+      "660d539e1544872f4d7fbd61"
+    ],
+    "triplet_73_question": [
+      "666c7fd0c209223644cd8c38"
+    ],
+    "triplet_73_rating": [
+      "666c7fd0c209223644cd8c38"
+    ],
+    "triplet_73_comparison": [
+      "666c7fd0c209223644cd8c38"
+    ],
+    "triplet_74_question": [
+      "65edfd46701f04e9cfffc76c"
+    ],
+    "triplet_74_rating": [
+      "65edfd46701f04e9cfffc76c"
+    ],
+    "triplet_74_comparison": [
+      "65edfd46701f04e9cfffc76c"
+    ],
+    "triplet_75_question": [
+      "665147fb0d8c521dca367eef"
+    ],
+    "triplet_75_rating": [
+      "665147fb0d8c521dca367eef"
+    ],
+    "triplet_75_comparison": [
+      "665147fb0d8c521dca367eef"
+    ],
+    "triplet_76_question": [
+      "6234c1abfc04a4163c09a78f"
+    ],
+    "triplet_76_rating": [
+      "6234c1abfc04a4163c09a78f"
+    ],
+    "triplet_76_comparison": [
+      "6234c1abfc04a4163c09a78f"
+    ],
+    "triplet_77_question": [
+      "66f59c766e7e22e1f90d08f6"
+    ],
+    "triplet_77_rating": [
+      "66f59c766e7e22e1f90d08f6"
+    ],
+    "triplet_77_comparison": [
+      "66f59c766e7e22e1f90d08f6"
+    ],
+    "triplet_78_question": [
+      "666097c5dbffa0803033094d"
+    ],
+    "triplet_78_rating": [
+      "666097c5dbffa0803033094d"
+    ],
+    "triplet_78_comparison": [
+      "666097c5dbffa0803033094d"
+    ],
+    "triplet_79_question": [
+      "67a98bde69857fed20901227"
+    ],
+    "triplet_79_rating": [
+      "67a98bde69857fed20901227"
+    ],
+    "triplet_79_comparison": [
+      "67a98bde69857fed20901227"
+    ],
+    "triplet_80_question": [
+      "5f7f4710b52bcd0b3ec52e62"
+    ],
+    "triplet_80_rating": [
+      "5f7f4710b52bcd0b3ec52e62"
+    ],
+    "triplet_80_comparison": [
+      "5f7f4710b52bcd0b3ec52e62"
+    ],
+    "triplet_81_question": [
+      "65e32297c34ae3a8c3e3b1c2"
+    ],
+    "triplet_81_rating": [
+      "65e32297c34ae3a8c3e3b1c2"
+    ],
+    "triplet_81_comparison": [
+      "65e32297c34ae3a8c3e3b1c2"
+    ],
+    "triplet_82_question": [
+      "5ece0369618acf1948655484"
+    ],
+    "triplet_82_rating": [
+      "5ece0369618acf1948655484"
+    ],
+    "triplet_82_comparison": [
+      "5ece0369618acf1948655484"
+    ],
+    "triplet_83_question": [
+      "5fab34d5e971f1617667232e"
+    ],
+    "triplet_83_rating": [
+      "5fab34d5e971f1617667232e"
+    ],
+    "triplet_83_comparison": [
+      "5fab34d5e971f1617667232e"
+    ],
+    "triplet_84_question": [
+      "66a2552f0ea42faf500dfc94"
+    ],
+    "triplet_84_rating": [
+      "66a2552f0ea42faf500dfc94"
+    ],
+    "triplet_84_comparison": [
+      "66a2552f0ea42faf500dfc94"
+    ],
+    "triplet_85_question": [
+      "6679c30cbbeff0c16f70a07a"
+    ],
+    "triplet_85_rating": [
+      "6679c30cbbeff0c16f70a07a"
+    ],
+    "triplet_85_comparison": [
+      "6679c30cbbeff0c16f70a07a"
+    ],
+    "triplet_86_question": [
+      "6722b6b9cb69415ce7f4c688"
+    ],
+    "triplet_86_rating": [
+      "6722b6b9cb69415ce7f4c688"
+    ],
+    "triplet_86_comparison": [
+      "6722b6b9cb69415ce7f4c688"
+    ],
+    "triplet_87_question": [
+      "590b5d6743b2950001c9531a"
+    ],
+    "triplet_87_rating": [
+      "590b5d6743b2950001c9531a"
+    ],
+    "triplet_87_comparison": [
+      "590b5d6743b2950001c9531a"
+    ],
+    "triplet_88_question": [
+      "6577262df3c2d6f59c4fc4d6"
+    ],
+    "triplet_88_rating": [
+      "6577262df3c2d6f59c4fc4d6"
+    ],
+    "triplet_88_comparison": [
+      "6577262df3c2d6f59c4fc4d6"
+    ],
+    "triplet_89_question": [
+      "639dd20ab47fd76a4fd9c2c0"
+    ],
+    "triplet_89_rating": [
+      "639dd20ab47fd76a4fd9c2c0"
+    ],
+    "triplet_89_comparison": [
+      "639dd20ab47fd76a4fd9c2c0"
+    ],
+    "triplet_90_question": [
+      "5badcd276322c5000157c196"
+    ],
+    "triplet_90_rating": [
+      "5badcd276322c5000157c196"
+    ],
+    "triplet_90_comparison": [
+      "5badcd276322c5000157c196"
+    ],
+    "triplet_91_question": [
+      "5c03fc30c776820001bdadb3"
+    ],
+    "triplet_91_rating": [
+      "5c03fc30c776820001bdadb3"
+    ],
+    "triplet_91_comparison": [
+      "5c03fc30c776820001bdadb3"
+    ],
+    "triplet_92_question": [
+      "630a5d054a84587d32b7d526"
+    ],
+    "triplet_92_rating": [
+      "630a5d054a84587d32b7d526"
+    ],
+    "triplet_92_comparison": [
+      "630a5d054a84587d32b7d526"
+    ],
+    "triplet_93_question": [
+      "610065f36ea6cd61b43e8ff7"
+    ],
+    "triplet_93_rating": [
+      "610065f36ea6cd61b43e8ff7"
+    ],
+    "triplet_93_comparison": [
+      "610065f36ea6cd61b43e8ff7"
+    ],
+    "triplet_94_question": [
+      "5d338bb02381b7001761694e"
+    ],
+    "triplet_94_rating": [
+      "5d338bb02381b7001761694e"
+    ],
+    "triplet_94_comparison": [
+      "5d338bb02381b7001761694e"
+    ],
+    "triplet_95_question": [
+      "676f9074e64ab87848a30331"
+    ],
+    "triplet_95_rating": [
+      "676f9074e64ab87848a30331"
+    ],
+    "triplet_95_comparison": [
+      "676f9074e64ab87848a30331"
+    ],
+    "triplet_96_question": [
+      "66c4b62a43b7ea9fa8d655b6"
+    ],
+    "triplet_96_rating": [
+      "66c4b62a43b7ea9fa8d655b6"
+    ],
+    "triplet_96_comparison": [
+      "66c4b62a43b7ea9fa8d655b6"
+    ],
+    "triplet_99_question": [
+      "5e98ae20be425f0e61330c39"
+    ],
+    "triplet_99_rating": [
+      "5e98ae20be425f0e61330c39"
+    ],
+    "triplet_99_comparison": [
+      "5e98ae20be425f0e61330c39"
+    ],
+    "triplet_101_question": [
+      "595a458f4c20120001517d39"
+    ],
+    "triplet_101_rating": [
+      "595a458f4c20120001517d39"
+    ],
+    "triplet_101_comparison": [
+      "595a458f4c20120001517d39"
+    ],
+    "triplet_102_question": [
+      "5f4bd69cacc7c47c56d50599"
+    ],
+    "triplet_102_rating": [
+      "5f4bd69cacc7c47c56d50599"
+    ],
+    "triplet_102_comparison": [
+      "5f4bd69cacc7c47c56d50599"
+    ],
+    "triplet_103_question": [
+      "64727ea9591087aef21f3dcf"
+    ],
+    "triplet_103_rating": [
+      "64727ea9591087aef21f3dcf"
+    ],
+    "triplet_103_comparison": [
+      "64727ea9591087aef21f3dcf"
+    ],
+    "triplet_104_question": [
+      "63d161e70272bba9f3f70980"
+    ],
+    "triplet_104_rating": [
+      "63d161e70272bba9f3f70980"
+    ],
+    "triplet_104_comparison": [
+      "63d161e70272bba9f3f70980"
+    ],
+    "triplet_105_question": [
+      "6615d2264e4143b2a0c983d6"
+    ],
+    "triplet_105_rating": [
+      "6615d2264e4143b2a0c983d6"
+    ],
+    "triplet_105_comparison": [
+      "6615d2264e4143b2a0c983d6"
+    ],
+    "triplet_106_question": [
+      "63f0fb9941434d10e8e4909b"
+    ],
+    "triplet_106_rating": [
+      "63f0fb9941434d10e8e4909b"
+    ],
+    "triplet_106_comparison": [
+      "63f0fb9941434d10e8e4909b"
+    ],
+    "triplet_107_question": [
+      "67e9a601c1917b831419cf77"
+    ],
+    "triplet_107_rating": [
+      "67e9a601c1917b831419cf77"
+    ],
+    "triplet_107_comparison": [
+      "67e9a601c1917b831419cf77"
+    ],
+    "triplet_108_question": [
+      "63b6dfb29118fec2d923f8c3"
+    ],
+    "triplet_108_rating": [
+      "63b6dfb29118fec2d923f8c3"
+    ],
+    "triplet_108_comparison": [
+      "63b6dfb29118fec2d923f8c3"
+    ],
+    "triplet_110_question": [
+      "663fd90c48bc19808e422ca0"
+    ],
+    "triplet_110_rating": [
+      "663fd90c48bc19808e422ca0"
+    ],
+    "triplet_110_comparison": [
+      "663fd90c48bc19808e422ca0"
+    ],
+    "triplet_111_question": [
+      "5eb693937a030e5923b44068"
+    ],
+    "triplet_111_rating": [
+      "5eb693937a030e5923b44068"
+    ],
+    "triplet_111_comparison": [
+      "5eb693937a030e5923b44068"
+    ],
+    "triplet_113_question": [
+      "5df040fa82b88c0a7c698dd8"
+    ],
+    "triplet_113_rating": [
+      "5df040fa82b88c0a7c698dd8"
+    ],
+    "triplet_113_comparison": [
+      "5df040fa82b88c0a7c698dd8"
+    ],
+    "triplet_114_question": [
+      "662848c40caa342b28493265"
+    ],
+    "triplet_114_rating": [
+      "662848c40caa342b28493265"
+    ],
+    "triplet_114_comparison": [
+      "662848c40caa342b28493265"
+    ],
+    "triplet_115_question": [
+      "66a95d70975d6208dbb70c1e"
+    ],
+    "triplet_115_rating": [
+      "66a95d70975d6208dbb70c1e"
+    ],
+    "triplet_115_comparison": [
+      "66a95d70975d6208dbb70c1e"
+    ],
+    "triplet_116_question": [
+      "667dc494d7b2dff589b4e7c5"
+    ],
+    "triplet_116_rating": [
+      "667dc494d7b2dff589b4e7c5"
+    ],
+    "triplet_116_comparison": [
+      "667dc494d7b2dff589b4e7c5"
+    ],
+    "triplet_117_question": [
+      "5feb72dccbe069c16ef3c292"
+    ],
+    "triplet_117_rating": [
+      "5feb72dccbe069c16ef3c292"
+    ],
+    "triplet_117_comparison": [
+      "5feb72dccbe069c16ef3c292"
+    ],
+    "triplet_118_question": [
+      "578901354a84da00014c41cf"
+    ],
+    "triplet_118_rating": [
+      "578901354a84da00014c41cf"
+    ],
+    "triplet_118_comparison": [
+      "578901354a84da00014c41cf"
+    ],
+    "triplet_119_question": [
+      "67b9d2f7a49052c6e25c6a7f"
+    ],
+    "triplet_119_rating": [
+      "67b9d2f7a49052c6e25c6a7f"
+    ],
+    "triplet_119_comparison": [
+      "67b9d2f7a49052c6e25c6a7f"
+    ],
+    "triplet_120_question": [
+      "6635054dfb8caedd407ca84b"
+    ],
+    "triplet_120_rating": [
+      "6635054dfb8caedd407ca84b"
+    ],
+    "triplet_120_comparison": [
+      "6635054dfb8caedd407ca84b"
+    ],
+    "triplet_121_question": [
+      "668ef254bc2ae7eae4f06805"
+    ],
+    "triplet_121_rating": [
+      "668ef254bc2ae7eae4f06805"
+    ],
+    "triplet_121_comparison": [
+      "668ef254bc2ae7eae4f06805"
+    ],
+    "triplet_122_question": [
+      "6687f601f314d21ec463f3da"
+    ],
+    "triplet_122_rating": [
+      "6687f601f314d21ec463f3da"
+    ],
+    "triplet_122_comparison": [
+      "6687f601f314d21ec463f3da"
+    ],
+    "triplet_123_question": [
+      "666b254d9bc6d71a71b89cee"
+    ],
+    "triplet_123_rating": [
+      "666b254d9bc6d71a71b89cee"
+    ],
+    "triplet_123_comparison": [
+      "666b254d9bc6d71a71b89cee"
+    ],
+    "triplet_124_question": [
+      "5c46315c85b76000017ce729"
+    ],
+    "triplet_124_rating": [
+      "5c46315c85b76000017ce729"
+    ],
+    "triplet_124_comparison": [
+      "5c46315c85b76000017ce729"
+    ],
+    "triplet_126_question": [
+      "67a3c330ba64a132f9de6787"
+    ],
+    "triplet_126_rating": [
+      "67a3c330ba64a132f9de6787"
+    ],
+    "triplet_126_comparison": [
+      "67a3c330ba64a132f9de6787"
+    ],
+    "triplet_127_question": [
+      "668daa1bd2c9c15fe7658159"
+    ],
+    "triplet_127_rating": [
+      "668daa1bd2c9c15fe7658159"
+    ],
+    "triplet_127_comparison": [
+      "668daa1bd2c9c15fe7658159"
+    ],
+    "triplet_128_question": [
+      "5bf44e609a50810001a69f89"
+    ],
+    "triplet_128_rating": [
+      "5bf44e609a50810001a69f89"
+    ],
+    "triplet_128_comparison": [
+      "5bf44e609a50810001a69f89"
+    ],
+    "triplet_129_question": [
+      "5c1143b388dc060001bab203"
+    ],
+    "triplet_129_rating": [
+      "5c1143b388dc060001bab203"
+    ],
+    "triplet_129_comparison": [
+      "5c1143b388dc060001bab203"
+    ],
+    "triplet_130_question": [
+      "67a5669452a6651f8be0b0bc"
+    ],
+    "triplet_130_rating": [
+      "67a5669452a6651f8be0b0bc"
+    ],
+    "triplet_130_comparison": [
+      "67a5669452a6651f8be0b0bc"
+    ],
+    "triplet_131_question": [
+      "5e458d0d3a6ba8042ead0c66"
+    ],
+    "triplet_131_rating": [
+      "5e458d0d3a6ba8042ead0c66"
+    ],
+    "triplet_131_comparison": [
+      "5e458d0d3a6ba8042ead0c66"
+    ],
+    "triplet_133_question": [
+      "5f93186d0e61130ad2fe395c"
+    ],
+    "triplet_133_rating": [
+      "5f93186d0e61130ad2fe395c"
+    ],
+    "triplet_133_comparison": [
+      "5f93186d0e61130ad2fe395c"
+    ],
+    "triplet_134_question": [
+      "65cb86a3dd1893183b69bb6c"
+    ],
+    "triplet_134_rating": [
+      "65cb86a3dd1893183b69bb6c"
+    ],
+    "triplet_134_comparison": [
+      "65cb86a3dd1893183b69bb6c"
+    ],
+    "triplet_135_question": [
+      "5ac70920a3ba7a0001b4ba8c"
+    ],
+    "triplet_135_rating": [
+      "5ac70920a3ba7a0001b4ba8c"
+    ],
+    "triplet_135_comparison": [
+      "5ac70920a3ba7a0001b4ba8c"
+    ],
+    "triplet_136_question": [
+      "6733a509fb6a7bd6e6f641d3"
+    ],
+    "triplet_136_rating": [
+      "6733a509fb6a7bd6e6f641d3"
+    ],
+    "triplet_136_comparison": [
+      "6733a509fb6a7bd6e6f641d3"
+    ],
+    "triplet_137_question": [
+      "5c4534332b1bda0001f5791f"
+    ],
+    "triplet_137_rating": [
+      "5c4534332b1bda0001f5791f"
+    ],
+    "triplet_137_comparison": [
+      "5c4534332b1bda0001f5791f"
+    ],
+    "triplet_138_question": [
+      "5c5fca504fff5700017ecd34"
+    ],
+    "triplet_138_rating": [
+      "5c5fca504fff5700017ecd34"
+    ],
+    "triplet_138_comparison": [
+      "5c5fca504fff5700017ecd34"
+    ],
+    "triplet_140_question": [
+      "614f74c86e809d190daf00a4"
+    ],
+    "triplet_140_rating": [
+      "614f74c86e809d190daf00a4"
+    ],
+    "triplet_140_comparison": [
+      "614f74c86e809d190daf00a4"
+    ],
+    "triplet_141_question": [
+      "66e739f07dd765fe0446ddb7"
+    ],
+    "triplet_141_rating": [
+      "66e739f07dd765fe0446ddb7"
+    ],
+    "triplet_141_comparison": [
+      "66e739f07dd765fe0446ddb7"
+    ],
+    "triplet_142_question": [
+      "674062c6719d4b07777215a2"
+    ],
+    "triplet_142_rating": [
+      "674062c6719d4b07777215a2"
+    ],
+    "triplet_142_comparison": [
+      "674062c6719d4b07777215a2"
+    ],
+    "triplet_143_question": [
+      "62d38f10654f3fc8a393b551"
+    ],
+    "triplet_143_rating": [
+      "62d38f10654f3fc8a393b551"
+    ],
+    "triplet_143_comparison": [
+      "62d38f10654f3fc8a393b551"
+    ],
+    "triplet_144_question": [
+      "6695227ee33b1435180a693c"
+    ],
+    "triplet_144_rating": [
+      "6695227ee33b1435180a693c"
+    ],
+    "triplet_144_comparison": [
+      "6695227ee33b1435180a693c"
+    ],
+    "triplet_145_question": [
+      "5eceed79840590300f53fa51"
+    ],
+    "triplet_145_rating": [
+      "5eceed79840590300f53fa51"
+    ],
+    "triplet_145_comparison": [
+      "5eceed79840590300f53fa51"
+    ],
+    "triplet_147_question": [
+      "664832f0ca2c56df8b3cdfc8"
+    ],
+    "triplet_147_rating": [
+      "664832f0ca2c56df8b3cdfc8"
+    ],
+    "triplet_147_comparison": [
+      "664832f0ca2c56df8b3cdfc8"
+    ],
+    "triplet_148_question": [
+      "5c53c9f9ea00280001fd06a3"
+    ],
+    "triplet_148_rating": [
+      "5c53c9f9ea00280001fd06a3"
+    ],
+    "triplet_148_comparison": [
+      "5c53c9f9ea00280001fd06a3"
+    ],
+    "triplet_149_question": [
+      "5fbc56c0293d73121cdc1eb5"
+    ],
+    "triplet_149_rating": [
+      "5fbc56c0293d73121cdc1eb5"
+    ],
+    "triplet_149_comparison": [
+      "5fbc56c0293d73121cdc1eb5"
+    ],
+    "triplet_150_question": [
+      "669878eb97d1dc6253b65ac9"
+    ],
+    "triplet_150_rating": [
+      "669878eb97d1dc6253b65ac9"
+    ],
+    "triplet_150_comparison": [
+      "669878eb97d1dc6253b65ac9"
+    ],
+    "triplet_151_question": [
+      "5eaf2b7e05ff7862e21e9d3b"
+    ],
+    "triplet_151_rating": [
+      "5eaf2b7e05ff7862e21e9d3b"
+    ],
+    "triplet_151_comparison": [
+      "5eaf2b7e05ff7862e21e9d3b"
+    ],
+    "triplet_152_question": [
+      "63d420b1d5b7dc6a3a4c50aa"
+    ],
+    "triplet_152_rating": [
+      "63d420b1d5b7dc6a3a4c50aa"
+    ],
+    "triplet_152_comparison": [
+      "63d420b1d5b7dc6a3a4c50aa"
+    ],
+    "triplet_153_question": [
+      "6688196ff8ecace0eaba5839"
+    ],
+    "triplet_153_rating": [
+      "6688196ff8ecace0eaba5839"
+    ],
+    "triplet_153_comparison": [
+      "6688196ff8ecace0eaba5839"
+    ],
+    "triplet_154_question": [
+      "66463d3560eac977430ac716"
+    ],
+    "triplet_154_rating": [
+      "66463d3560eac977430ac716"
+    ],
+    "triplet_154_comparison": [
+      "66463d3560eac977430ac716"
+    ],
+    "triplet_156_question": [
+      "5a6c8047e70ca900017acdae"
+    ],
+    "triplet_156_rating": [
+      "5a6c8047e70ca900017acdae"
+    ],
+    "triplet_156_comparison": [
+      "5a6c8047e70ca900017acdae"
+    ],
+    "triplet_157_question": [
+      "66465d9b86a39e880cb3e63a"
+    ],
+    "triplet_157_rating": [
+      "66465d9b86a39e880cb3e63a"
+    ],
+    "triplet_157_comparison": [
+      "66465d9b86a39e880cb3e63a"
+    ],
+    "triplet_158_question": [
+      "5fd6f37a0ffc7b67ce2a73a3"
+    ],
+    "triplet_158_rating": [
+      "5fd6f37a0ffc7b67ce2a73a3"
+    ],
+    "triplet_158_comparison": [
+      "5fd6f37a0ffc7b67ce2a73a3"
+    ],
+    "triplet_159_question": [
+      "6682ff3b64d208c399214448"
+    ],
+    "triplet_159_rating": [
+      "6682ff3b64d208c399214448"
+    ],
+    "triplet_159_comparison": [
+      "6682ff3b64d208c399214448"
+    ],
+    "triplet_160_question": [
+      "57ab346e21e5a50001562cb8"
+    ],
+    "triplet_160_rating": [
+      "57ab346e21e5a50001562cb8"
+    ],
+    "triplet_160_comparison": [
+      "57ab346e21e5a50001562cb8"
+    ],
+    "triplet_162_question": [
+      "6779e07aeb6a0e66e84ae0e7"
+    ],
+    "triplet_162_rating": [
+      "6779e07aeb6a0e66e84ae0e7"
+    ],
+    "triplet_162_comparison": [
+      "6779e07aeb6a0e66e84ae0e7"
+    ],
+    "triplet_163_question": [
+      "68c2df0a0e9cd5c4da42ca55"
+    ],
+    "triplet_163_rating": [
+      "68c2df0a0e9cd5c4da42ca55"
+    ],
+    "triplet_163_comparison": [
+      "68c2df0a0e9cd5c4da42ca55"
+    ],
+    "triplet_164_question": [
+      "65cb6d799d023df9be06bfb6"
+    ],
+    "triplet_164_rating": [
+      "65cb6d799d023df9be06bfb6"
+    ],
+    "triplet_164_comparison": [
+      "65cb6d799d023df9be06bfb6"
+    ],
+    "triplet_165_question": [
+      "5798be2b913c710001976173"
+    ],
+    "triplet_165_rating": [
+      "5798be2b913c710001976173"
+    ],
+    "triplet_165_comparison": [
+      "5798be2b913c710001976173"
+    ],
+    "triplet_166_question": [
+      "615a3aff99c738f7dd86fded"
+    ],
+    "triplet_166_rating": [
+      "615a3aff99c738f7dd86fded"
+    ],
+    "triplet_166_comparison": [
+      "615a3aff99c738f7dd86fded"
+    ],
+    "triplet_167_question": [
+      "65c12ea66c65fd9357ae4068"
+    ],
+    "triplet_167_rating": [
+      "65c12ea66c65fd9357ae4068"
+    ],
+    "triplet_167_comparison": [
+      "65c12ea66c65fd9357ae4068"
+    ],
+    "triplet_168_question": [
+      "6726ae14a783520d944f2951"
+    ],
+    "triplet_168_rating": [
+      "6726ae14a783520d944f2951"
+    ],
+    "triplet_168_comparison": [
+      "6726ae14a783520d944f2951"
+    ],
+    "triplet_169_question": [
+      "6069781e4adc91cb98023a4c"
+    ],
+    "triplet_169_rating": [
+      "6069781e4adc91cb98023a4c"
+    ],
+    "triplet_169_comparison": [
+      "6069781e4adc91cb98023a4c"
+    ],
+    "triplet_170_question": [
+      "66f0ab4e5d9ac0aa8691b96f"
+    ],
+    "triplet_170_rating": [
+      "66f0ab4e5d9ac0aa8691b96f"
+    ],
+    "triplet_170_comparison": [
+      "66f0ab4e5d9ac0aa8691b96f"
+    ],
+    "triplet_171_question": [
+      "65e9caf988370d3db1ca1000"
+    ],
+    "triplet_171_rating": [
+      "65e9caf988370d3db1ca1000"
+    ],
+    "triplet_171_comparison": [
+      "65e9caf988370d3db1ca1000"
+    ],
+    "triplet_174_question": [
+      "62fee4976ce0883ebbc86e20"
+    ],
+    "triplet_174_rating": [
+      "62fee4976ce0883ebbc86e20"
+    ],
+    "triplet_174_comparison": [
+      "62fee4976ce0883ebbc86e20"
+    ],
+    "triplet_175_question": [
+      "5fc76a415002cb02da36e980"
+    ],
+    "triplet_175_rating": [
+      "5fc76a415002cb02da36e980"
+    ],
+    "triplet_175_comparison": [
+      "5fc76a415002cb02da36e980"
+    ],
+    "triplet_176_question": [
+      "56c8915edfea6c000cb29c98"
+    ],
+    "triplet_176_rating": [
+      "56c8915edfea6c000cb29c98"
+    ],
+    "triplet_176_comparison": [
+      "56c8915edfea6c000cb29c98"
+    ],
+    "triplet_177_question": [
+      "5e6b11a7704ee10c3d5e203a"
+    ],
+    "triplet_177_rating": [
+      "5e6b11a7704ee10c3d5e203a"
+    ],
+    "triplet_177_comparison": [
+      "5e6b11a7704ee10c3d5e203a"
+    ],
+    "triplet_178_question": [
+      "662a83038907a650a3115282"
+    ],
+    "triplet_178_rating": [
+      "662a83038907a650a3115282"
+    ],
+    "triplet_178_comparison": [
+      "662a83038907a650a3115282"
+    ],
+    "triplet_179_question": [
+      "676fa93a6e1840db7ea43423"
+    ],
+    "triplet_179_rating": [
+      "676fa93a6e1840db7ea43423"
+    ],
+    "triplet_179_comparison": [
+      "676fa93a6e1840db7ea43423"
+    ],
+    "triplet_180_question": [
+      "6483fded206bc517c6ad6d0c"
+    ],
+    "triplet_180_rating": [
+      "6483fded206bc517c6ad6d0c"
+    ],
+    "triplet_180_comparison": [
+      "6483fded206bc517c6ad6d0c"
+    ],
+    "triplet_181_question": [
+      "63039dbefda87c47a91fec04"
+    ],
+    "triplet_181_rating": [
+      "63039dbefda87c47a91fec04"
+    ],
+    "triplet_181_comparison": [
+      "63039dbefda87c47a91fec04"
+    ],
+    "triplet_182_question": [
+      "67316c888f20be7e784623df"
+    ],
+    "triplet_182_rating": [
+      "67316c888f20be7e784623df"
+    ],
+    "triplet_182_comparison": [
+      "67316c888f20be7e784623df"
+    ],
+    "triplet_183_question": [
+      "5fa3dc44bc91850202c76749"
+    ],
+    "triplet_183_rating": [
+      "5fa3dc44bc91850202c76749"
+    ],
+    "triplet_183_comparison": [
+      "5fa3dc44bc91850202c76749"
+    ],
+    "triplet_184_question": [
+      "675660c1ce75fb95cfe069c2"
+    ],
+    "triplet_184_rating": [
+      "675660c1ce75fb95cfe069c2"
+    ],
+    "triplet_184_comparison": [
+      "675660c1ce75fb95cfe069c2"
+    ],
+    "triplet_185_question": [
+      "65f1e602324cee4a8e9c8177"
+    ],
+    "triplet_185_rating": [
+      "65f1e602324cee4a8e9c8177"
+    ],
+    "triplet_185_comparison": [
+      "65f1e602324cee4a8e9c8177"
+    ],
+    "triplet_186_question": [
+      "66d704abf53ea1690d42a898"
+    ],
+    "triplet_186_rating": [
+      "66d704abf53ea1690d42a898"
+    ],
+    "triplet_186_comparison": [
+      "66d704abf53ea1690d42a898"
+    ],
+    "triplet_187_question": [
+      "6736679e7f59a8570f845b14"
+    ],
+    "triplet_187_rating": [
+      "6736679e7f59a8570f845b14"
+    ],
+    "triplet_187_comparison": [
+      "6736679e7f59a8570f845b14"
+    ],
+    "triplet_188_question": [
+      "67cdf158555dc24e9c13714a"
+    ],
+    "triplet_188_rating": [
+      "67cdf158555dc24e9c13714a"
+    ],
+    "triplet_188_comparison": [
+      "67cdf158555dc24e9c13714a"
+    ],
+    "triplet_189_question": [
+      "678fba732e3c7c2620e94db9"
+    ],
+    "triplet_189_rating": [
+      "678fba732e3c7c2620e94db9"
+    ],
+    "triplet_189_comparison": [
+      "678fba732e3c7c2620e94db9"
+    ],
+    "triplet_190_question": [
+      "65f0f81196ccdca3d2ab5358"
+    ],
+    "triplet_190_rating": [
+      "65f0f81196ccdca3d2ab5358"
+    ],
+    "triplet_190_comparison": [
+      "65f0f81196ccdca3d2ab5358"
+    ],
+    "triplet_191_question": [
+      "5a501c26eedc32000141f4f2"
+    ],
+    "triplet_191_rating": [
+      "5a501c26eedc32000141f4f2"
+    ],
+    "triplet_191_comparison": [
+      "5a501c26eedc32000141f4f2"
+    ],
+    "triplet_192_question": [
+      "6644cad7258882e3ef8345bb"
+    ],
+    "triplet_192_rating": [
+      "6644cad7258882e3ef8345bb"
+    ],
+    "triplet_192_comparison": [
+      "6644cad7258882e3ef8345bb"
+    ],
+    "triplet_193_question": [
+      "65cbbc3c58b74649b3cd7bf1"
+    ],
+    "triplet_193_rating": [
+      "65cbbc3c58b74649b3cd7bf1"
+    ],
+    "triplet_193_comparison": [
+      "65cbbc3c58b74649b3cd7bf1"
+    ],
+    "triplet_194_question": [
+      "6110a371c00388d587922ff1"
+    ],
+    "triplet_194_rating": [
+      "6110a371c00388d587922ff1"
+    ],
+    "triplet_194_comparison": [
+      "6110a371c00388d587922ff1"
+    ],
+    "triplet_195_question": [
+      "673fdd7f42e67ec8e39d79e6"
+    ],
+    "triplet_195_rating": [
+      "673fdd7f42e67ec8e39d79e6"
+    ],
+    "triplet_195_comparison": [
+      "673fdd7f42e67ec8e39d79e6"
+    ],
+    "triplet_196_question": [
+      "6428c3d1aeb8d1cbe7e8cb78"
+    ],
+    "triplet_196_rating": [
+      "6428c3d1aeb8d1cbe7e8cb78"
+    ],
+    "triplet_196_comparison": [
+      "6428c3d1aeb8d1cbe7e8cb78"
+    ],
+    "triplet_197_question": [
+      "67206083e8af4cf14439ac21"
+    ],
+    "triplet_197_rating": [
+      "67206083e8af4cf14439ac21"
+    ],
+    "triplet_197_comparison": [
+      "67206083e8af4cf14439ac21"
+    ],
+    "triplet_198_question": [
+      "65fccfbedce99b1065ef1768"
+    ],
+    "triplet_198_rating": [
+      "65fccfbedce99b1065ef1768"
+    ],
+    "triplet_198_comparison": [
+      "65fccfbedce99b1065ef1768"
+    ],
+    "triplet_200_question": [
+      "56bd7bf3d4e2180005a86846"
+    ],
+    "triplet_200_rating": [
+      "56bd7bf3d4e2180005a86846"
+    ],
+    "triplet_200_comparison": [
+      "56bd7bf3d4e2180005a86846"
+    ],
+    "triplet_201_question": [
+      "5ef54b31234db61ac1c7fdb0"
+    ],
+    "triplet_201_rating": [
+      "5ef54b31234db61ac1c7fdb0"
+    ],
+    "triplet_201_comparison": [
+      "5ef54b31234db61ac1c7fdb0"
+    ],
+    "triplet_202_question": [
+      "5d845d15fbc5970001e821e0"
+    ],
+    "triplet_202_rating": [
+      "5d845d15fbc5970001e821e0"
+    ],
+    "triplet_202_comparison": [
+      "5d845d15fbc5970001e821e0"
+    ],
+    "triplet_203_question": [
+      "5ddc44d65a40f2bb49218200"
+    ],
+    "triplet_203_rating": [
+      "5ddc44d65a40f2bb49218200"
+    ],
+    "triplet_203_comparison": [
+      "5ddc44d65a40f2bb49218200"
+    ],
+    "triplet_204_question": [
+      "63e55da197c585d2bc031bbc"
+    ],
+    "triplet_204_rating": [
+      "63e55da197c585d2bc031bbc"
+    ],
+    "triplet_204_comparison": [
+      "63e55da197c585d2bc031bbc"
+    ],
+    "triplet_205_question": [
+      "67132df80dca7f04dfa88678"
+    ],
+    "triplet_205_rating": [
+      "67132df80dca7f04dfa88678"
+    ],
+    "triplet_205_comparison": [
+      "67132df80dca7f04dfa88678"
+    ],
+    "triplet_207_question": [
+      "67a517b3ce9ad5ca6839e028"
+    ],
+    "triplet_207_rating": [
+      "67a517b3ce9ad5ca6839e028"
+    ],
+    "triplet_207_comparison": [
+      "67a517b3ce9ad5ca6839e028"
+    ],
+    "triplet_208_question": [
+      "662949dcb3c06ccdd7352db5"
+    ],
+    "triplet_208_rating": [
+      "662949dcb3c06ccdd7352db5"
+    ],
+    "triplet_208_comparison": [
+      "662949dcb3c06ccdd7352db5"
+    ],
+    "triplet_210_question": [
+      "664c43b65dc4c4edec8c2569"
+    ],
+    "triplet_210_rating": [
+      "664c43b65dc4c4edec8c2569"
+    ],
+    "triplet_210_comparison": [
+      "664c43b65dc4c4edec8c2569"
+    ],
+    "triplet_213_question": [
+      "66d51b4e213b318f941da552"
+    ],
+    "triplet_213_rating": [
+      "66d51b4e213b318f941da552"
+    ],
+    "triplet_213_comparison": [
+      "66d51b4e213b318f941da552"
+    ],
+    "triplet_214_question": [
+      "571164253d47e80009635a80"
+    ],
+    "triplet_214_rating": [
+      "571164253d47e80009635a80"
+    ],
+    "triplet_214_comparison": [
+      "571164253d47e80009635a80"
+    ],
+    "triplet_215_question": [
+      "5d82be0cf45ead000150f026"
+    ],
+    "triplet_215_rating": [
+      "5d82be0cf45ead000150f026"
+    ],
+    "triplet_215_comparison": [
+      "5d82be0cf45ead000150f026"
+    ],
+    "triplet_216_question": [
+      "66600cb171f55c1301097e38"
+    ],
+    "triplet_216_rating": [
+      "66600cb171f55c1301097e38"
+    ],
+    "triplet_216_comparison": [
+      "66600cb171f55c1301097e38"
+    ],
+    "triplet_217_question": [
+      "5c6737b5d6c7500001a03611"
+    ],
+    "triplet_217_rating": [
+      "5c6737b5d6c7500001a03611"
+    ],
+    "triplet_217_comparison": [
+      "5c6737b5d6c7500001a03611"
+    ],
+    "triplet_219_question": [
+      "65a5418510f8dd6605fd790d"
+    ],
+    "triplet_219_rating": [
+      "65a5418510f8dd6605fd790d"
+    ],
+    "triplet_219_comparison": [
+      "65a5418510f8dd6605fd790d"
+    ],
+    "triplet_220_question": [
+      "6684928e82e515000197f9c6"
+    ],
+    "triplet_220_rating": [
+      "6684928e82e515000197f9c6"
+    ],
+    "triplet_220_comparison": [
+      "6684928e82e515000197f9c6"
+    ],
+    "triplet_221_question": [
+      "65c118f1cd19001157ace3a0"
+    ],
+    "triplet_221_rating": [
+      "65c118f1cd19001157ace3a0"
+    ],
+    "triplet_221_comparison": [
+      "65c118f1cd19001157ace3a0"
+    ],
+    "triplet_222_question": [
+      "6630706b75f4ca6c14e46a19"
+    ],
+    "triplet_222_rating": [
+      "6630706b75f4ca6c14e46a19"
+    ],
+    "triplet_222_comparison": [
+      "6630706b75f4ca6c14e46a19"
+    ],
+    "triplet_223_question": [
+      "6604610e7a4c3d8b8aa2309f"
+    ],
+    "triplet_223_rating": [
+      "6604610e7a4c3d8b8aa2309f"
+    ],
+    "triplet_223_comparison": [
+      "6604610e7a4c3d8b8aa2309f"
+    ],
+    "triplet_224_question": [
+      "60da6f47359a9fc411cc8313"
+    ],
+    "triplet_224_rating": [
+      "60da6f47359a9fc411cc8313"
+    ],
+    "triplet_224_comparison": [
+      "60da6f47359a9fc411cc8313"
+    ]
+  },
+  "unassigned": {
+    "triplet_9_question": 1,
+    "triplet_9_rating": 1,
+    "triplet_9_comparison": 1,
+    "triplet_18_question": 1,
+    "triplet_18_rating": 1,
+    "triplet_18_comparison": 1,
+    "triplet_38_question": 1,
+    "triplet_38_rating": 1,
+    "triplet_38_comparison": 1,
+    "triplet_50_question": 1,
+    "triplet_50_rating": 1,
+    "triplet_50_comparison": 1,
+    "triplet_97_question": 1,
+    "triplet_97_rating": 1,
+    "triplet_97_comparison": 1,
+    "triplet_98_question": 1,
+    "triplet_98_rating": 1,
+    "triplet_98_comparison": 1,
+    "triplet_100_question": 1,
+    "triplet_100_rating": 1,
+    "triplet_100_comparison": 1,
+    "triplet_109_question": 1,
+    "triplet_109_rating": 1,
+    "triplet_109_comparison": 1,
+    "triplet_112_question": 1,
+    "triplet_112_rating": 1,
+    "triplet_112_comparison": 1,
+    "triplet_125_question": 1,
+    "triplet_125_rating": 1,
+    "triplet_125_comparison": 1,
+    "triplet_132_question": 1,
+    "triplet_132_rating": 1,
+    "triplet_132_comparison": 1,
+    "triplet_139_question": 1,
+    "triplet_139_rating": 1,
+    "triplet_139_comparison": 1,
+    "triplet_146_question": 1,
+    "triplet_146_rating": 1,
+    "triplet_146_comparison": 1,
+    "triplet_155_question": 1,
+    "triplet_155_rating": 1,
+    "triplet_155_comparison": 1,
+    "triplet_161_question": 1,
+    "triplet_161_rating": 1,
+    "triplet_161_comparison": 1,
+    "triplet_172_question": 1,
+    "triplet_172_rating": 1,
+    "triplet_172_comparison": 1,
+    "triplet_173_question": 1,
+    "triplet_173_rating": 1,
+    "triplet_173_comparison": 1,
+    "triplet_199_question": 1,
+    "triplet_199_rating": 1,
+    "triplet_199_comparison": 1,
+    "triplet_206_question": 1,
+    "triplet_206_rating": 1,
+    "triplet_206_comparison": 1,
+    "triplet_209_question": 1,
+    "triplet_209_rating": 1,
+    "triplet_209_comparison": 1,
+    "triplet_211_question": 1,
+    "triplet_211_rating": 1,
+    "triplet_211_comparison": 1,
+    "triplet_212_question": 1,
+    "triplet_212_rating": 1,
+    "triplet_212_comparison": 1,
+    "triplet_218_question": 1,
+    "triplet_218_rating": 1,
+    "triplet_218_comparison": 1
+  },
+  "testing": {
+    "test_question_per_annotator": 0,
+    "ids": [
+      "match_finding_testing_1",
+      "match_finding_testing_2"
+    ]
+  },
+  "prestudy_ids": [],
+  "prestudy_passed_users": [],
+  "prestudy_failed_users": [],
+  "pre_annotation_pages": [
+    "Summary-Rating-intro.html"
+  ],
+  "post_annotation_pages": [
+    "Summary-Rating-end.html"
+  ]
+}

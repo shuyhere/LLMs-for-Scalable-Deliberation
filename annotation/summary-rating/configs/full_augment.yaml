@@ -8,7 +8,7 @@
     # Potato will write the annotation file for all annotations to this
     # directory, as well as per-annotator output files and state information
     # necessary to restart annotation.
-    "output_annotation_dir": "annotation_output/full_augment/",
+    "output_annotation_dir": "annotation_output/full_ablation/",
 
     # The output format for the all-annotator data. Allowed formats are:
     # * jsonl
