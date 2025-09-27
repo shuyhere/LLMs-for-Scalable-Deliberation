@@ -1,65 +1,39 @@
-# LLMs-Scalable-Deliberation
-Scaling evaluation of LLM based opinion summarization.
+# LLMs-for-Scalable-Deliberation
+Scaling evaluation of LLM-based opinion summarization in public deliberation.
 
-# Enviroment setup
-We use `uv` to manage the environment.
+<div align=center>
+<img src="image/llmdliberation-svg.svg" width="200px">
+</div>
+<h2 align="center"> <a href="https://arxiv.org/abs/2410.23746">	LLMs-for-Scalable-Deliberation </a></h2>
 
-if you did not have `uv` installed, you can install it by:
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+<h5 align="center"> 
 
-Then, you can install the environment by:
+If you like our project, please give us a star ⭐ on GitHub for the latest update.  </h2>
 
-```bash
-uv python install
-uv sync --frozen
-```
+</h5>
 
-Also you need to create .env file at the root of this project folder
-```bash
-OPENAI_API_KEY=YOUR_OPENAI_KEY
+<div align=center>
+  
+[![arXiv](https://img.shields.io/badge/Arxiv-XXX.svg?logo=arXiv)]() 
+	LLMs-for-Scalable-Deliberation [![Home Page](https://img.shields.io/badge/Project-LLMDliberation-green.svg)]()
 
-ZHI_API_KEY=YOUR_ZHIZENGZENG_KEY
-```
+This repository is the official implementation of LLMDliberation,xxx
+</div>
 
+---
 
-# Data
-We use the following datasets:
-- protest.json
-- gun_use.json
-- operation.json
-- bowling-green.json
-- LouisvilleCivicAssembly.json
-- GenAI.json
+## 📣 News
+
+* ⏳⏳⏳ Our code and data are released. And we will provide a detailed manual later and submit the data and leaderboard to huggingface soon.
+* `[2025.09.27]`  ✨ Our paper is published by **Arxiv**.
 
 
-# Demo usage
 
-You can check the usage of the scripts in batch submission and batch evaluation documentation: [README_batch_evaluation.md](./scripts/README_batch_evaluation.md) and [README_batch_summarization.md](./scripts/README_batch_summarization.md)
+## 🧐 Overview
 
-default setting can be found in [config/batch_summarization_config.yaml](./config/batch_summarization_config.yaml) and [config/batch_evaluation_config.yaml](./config/batch_evaluation_config.yaml)
-
-## Summary with LLM
-`uv run scripts/batch_gen_summarization.py`
-
-## Evaluation with LLMs
-`uv run scripts/batch_evaluate_summaries.py --evaluation-model gpt-4o-mini`
-
-`uv run scripts/batch_evaluate_summaries.py --evaluation-model gpt-5-nano`
-
-## Analysis scripts
-use `uv run xx.py` to analyze the results, all the analysis scripts are in the `scripts/visualization` folder.
+## 🏆 LeaderBoard
 
 
-wordcloud analysis:
-`python scripts/visualization/data_visualization/wordcloud_analysis.py `
+## ⚙️ Data and Experimental Reproduction
 
 
-# SFT
-
-data processing:
-
-`python /src/finetuning/data_process/build_supervised_from_full_augment.py`
-
-`python src/finetuning/data_process/build_comment_summary_ratings.py`
