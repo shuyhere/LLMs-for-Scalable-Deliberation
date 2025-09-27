@@ -781,10 +781,10 @@ def evaluate_correlations(trainer: Trainer, eval_dataset: Dataset, wandb_enabled
 def main():
     parser = argparse.ArgumentParser(description="Qwen3-0.6B multi-output regression training")
     parser.add_argument("--data", type=str,
-                        default="/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/comment_summary_ratings.jsonl")
+                        default="datasets/comment_summary_ratings.jsonl")
     parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-0.5B")
     parser.add_argument("--out", type=str,
-                        default="/ibex/project/c2328/LLMs-Scalable-Deliberation/results/qwen_regression")
+                        default="results/qwen_regression")
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--lr", type=float, default=5e-5)
     parser.add_argument("--batch", type=int, default=4)

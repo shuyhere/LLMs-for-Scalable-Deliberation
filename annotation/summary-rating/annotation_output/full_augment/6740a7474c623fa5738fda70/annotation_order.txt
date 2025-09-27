@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_2423_question
-triplet_2423_rating
-triplet_2423_comparison
-Summary-Rating-end.html

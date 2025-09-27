@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Define project directory
-PROJECT_DIR="/ibex/project/c2328/LLMs-Scalable-Deliberation"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
 # Data parameters
 DATA_FILE="$PROJECT_DIR/datasets/summary_rating_dataset/comment_summary_ratings.jsonl"

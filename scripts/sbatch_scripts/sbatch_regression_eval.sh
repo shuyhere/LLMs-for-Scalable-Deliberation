@@ -3,8 +3,9 @@
 # Script for batch submitting regression evaluation jobs for all model-size combinations
 # Usage: ./sbatch_regression_eval.sh [--eval-model-path PATH] [--models MODEL1,MODEL2] [--sizes SIZE1,SIZE2]
 
-# Define project directory
-PROJECT_DIR="/ibex/project/c2328/LLMs-Scalable-Deliberation"
+# Define project directory (relative to script location)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
 # Default evaluation model path
 DEFAULT_EVAL_MODEL_PATH="$PROJECT_DIR/checkpoints/deberta_regression_base_final_v6_pair_split_noactivation"

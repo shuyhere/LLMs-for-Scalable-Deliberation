@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_45_question
-triplet_45_rating
-triplet_45_comparison
-Summary-Rating-end.html

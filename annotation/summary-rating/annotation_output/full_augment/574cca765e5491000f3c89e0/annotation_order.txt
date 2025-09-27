@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_719_question
-triplet_719_rating
-triplet_719_comparison
-Summary-Rating-end.html

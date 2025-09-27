@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_737_question
-triplet_737_rating
-triplet_737_comparison
-Summary-Rating-end.html

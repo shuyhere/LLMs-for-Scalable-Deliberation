@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_3306_question
-triplet_3306_rating
-triplet_3306_comparison
-Summary-Rating-end.html

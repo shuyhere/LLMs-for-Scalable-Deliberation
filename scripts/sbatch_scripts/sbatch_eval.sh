@@ -43,7 +43,9 @@ submit_job() {
 #SBATCH --cpus-per-task=8
 
 # Set working directory
-cd /ibex/project/c2328/LLMs-Scalable-Deliberation
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+cd "$PROJECT_DIR"
 
 echo "Starting evaluation: Eval_Model=${eval_model}, Summary_Model=${summary_model}, Dataset=${dataset} at \$(date)"
 echo "=================================================="

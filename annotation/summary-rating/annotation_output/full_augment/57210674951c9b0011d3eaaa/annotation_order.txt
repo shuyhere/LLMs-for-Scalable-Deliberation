@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_3601_question
-triplet_3601_rating
-triplet_3601_comparison
-Summary-Rating-end.html

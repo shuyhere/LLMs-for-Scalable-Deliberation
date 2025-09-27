@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_1931_question
-triplet_1931_rating
-triplet_1931_comparison
-Summary-Rating-end.html

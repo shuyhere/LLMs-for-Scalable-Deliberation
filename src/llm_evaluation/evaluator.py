@@ -668,7 +668,7 @@ def main():
     print("\n=== DEBERTA-BASED EVALUATION (DebertaEvaluator) ===")
     
     # Example usage of DebertaEvaluator (requires trained model)
-    model_path = "/ibex/project/c2328/LLMs-Scalable-Deliberation/checkpoints/deberta_regression_base_v10_pair_split_sigmoid"
+    model_path = "checkpoints/deberta_regression_base_v10_pair_split_sigmoid"
     
     if Path(model_path).exists():
         try:

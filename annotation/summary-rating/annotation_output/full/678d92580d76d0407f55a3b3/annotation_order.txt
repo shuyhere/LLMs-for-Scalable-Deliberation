@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_1841_question
-triplet_1841_rating
-triplet_1841_comparison
-Summary-Rating-end.html

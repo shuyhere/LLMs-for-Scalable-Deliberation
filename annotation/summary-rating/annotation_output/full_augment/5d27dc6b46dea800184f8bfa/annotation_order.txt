@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_2060_question
-triplet_2060_rating
-triplet_2060_comparison
-Summary-Rating-end.html

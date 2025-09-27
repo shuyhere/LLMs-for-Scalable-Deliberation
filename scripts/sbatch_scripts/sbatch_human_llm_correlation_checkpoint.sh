@@ -70,7 +70,9 @@ submit_job() {
 #SBATCH --cpus-per-task=4
 
 # Set working directory
-cd /ibex/project/c2328/LLMs-Scalable-Deliberation
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
+cd "$PROJECT_DIR"
 
 echo "Running human-LLM correlation evaluation: Model=${model_name}, Temperature=${TEMPERATURE} at \$(date)"
 echo "=================================================="

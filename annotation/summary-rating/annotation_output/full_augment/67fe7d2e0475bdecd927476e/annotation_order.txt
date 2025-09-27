@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_4026_question
-triplet_4026_rating
-triplet_4026_comparison
-Summary-Rating-end.html

@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_887_question
-triplet_887_rating
-triplet_887_comparison
-Summary-Rating-end.html

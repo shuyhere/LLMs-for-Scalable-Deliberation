@@ -15,7 +15,7 @@ from tqdm import tqdm
 import csv
 
 # Ensure project imports work
-PROJECT_DIR = Path("/ibex/project/c2328/LLMs-Scalable-Deliberation").resolve()
+PROJECT_DIR = Path(__file__).parent.parent.parent
 SRC_DIR = PROJECT_DIR / "src"
 sys.path.append(str(SRC_DIR))
 

@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_493_question
-triplet_493_rating
-triplet_493_comparison
-Summary-Rating-end.html

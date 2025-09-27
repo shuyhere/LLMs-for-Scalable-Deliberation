@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_3090_question
-triplet_3090_rating
-triplet_3090_comparison
-Summary-Rating-end.html

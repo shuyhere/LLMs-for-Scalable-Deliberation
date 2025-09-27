@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_820_question
-triplet_820_rating
-triplet_820_comparison
-Summary-Rating-end.html

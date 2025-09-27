@@ -940,10 +940,10 @@ def set_seed(seed: int):
 def main():
     parser = argparse.ArgumentParser(description="Multi-output regression training (labels -1..7 normalized to -1..1)")
     parser.add_argument("--data", type=str,
-                        default="/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/comment_summary_ratings.jsonl")
+                        default="datasets/comment_summary_ratings.jsonl")
     parser.add_argument("--model", type=str, default="microsoft/deberta-v3-base")
     parser.add_argument("--out", type=str,
-                        default="/ibex/project/c2328/LLMs-Scalable-Deliberation/results/deberta_regression")
+                        default="results/deberta_regression")
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--lr", type=float, default=5e-5)
     parser.add_argument("--batch", type=int, default=8)

@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_170_question
-triplet_170_rating
-triplet_170_comparison
-Summary-Rating-end.html

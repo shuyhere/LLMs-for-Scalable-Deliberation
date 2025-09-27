@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_258_question
-triplet_258_rating
-triplet_258_comparison
-Summary-Rating-end.html

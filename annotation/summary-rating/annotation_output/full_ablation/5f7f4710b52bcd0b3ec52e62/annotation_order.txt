@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_80_question
-triplet_80_rating
-triplet_80_comparison
-Summary-Rating-end.html

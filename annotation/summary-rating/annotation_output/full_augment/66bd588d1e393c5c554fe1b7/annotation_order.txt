@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_2837_question
-triplet_2837_rating
-triplet_2837_comparison
-Summary-Rating-end.html

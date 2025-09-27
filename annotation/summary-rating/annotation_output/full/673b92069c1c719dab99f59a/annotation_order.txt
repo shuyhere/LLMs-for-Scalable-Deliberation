@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_1980_question
-triplet_1980_rating
-triplet_1980_comparison
-Summary-Rating-end.html

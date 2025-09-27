@@ -216,10 +216,10 @@ def compute_metrics(eval_pred):
 def main():
     parser = argparse.ArgumentParser(description="Multi-output multiclass training (labels -1..7 mapped to 0..8)")
     parser.add_argument("--data", type=str,
-                        default="/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/comment_summary_ratings.jsonl")
+                        default="datasets/comment_summary_ratings.jsonl")
     parser.add_argument("--model", type=str, default="microsoft/deberta-v3-base")
     parser.add_argument("--out", type=str,
-                        default="/ibex/project/c2328/LLMs-Scalable-Deliberation/results/deberta_multiclass")
+                        default="results/deberta_multiclass")
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--batch", type=int, default=8)

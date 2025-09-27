@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_3203_question
-triplet_3203_rating
-triplet_3203_comparison
-Summary-Rating-end.html

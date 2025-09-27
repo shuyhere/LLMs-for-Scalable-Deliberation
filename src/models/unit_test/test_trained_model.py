@@ -16,8 +16,8 @@ from models.LanguageModel import LanguageModel
 def test_trained_model():
     """Test loading and using a trained model"""
     
-    # Path to trained model
-    model_path = "/ibex/project/c2328/sft_tools/LLaMA-Factory/saves/qwen3_4b/full/deliberation_sft_compair/checkpoint-99"
+    # Path to trained model (example path - update as needed)
+    model_path = "checkpoints/qwen3_4b/checkpoint-99"
     
     print("🚀 Testing trained model loading")
     print(f"Model path: {model_path}")
@@ -66,7 +66,7 @@ def test_trained_model():
 def test_quiet_mode():
     """Test quiet mode (no verbose output)"""
     
-    model_path = "/ibex/project/c2328/sft_tools/LLaMA-Factory/saves/qwen3_4b/full/deliberation_sft_compair/checkpoint-99"
+    model_path = "checkpoints/qwen3_4b/checkpoint-99"
     
     print("\n🔇 Testing quiet mode")
     
@@ -107,7 +107,7 @@ def test_quiet_mode():
 def test_chat_completion():
     """Test chat completion functionality"""
     
-    model_path = "/ibex/project/c2328/sft_tools/LLaMA-Factory/saves/qwen3_4b/full/deliberation_sft_compair/checkpoint-99"
+    model_path = "checkpoints/qwen3_4b/checkpoint-99"
     
     print("\n💬 Testing chat completion")
     

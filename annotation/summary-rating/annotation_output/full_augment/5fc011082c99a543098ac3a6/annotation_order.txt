@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_3541_question
-triplet_3541_rating
-triplet_3541_comparison
-Summary-Rating-end.html

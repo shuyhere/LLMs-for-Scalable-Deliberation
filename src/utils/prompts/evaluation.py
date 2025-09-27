@@ -157,7 +157,7 @@ class HumanAnnotationPrompt(BasePrompt):
 	
 	def _load_label_catalog(self) -> Dict[str, Dict[str, Dict[str, List[str]]]]:
 		# Default path synchronized with data_process script output
-		default_report = Path("/ibex/project/c2328/LLMs-Scalable-Deliberation/datasets/sft_annotation_format_full_augment/labels_report.json")
+		default_report = Path("datasets/sft_annotation_format_full_augment/labels_report.json")
 		if default_report.exists():
 			try:
 				data = json.loads(default_report.read_text(encoding="utf-8"))

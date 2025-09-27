@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_421_question
-triplet_421_rating
-triplet_421_comparison
-Summary-Rating-end.html

@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_409_question
-triplet_409_rating
-triplet_409_comparison
-Summary-Rating-end.html

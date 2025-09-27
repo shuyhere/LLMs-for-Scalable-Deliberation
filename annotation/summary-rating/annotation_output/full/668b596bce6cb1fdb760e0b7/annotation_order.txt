@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_891_question
-triplet_891_rating
-triplet_891_comparison
-Summary-Rating-end.html

@@ -1,5 +1,0 @@
-Summary-Rating-intro.html
-triplet_1990_question
-triplet_1990_rating
-triplet_1990_comparison
-Summary-Rating-end.html
