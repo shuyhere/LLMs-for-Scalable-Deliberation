@@ -4,7 +4,7 @@ Scaling evaluation of LLM-based opinion summarization in public deliberation.
 <div align=center>
 <img src="image/projectlogo.png" width="250px">
 </div>
-<h1 align="center"> <a href="https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/">	LLMs-for-Scalable-Deliberation </a></h1>
+<h2 align="center"> <a href="https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/">	LLMs-for-Scalable-Deliberation </a></h2>
 
 <h3 align="center">
   <a href="https://shenzhezhu.github.io/">Shenzhe Zhu<sup>1,*</sup></a>, 
