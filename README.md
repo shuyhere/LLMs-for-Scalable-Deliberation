@@ -172,7 +172,7 @@ The project includes three main SBATCH scripts for distributed computing on SLUR
 
 **Usage**:
 ```bash
-# Evaluate all summaries with all evaluation models
+# Evaluate all summaries with all evaluation LLM models
 ./scripts/sbatch_scripts/sbatch_eval.sh
 
 # Specific evaluation model for all summary models
@@ -194,7 +194,7 @@ The project includes three main SBATCH scripts for distributed computing on SLUR
 
 ### 3. `sbatch_regression_eval.sh` - Regression Evaluation
 
-**Purpose**: Perform regression-based evaluation using trained DeBERTa models for scalable assessment.
+**Purpose**: Perform regression-based evaluation using our trained DeBERTa models for scalable assessment.
 
 **Usage**:
 ```bash
