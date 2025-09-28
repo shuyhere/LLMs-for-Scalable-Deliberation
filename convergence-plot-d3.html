@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Scatterplot with Voronoi</title>
+
+    <!-- D3.js -->
+    <script src="d3.v3.js"></script>
+
+    <!-- jQuery -->
+    <script src="jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="bootstrap.min.js"></script>
+
+    <!-- Removed Google Fonts CSS for pure-local build -->
+    <style>
+        @font-face {
+            font-family: 'graphik';
+            src: url('GraphikLight.otf') format('opentype');
+        }
+        body {
+            font-family: 'graphik', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: #525252;
+            text-align: center;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #B3B3B3;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-size: 10px;
+            fill: #6B6B6B;
+        }
+
+        .countries {
+            pointer-events: none;
+        }
+
+        .circle-wrapper {
+            fill: none;
+            pointer-events: all;
+        }
+
+        .guide {
+            pointer-events: none;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .popover {
+            pointer-events: none;
+        }
+
+        .legendCircle {
+            stroke-width: 1;
+            stroke: #999;
+            stroke-dasharray: 2 2;
+            fill: none;
+        }
+
+        .legendLine {
+            stroke-width: 1;
+            stroke: #D1D1D1;
+            shape-rendering: crispEdges;
+        }
+
+        .legendTitle {
+            fill: #1A1A1A;
+            color: #1A1A1A;
+            text-anchor: middle;
+            font-size: 10px;
+        }
+
+        .legendText {
+            fill: #949494;
+            text-anchor: start;
+            font-size: 9px;
+        }
+
+        @media (min-width: 600) {
+
+            .col-sm-3,
+            .col-sm-9 {
+                float: left;
+            }
+
+            .col-sm-9 {
+                width: 60%;
+            }
+
+            .col-sm-3 {
+                width: 40%;
+            }
+        }
+
+        .centered-container {
+            max-width: 800px; /* Adjust based on your design needs */
+            margin: 0 auto; /* This centers the div */
+            padding: 0px; /* Optional: Adds some padding inside the container */
+        }
+
+        @media (max-width: 800px) {
+            .centered-container {
+                width: 100%; /* Makes the container full-width on smaller screens */
+            }
+        }
+
+        </style>
+</head>
+
+
+
+<body>
+
+    <div class="centered-container">
+
+    <div id="cont" class="container-fluid text-center">
+        <div class="row scatter">
+            <!-- <h5 style="color: #3B3B3B;">Life expectancy versus GDP per Capita</h5>
+            <h6 style="color: #A6A6A6;">Voronoi clipped circles - Final</h6> -->
+            <div class="col-sm-9">
+                <div id="chart"></div>
+            </div>
+            <div id="legend" class="col-sm-3" style="padding-right: 0px; padding-left: 0px;">
+                <div class="legendTitle" style="font-size: 12px;">Model family</div>
+                <div id="legend"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="akc.js"></script>
+    <script src="script.js"></script>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,759 @@
+<html>
+  <head>
+
+<!-- Removed Google Analytics for pure-local build -->
+
+<!--<script src="https://d3js.org/d3.v3.js"></script>-->
+
+<script src="jquery.min.js"></script>
+
+<!-- Removed external CDN references for pure-local build -->
+<link rel="shortcut icon" href="icon.ico">
+<style type="text/css">
+	body {
+		background-color: #f5f9ff;
+	}
+
+	/* Hide both math displays initially, will display based on JS detection */
+  .mathjax-mobile, .mathml-non-mobile { display: none; }
+
+  /* Show the MathML content by default on non-mobile devices */
+  .show-mathml .mathml-non-mobile { display: block; }
+  .show-mathjax .mathjax-mobile { display: block; }
+
+	.content-margin-container {
+		display: flex;
+		width: 100%; /* Ensure the container is full width */
+		justify-content: left; /* Horizontally centers the children in the container */
+		align-items: center;  /* Vertically centers the children in the container */
+	}
+	.main-content-block {
+		width: 85%; /* Fill remaining space after 15% left nav */
+    max-width: none; /* Expand since right column removed */
+		background-color: #fff;
+		border-left: 1px solid #DDD;
+		border-right: 1px solid #DDD;
+		padding: 8px 8px 8px 8px;
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+	}
+	.margin-left-block {
+			font-size: 14px;
+			width: 15%; /* Change this percentage as needed */
+			max-width: 130px; /* Optional: Maximum width */
+			position: relative;
+			margin-left: 10px;
+			text-align: left;
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+			padding: 5px;
+	}
+	.margin-right-block {
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;#"Avenir";
+			font-size: 14px;
+			width: 25%; /* Change this percentage as needed */
+			max-width: 256px; /* Optional: Maximum width */
+			position: relative;
+			text-align: left;
+			padding: 10px;  /* Optional: Adds padding inside the caption */
+			display: none; /* Hide right-side explanatory bar globally */
+	}
+
+	img {
+			max-width: 100%; /* Make sure it fits inside the container */
+			height: auto;
+			display: block;
+			margin: auto;
+	}
+	.my-video {
+			max-width: 100%; /* Make sure it fits inside the container */
+			height: auto;
+			display: block;
+			margin: auto;
+	}
+	/* Hide both video displays initially, will display based on JS detection */
+  .vid-mobile, .vid-non-mobile { display: none; }
+
+  /* Show the video content by default on non-mobile devices */
+  .show-vid-mobile .vid-mobile { display: block; }
+  .show-vid-non-mobile .vid-non-mobile { display: block; }
+
+	a:link,a:visited
+	{
+		color: #0e7862; /*#1367a7;*/
+		text-decoration: none;
+	}
+	a:hover {
+		color: #24b597; /*#208799;*/
+	}
+
+	h1 {
+		font-size: 18px;
+		margin-top: 4px;
+		margin-bottom: 10px;
+	}
+
+table.header {
+    font-weight: 300;
+    font-size: 17px;
+    flex-grow: 1;
+    width: 70%;
+    max-width: calc(100% - 290px); /* Adjust according to the width of .paper-code-tab */
+}
+/* Increase spacing between title row and authors row */
+table.header tr:first-child td { padding-bottom: 6px; }
+/* Increase spacing between authors row and affiliations row */
+table.header tr:nth-child(2) td { padding-bottom: 5px; }
+		table td, table td * {
+	    vertical-align: middle;
+	    position: relative;
+	}
+  /* Authors block extracted from table cells; prevent breaking a single name */
+  .authors-list {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 30px;
+      row-gap: 6px;
+      margin-top: 4px; /* extra gap below the title */
+  }
+  .authors-list a { white-space: nowrap; font-size: 17px; }
+  /* Superscript styling for authors/affiliations (stronger + targeted) */
+  .authors-list sup, .affiliations sup {
+    font-size: 0.75em;
+    line-height: 0;
+    position: relative;
+    top: -0.45em;
+  }
+/* Only target the authors row: keep names on one line, allow wrapping between authors */
+/* (reverted) no special author-row layout; use default table flow */
+	table.paper-code-tab {
+	    flex-shrink: 0;
+	    /* align=center in HTML centers the table; use auto to push right */
+	    margin-left: auto;
+	    margin-right: 50px; /* small right gutter */
+	    margin-top: 8px;
+	    padding: 0px 0px 0px 8px;
+	    width: 290px;
+	    height: 150px;
+	}
+
+	.layered-paper { /* modified from: http://css-tricks.com/snippets/css/layered-paper/ */
+		box-shadow:
+		        0px 0px 1px 1px rgba(0,0,0,0.35), /* The top layer shadow */
+		        5px 5px 0 0px #fff, /* The second layer */
+		        5px 5px 1px 1px rgba(0,0,0,0.35), /* The second layer shadow */
+		        10px 10px 0 0px #fff, /* The third layer */
+		        10px 10px 1px 1px rgba(0,0,0,0.35); /* The third layer shadow */
+		margin-top: 5px;
+		margin-left: 10px;
+		margin-right: 30px;
+		margin-bottom: 5px;
+	}
+
+	hr {
+    height: 1px; /* Sets the height of the line to 1 pixel */
+    border: none; /* Removes the default border */
+    background-color: #DDD; /* Sets the line color to black */
+  }
+
+	div.hypothesis {
+		width: 80%;
+		background-color: #EEE;
+		border: 1px solid black;
+		border-radius: 10px;
+		-moz-border-radius: 10px;
+		-webkit-border-radius: 10px;
+		font-family: Courier;
+		font-size: 18px;
+		text-align: center;
+		margin: auto;
+		padding: 16px 16px 16px 16px;
+	}
+
+	div.citation {
+    font-size: 0.8em;
+    background-color:#fff;
+    padding: 10px;
+		height: 200px;
+  }
+
+	.fade-in-inline {
+		position: absolute;
+		text-align: center;
+		margin: auto;
+		-webkit-mask-image: linear-gradient(to right,
+																			transparent 0%,
+																			transparent 40%,
+																			black 50%,
+																			black 90%,
+																			transparent 100%);
+		mask-image: linear-gradient(to right,
+																transparent 0%,
+																transparent 40%,
+																black 50%,
+																black 90%,
+																transparent 100%);
+		-webkit-mask-size: 8000% 100%;
+		mask-size: 8000% 100%;
+		animation-name: sweepMask;
+		animation-duration: 4s;
+		animation-iteration-count: infinite;
+		animation-timing-function: linear;
+		animation-delay: -1s;
+	}
+
+	.fade-in2-inline {
+			animation-delay: 1s;
+	}
+
+	.inline-div {
+			position: relative;
+	    display: inline-block; /* Makes both the div and paragraph inline-block elements */
+	    vertical-align: top; /* Aligns them at the top, you can adjust this to middle, bottom, etc., based on your needs */
+	    width: 50px; /* Optional: Adds space between the div and the paragraph */
+	}
+
+	/* Using a keyframe animation to create a fade effect with gradient */
+	@keyframes sweepMask {
+	    from {
+	        -webkit-mask-position: 0% center;
+	        mask-position: 0% center;
+	    }
+	    to {
+	        -webkit-mask-position: -100% center;
+	        mask-position: -100% center;
+	    }
+	}
+
+	/* Affiliations (static) */
+    	.affiliations { font-size: 18px; display: flex; flex-wrap: wrap; gap: 6px 24px; align-items: baseline; }
+    	.affiliations .sep { opacity: 0.5; }
+	    	.author-notes { font-size: 13px; color: #444; margin-top: 1px; text-align: left; }
+
+    /* Small caps like \textsc{} */
+    .sc {
+      font-variant: small-caps;
+      font-variant-caps: all-small-caps;
+      font-feature-settings: 'smcp' 1, 'c2sc' 1;
+	  font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+</style>
+<style type="text/css">
+  /* Mobile tweaks: stack layout, responsive media, friendlier spacing */
+  @media (max-width: 768px) {
+    .content-margin-container { flex-direction: column; align-items: stretch; }
+    .margin-left-block { display: none; }
+    .main-content-block { width: 100%; border-left: none; border-right: none; padding: 8px 10px; }
+
+    /* Header title uses full width; Paper/Code stacks below and centers */
+    table.header { width: 100% !important; max-width: 100% !important; display: block; }
+    table.paper-code-tab { margin-left: auto; margin-right: auto; float: none; width: auto; height: auto; }
+    .layered-paper { margin-left: 0 !important; }
+
+    /* Make images and iframes responsive even if inline width is set */
+    .main-content-block img { max-width: 100% !important; width: 100% !important; height: auto !important; }
+    iframe { width: 100% !important; height: 340px; }
+
+    /* Slightly smaller author font on mobile */
+    .authors-list a { font-size: 16px; }
+    .affiliations { font-size: 16px; gap: 4px 12px; }
+  }
+  @media (max-width: 420px) {
+    iframe { height: 300px; }
+  }
+</style>
+
+	  <title>Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs</title>
+      <meta property="og:title" content="Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs" />
+			<meta charset="UTF-8">
+  </head>
+
+  <body>
+
+		<div class="content-margin-container">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<table class="header" align=left>
+                        <tr>
+                                <td colspan=4>
+										<span style="font-size: 32px; font-family: 'Courier New', Courier, monospace; /* Adds fallbacks */">Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs</span>
+									</td>
+								</tr>
+                        <tr>
+                                <td colspan=4 align=left>
+                                    <div class="authors-list">
+                                        <a href="https://shenzhezhu.github.io/">Shenzhe Zhu<sup>1,🌟</sup></a>
+                                        <a href="https://shuyhere.notion.site/Shu-Yang-1210f14e46e080f18511e448279487e6">Shu Yang<sup>2,🌟</sup></a>
+                                        <a href="https://miba.dev/">Michiel A. Bakker<sup>3</sup></a>
+                                        <a href="https://www.media.mit.edu/people/sandy/overview/">Alex Pentland<sup>3,4</sup></a>
+                                        <a href="https://jiaxin-pei.github.io/">Jiaxin Pei<sup>4,📮</sup></a>
+                                    </div>
+                                </td>
+                        <tr>
+                                <td colspan=4 align=left height=30px>
+                                    <div class="affiliations">
+                                        <span>University of Toronto<sup>1</sup></span>
+                                        <span class="sep"></span>
+                                        <span>KAUST<sup>2</sup></span>
+                                        <span class="sep"></span>
+                                        <span>MIT<sup>3</sup></span>
+                                        <span class="sep"></span>
+                                        <span>Stanford University<sup>4</sup></span>
+                                    </div>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td colspan=4 align=left>
+                                    <div class="author-notes">🌟 Equal contribution 📮 Corresponding author</div>
+                                </td>
+                        </tr>
+						</table>
+
+						<table class="paper-code-tab" align=center>
+							<tr height:125>
+								<td style="vertical-align: top; text-align: center; width: 50px; border-left: 1px dotted black;">
+										<span style="font-size:20px"><a href=''>Paper</a></span>
+										<span style="font-size:42px"><a href=''><img class="layered-paper" style="height:100px;  margin-left:28px" src="image/paper_pdf_thumb.png"></a>
+								</td>
+								<td style="vertical-align: top; text-align: center; width: 50px;">
+										<span style="font-size:20px"><a href='https://github.com/shuyhere/LLMs-Scalable-Deliberation'>Code</a></span>
+										<span style="font-size:42px"><a href='https://github.com/shuyhere/LLMs-Scalable-Deliberation'><img style="border: 1px solid black; height:75px; margin-top:20px" src="code.png"></a
+								</td>
+							</tr>
+						</table>
+					</div>
+
+		</div>
+
+
+		<div class="content-margin-container">
+				<div class="margin-left-block">
+                    <div style="position:fixed; max-width:inherit; top:max(20%,120px)">
+						<b style="font-size:16px">Outline</b><br><br>
+						<a href="index.html#introduction">Introduction</a><br><br>
+						<a href="index.html#Evaluation_framework">Evaluation Framework</a><br><br>
+						<a href="index.html#deliberationbank">DeliberationBank</a><br><br>
+						<a href="index.html#deliberationjudge">DeliberationJudge</a><br><br>
+						<a href="index.html#main_results">Main Results</a><br><br>
+						<a href="index.html#Influencing Factors">Influencing Factors</a><br><br>
+						<a href="index.html#minority_underrepresentation">Minority Underrepresentation</a>
+                    </div>
+				</div>
+		    <div class="main-content-block">
+		        <img src="image/deliberation.png" alt="" style="width: 700px">
+		    </div>
+
+		</div>
+
+		<div class="content-margin-container" id="introduction">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+				Public deliberations generate vast amounts of free-form input, yet producing summaries that are both informative and fair remains costly and difficult. Recent approaches attempt to harness LLMs to assist this process, offering efficiency gains but also raising concerns: they risk over-representing majority views and introducing bias, challenging the reliability of current practices. These issues motivate our central question:
+						<br><br>
+						<div class="hypothesis" style="font-size: 16.5px;line-height: 1.25;font-weight: bold;">
+							Can LLMs truly support deliberation by producing summaries that are representative, informative, and neutral for policy use—and how can we evaluate them reliably at scale?
+						</div>
+						<br><br>
+							To tackle this challenge, we propose <span class="sc">DeliberationBank</span>, a large-scale dataset of diverse human opinions, together with <span class="sc">DeliberationJudge</span>, an automatic evaluation framework that integrates LLM-based and model-based judging for opinion summarization in deliberations.
+		    </div>
+
+		</div>
+
+		<div class="content-margin-container" id="Evaluation_framework">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+					<h1>Automatic Deliberation Summarization Evaluation Framework</h1>
+                    The overall goal is to evaluate LLM's capabilities to generate representative and effective summaries for public deliberations. We create four deliberation-relevant metrics, grounded in prior work on summarization and societal deliberation: <em>Representativeness</em>, <em></em>Informativeness</em>, <em>Neutrality</em>, and <em>Policy Approval</em>, and adopt an automatic evaluation framework. For each deliberation question (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+						<msub>
+						  <mi>q</mi>
+						</msub>
+					  </math>), a subset of opinions (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+						<mover accent="true">
+						  <mi>O</mi>
+						  <mo>~</mo>
+						</mover>
+					  </math>) from public opinion dataset part of <span class="sc">DeliberationBank</span> is given to a summarization model (<i>M</i>), which produces a summary:
+                    <center>
+                        <div class="mathml-non-mobile">
+                            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                <msub>
+                                    <mi>S</mi>
+                                    <mrow>
+                                        <mi>M</mi>
+                                        <mo>,</mo>
+                                        <mover accent="true"><mi>O</mi><mo>~</mo></mover>
+                                    </mrow>
+                                </msub>
+                                <mo>=</mo>
+                                <mi>M</mi>
+                                <mo>(</mo>
+                                <mi>q</mi>
+                                <mo>,</mo>
+                                <mover accent="true"><mi>O</mi><mo>~</mo></mover>
+                                <mo>)</mo>
+                            </math>
+                        </div>
+                        <div class="mathjax-mobile">
+                            \[ S_{\mathcal{M},\,\tilde{\mathcal{O}}} = \mathcal{M}(q,\,\tilde{\mathcal{O}}). \]
+                        </div>
+                    </center>
+
+                    Each summary is then paired with an individual opinion (o<sub>i</sub>) and scored by <span class="sc">DeliberationJudge</span>, a fine-tuned DeBERTa judge, yielding a 4-dimensional vector:
+                    <center>
+                        <div class="mathml-non-mobile">
+                            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                <msub><mi>J</mi><mi>θ</mi></msub>
+                                <mo>(</mo>
+                                <mi>q</mi>
+                                <mo>,</mo>
+                                <msub><mi>o</mi><mi>i</mi></msub>
+                                <mo>,</mo>
+                                <msub>
+                                    <mi>S</mi>
+                                    <mrow>
+                                        <mi>M</mi>
+                                        <mo>,</mo>
+                                        <mover accent="true"><mi>O</mi><mo>~</mo></mover>
+                                    </mrow>
+                                </msub>
+                                <mo>)</mo>
+                                <mo>=</mo>
+                                <mo>(</mo>
+                                <mrow>
+                                    <mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>rep</mtext><mo>)</mo>
+                                </mrow>
+                                <mo>,</mo>
+                                <mrow>
+                                    <mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>inf</mtext><mo>)</mo>
+                                </mrow>
+                                <mo>,</mo>
+                                <mrow>
+                                    <mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>neu</mtext><mo>)</mo>
+                                </mrow>
+                                <mo>,</mo>
+                                <mrow>
+                                    <mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>pol</mtext><mo>)</mo>
+                                </mrow>
+                                <mo>)</mo>
+                                <mo>∈</mo>
+                                <msup>
+                                    <mrow>
+                                        <mo>[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>]</mo>
+                                    </mrow>
+                                    <mn>4</mn>
+                                </msup>
+                                <mo>.</mo>
+                            </math>
+                        </div>
+                        <div class="mathjax-mobile">
+                            \[ \mathcal{J}_\theta(q,\, o_i,\, S_{\mathcal{M},\,\tilde{\mathcal{O}}}) = (\hat{y}^{(\mathrm{rep})},\, \hat{y}^{(\mathrm{inf})},\, \hat{y}^{(\mathrm{neu})},\, \hat{y}^{(\mathrm{pol})}) \in [0,1]^4. \]
+                        </div>
+                    </center>
+		    </div>
+
+		</div>
+
+		<div class="content-margin-container" id="deliberationbank">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<h1>DeliberationBank</h1>
+						<span class="sc">DeliberationBank</span> is a large-scale deliberation benchmark dataset created by 7,500 participants from a US representative sample with two subsets: (i) a public opinion dataset of 3,000 free-form opinions collected from 10 societal deliberation questions on trending topics, and (ii) a summary judgement dataset of 4,500 annotations that evaluate deliberation summaries from individual perspectives. The figure showing below is the construction process of <span class="sc">DeliberationBank</span>.
+		    </div>
+
+		</div>
+		<div class="content-margin-container">
+			<div class="margin-left-block">
+			</div>
+		<div class="main-content-block">
+					<img src="image/annotate_pipe.png" alt="" style="width: 600px">
+		</div>
+
+		</div>
+
+		<div class="content-margin-container" id="deliberationjudge">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<h1>DeliberationJudge</h1>
+						Recent work has adopted pretrained LLMs as automated judges, but studies reveal systematic biases and instability rooted in their black-box nature and alignment limits. To improve reliability while retaining efficiency, we introduce <span class="sc">DeliberationJudge</span>, a DeBERTa-based model fine-tuned on human judgments for deliberation summarization and used for automatic evaluation. We utilize the summary judgement dataset to fine-tune the language model. <p> The <span class="sc">DeliberationJudge</span> is trained with normalized labels from both rating and comparison tasks on a unified [0,1] scale. Formally, given a deliberation question <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+							<msub>
+							  <mi>q</mi>
+							  <mi>i</mi>
+							</msub>
+						  </math>
+						  , an annotator opinion <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+							<msubsup>
+							  <mi>o</mi>
+							  <mi>i</mi>
+							  <mrow>
+								<mo>(</mo>
+								<mi>j</mi>
+								<mo>)</mo>
+							  </mrow>
+							</msubsup>
+						  </math>
+						  , and a candidate summary<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+							<msub>
+							  <mi>S</mi>
+							  <mrow>
+								<mi>M</mi>
+								<mo>,</mo>
+								<msub>
+								  <mover accent="true">
+									<mi>O</mi>
+									<mo>~</mo>
+								  </mover>
+								  <mi>i</mi>
+								</msub>
+							  </mrow>
+							</msub>
+						  </math>
+						  , the judge encodes: </p>
+						  <center>
+							<!-- MathML version -->
+							<div class="mathml-non-mobile">
+							  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+								<mstyle mathvariant="monospace"><mtext>[CLS]</mtext></mstyle>
+								<mo>;</mo> <mspace width="0.4em"/>
+								<msub><mi>q</mi><mi>i</mi></msub>
+								<mo>;</mo> <mspace width="0.4em"/>
+								<mstyle mathvariant="monospace"><mtext>[SEP]</mtext></mstyle>
+								<mo>;</mo> <mspace width="0.4em"/>
+								<msubsup>
+								  <mi>o</mi><mi>i</mi>
+								  <mrow><mo>(</mo><mi>j</mi><mo>)</mo></mrow>
+								</msubsup>
+								<mo>;</mo> <mspace width="0.4em"/>
+								<mstyle mathvariant="monospace"><mtext>[SEP]</mtext></mstyle>
+								<mo>;</mo> <mspace width="0.4em"/>
+								<msub>
+								  <mi>S</mi>
+								  <mrow>
+									<mi>M</mi><mo>,</mo>
+									<msub>
+									  <mover accent="true"><mi>O</mi><mo>~</mo></mover>
+									  <mi>i</mi>
+									</msub>
+								  </mrow>
+								</msub>
+								<mo>;</mo> <mspace width="0.4em"/>
+								<mstyle mathvariant="monospace"><mtext>[SEP]</mtext></mstyle>
+							  </math>
+							</div>
+						  
+							<!-- MathJax fallback -->
+							<div class="mathjax-mobile">
+							  \[
+							  [\texttt{[CLS]};\, q_i;\, \texttt{[SEP]};\, o_i^{(j)};\, \texttt{[SEP]};\,
+							  S_{M,\tilde{O}_i};\, \texttt{[SEP]}]
+							  \]
+							</div>
+						  </center>
+						  
+						  <p>and outputs a four-dimensional score vector:</p>
+						  
+						  <center>
+							<!-- MathML version -->
+							<div class="mathml-non-mobile">
+							  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+								<mover accent="true"><mi>y</mi><mo>^</mo></mover>
+								<mo>=</mo>
+								<msub><mi>J</mi><mi>θ</mi></msub>
+								<mo>(</mo>
+								<msub><mi>q</mi><mi>i</mi></msub>
+								<mo>,</mo>
+								<msubsup>
+								  <mi>o</mi><mi>i</mi>
+								  <mrow><mo>(</mo><mi>j</mi><mo>)</mo></mrow>
+								</msubsup>
+								<mo>,</mo>
+								<msub>
+								  <mi>S</mi>
+								  <mrow>
+									<mi>M</mi><mo>,</mo>
+									<msub>
+									  <mover accent="true"><mi>O</mi><mo>~</mo></mover>
+									  <mi>i</mi>
+									</msub>
+								  </mrow>
+								</msub>
+								<mo>)</mo>
+								<mo>=</mo>
+								<mo>(</mo>
+								<mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>rep</mtext><mo>)</mo>
+								<mo>,</mo>
+								<mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>inf</mtext><mo>)</mo>
+								<mo>,</mo>
+								<mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>neu</mtext><mo>)</mo>
+								<mo>,</mo>
+								<mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>pol</mtext><mo>)</mo>
+								<mo>)</mo>
+								<mo>∈</mo>
+								<msup>
+								  <mrow><mo>[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>]</mrow>
+								  <mn>4</mn>
+								</msup>
+							  </math>
+							</div>
+						  
+							<!-- MathJax fallback -->
+							<div class="mathjax-mobile">
+							  \[
+							  \hat{\mathbf{y}} = \mathcal{J}_{\theta}\!\left(q_i,\, o_i^{(j)},\, S_{M,\tilde{O}_i}\right)
+							  = \bigl(\hat{y}^{(\mathrm{rep})},\, \hat{y}^{(\mathrm{inf})},\, \hat{y}^{(\mathrm{neu})},\, \hat{y}^{(\mathrm{pol})}\bigr) \in [0,1]^4
+							  \]
+							</div>
+						  </center>	
+						  <p>
+							Here the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+								<mstyle mathvariant="monospace"><mtext>[CLS]</mtext></mstyle>
+							  </math> representation from the final encoder layer is passed through a hidden layer and a linear projection to produce the four regression outputs. Human annotations 
+							<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+							  <msup><mi>y</mi><mtext>raw</mtext></msup>
+							</math> ∈ [-1,7]<sup>4</sup> are linearly normalized to 
+							<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+							  <mi>y</mi>
+							</math> ∈ [0,1]<sup>4</sup> for training stability. The model is trained with the Huber loss averaged across dimensions. At inference time, predictions remain in the [0,1] range and are used directly as summary scores.
+							</p>					  
+					
+						<!--
+						<div class="centered-container">
+
+		            <div class="col-sm-9">
+		                <div id="chart"></div>
+		            </div>
+		            <div id="legend" class="col-sm-3" style="padding-right: 0px; padding-left: 0px;">
+		                <div class="legendTitle" style="font-size: 12px;">Model family</div>
+		                <div id="legend"></div>
+		            </div>
+
+								<script src="akc.js"></script>
+								<script src="script.js"></script>
+
+						</div>
+						-->
+		    </div>
+
+		</div>
+		<div class="content-margin-container">
+			<div class="margin-left-block">
+			</div>
+		<div class="main-content-block">
+					<img src="image/judge_performance.png" alt="" style="width: 700px">
+		</div>
+		</div>
+
+		<div class="content-margin-container">
+			<div class="margin-left-block">
+			</div>
+		<div class="main-content-block">
+			As shown above, <span class="sc">DeliberationJudge</span> offers the best trade-off between accuracy and efficiency. In large-scale deliberation, LLM inference becomes prohibitively costly as inputs grow, whereas <span class="sc">DeliberationJudge</span> maintains strong human alignment with evaluation time largely independent of input size.
+
+		</div>
+	</div>
+
+
+	
+	<div class="content-margin-container" id="main_results">
+		<div class="margin-left-block">
+		</div>
+	<div class="main-content-block">
+				<h1>Main Results</h1>
+				As shown below, table shows the LLM's global average score (GAS), expressed as 
+				<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
+					<mi>GAS</mi>
+					<mo>&#177;</mo>
+					<mn>95</mn>
+					<mo>%</mo>
+					<mi>CI</mi>
+				</math>,
+				computed across four evaluation dimensions (Representativeness, Informativeness, Neutrality, and Policy Approval) over all data samples. Models are arranged from left to right and top to bottom in descending order of mean performance.
+	</div>
+	</div>
+	<div class="content-margin-container">
+		<div class="margin-left-block">
+		</div>
+	<div class="main-content-block">
+				<img src="image/main.png" alt="" style="width: 600px">
+	</div>
+	</div>
+
+	</div>
+		<div class="content-margin-container" id="Influencing Factors">
+				<div class="margin-left-block">
+				</div>
+		    <div class="main-content-block">
+						<h1>Influencing Factors</h1>
+						We conduct a comprehesive analysis to understand the influencing factors of LLM's performance on deliberation summarization. This can be categorized into four types: (i) summarization input size, (ii) question topic, (iii) question type, and (iv) model size.
+		    </div>
+
+		</div>
+
+		<div class="content-margin-container">
+			<div class="margin-left-block">
+			</div>
+		<div class="main-content-block">
+					<img src="image/factor.png" alt="" style="width: 650px">
+		</div>
+		</div>
+
+		<div class="content-margin-container" id="minority_underrepresentation">
+			<div class="margin-left-block">
+			</div>
+		<div class="main-content-block">
+					<h1>Minority Underrepresentation</h1>
+					<p>
+						To examine LLMs' ability to represent minority opinions, we collected
+						1,000 U.S. responses on two deliberation questions
+						(<em>Tariff Policy</em> and <em>AI Change Life</em>), where participants
+						self-identified whether their stance reflected a minority view, providing a
+						ground-truth partition of minority vs. non-minority subsets.
+						Focusing on the <em>representativeness</em> dimension, we partition opinions
+						by self-reports and find that all models consistently score lower on
+						minority opinions, revealing a systematic bias.
+					  </p>
+		</div>
+		</div>
+		<div class="content-margin-container">
+			<div class="margin-left-block">
+			</div>
+		<div class="main-content-block">
+					<img src="image/minority.png" alt="" style="width: 800px">
+		</div>
+		</div>
+
+
+	</div>
+		<hr>
+			<center><a>Can AI Truly Represent Your Voice in Deliberations?🤔</a></center>
+
+	</body>
+
+	<script>
+	// Enhanced mobile detection function
+  function isMobileDevice() {
+      return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1) || /Mobi|Android/i.test(navigator.userAgent);
+  }
+
+  // Set up display without external CDNs: always use MathML locally
+  function applyDisplay() {
+      // Always show MathML content (pure local)
+      document.body.classList.add('show-mathml');
+
+      // Toggle video variants based on device
+      if (isMobileDevice()) {
+          document.body.classList.add('show-vid-mobile');
+      } else {
+          document.body.classList.add('show-vid-non-mobile');
+      }
+  }
+
+// Apply the math display setup when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', applyDisplay);
+
+</script>
+
+</html>
