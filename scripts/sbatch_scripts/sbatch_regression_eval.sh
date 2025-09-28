@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
 # Default evaluation model path
-DEFAULT_EVAL_MODEL_PATH="$PROJECT_DIR/checkpoints/deberta_regression_base_final_v6_pair_split_noactivation"
+DEFAULT_EVAL_MODEL_PATH="$PROJECT_DIR/model_path"
 
 # Available models and sample sizes
 
