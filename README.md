@@ -1,48 +1,65 @@
-# Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs
+# 🗣️💬🏛️ Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs
 Scaling evaluation of LLM-based opinion summarization in public deliberation.
 
 <div align=center>
-<img src="image/projectlogo.png" width="200px">
+<img src="image/projectlogo.png" width="250px">
 </div>
-<h2 align="center"> <a href="https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/">	LLMs-for-Scalable-Deliberation </a></h2>
+<h1 align="center"> <a href="https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/">	LLMs-for-Scalable-Deliberation </a></h1>
 
-<h5 align="center"> 
+<h3 align="center">
+  <a href="https://shenzhezhu.github.io/">Shenzhe Zhu<sup>1,*</sup></a>, 
+  <a href="https://shuyhere.notion.site/Shu-Yang-1210f14e46e080f18511e448279487e6">Shuyang<sup>2,*</sup></a>, 
+  <a href="https://miba.dev/">Michiel A. Bakker<sup>3</sup></a>, 
+  <a href="https://www.media.mit.edu/people/sandy/">Alex Pentland<sup>3,4</sup></a>, 
+  <a href="https://jiaxin-pei.github.io/">Jiaxin Pei<sup>4,†</sup></a>
+</h3>
 
-If you like our project, please give us a star ⭐ on GitHub for the latest update.  </h2>
+<h3 align="center">
+  UofToronto<sup>1</sup>, 
+  KAUST<sup>2</sup>, 
+  MIT<sup>3</sup>, 
+  Stanford University<sup>4</sup>
+</h3>
 
-</h5>
+
+<h4 align="center"> 
+
+If you like our project, please give us a star ⭐ on GitHub for the latest update.
+
+</h4>
+
+
 
 <div align=center>
   
 [![arXiv](https://img.shields.io/badge/Arxiv-123.svg?logo=arXiv)](https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/) 
-[![Home Page](https://img.shields.io/badge/Project-LLMDliberation-green.svg)](https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/)
+[![Home Page](https://img.shields.io/badge/Project-LLMDeliberation-green.svg)](https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/)
 
-This repository is the official code and data of ``Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs''.
+This repository contains the official code and data for *Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs*.
 </div>
 
 ---
 
 ## 📣 News
 
-*  Our code and data are released. 
+*  2025.09.27 Our code and data are released. 
 
 ## 🧐 Overview
 
 <div align=center>
-<img src="image/overview_figure.png" width="500px">
+<img src="image/overview_figure.png" width="600px">
 </div>
 
 Public deliberations generate vast amounts of free-form input, yet producing summaries that are both informative and fair remains costly and difficult. Recent approaches attempt to harness LLMs to assist this process, offering efficiency gains but also raising concerns: they risk over-representing majority views and introducing bias, challenging the reliability of current practices. These issues motivate our central question:
 
-```
-Can LLMs truly support deliberation by producing summaries that are representative, informative, and neutral for policy use—and how can we evaluate them reliably at scale?
-```
+> Can LLMs truly support deliberation by producing summaries that are representative, informative, and neutral for policy use—and how can we evaluate them reliably at scale?
+
 To tackle this challenge, we propose DeliberationBank, a large-scale dataset of diverse human opinions, together with DeliberationJudge, an automatic evaluation framework that integrates LLM-based and model-based judging for opinion summarization in deliberations.
 
 ## 🏆 Main Results
 
 <div align=center>
-<img src="image/main_result.png" width="500px">
+<img src="image/main_result.png" width="600px">
 </div>
 
 ## ⚙️ Data and Benchmarking your own models
@@ -230,3 +247,13 @@ scancel -u $USER                   # Cancel all your jobs
 # Evaluation jobs automatically save checkpoints
 uv run scripts/batch_evaluate_summaries.py --checkpoint evalsum_logs/evaluation_checkpoint_<model>_<dataset>.json --resume
 ``` 
+
+## Contact
+- Shenzhe Zhu: cho.zhu@mail.utoronto.ca
+- Shu Yang: shu.yang@kaust.edu.sa
+- Jiaxin Pei: pedropei@stanford.edu
+
+## 📖 BibTeX:
+```
+TODO
+```
