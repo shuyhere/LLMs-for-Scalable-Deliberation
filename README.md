@@ -42,7 +42,7 @@ This repository contains the official code and data for *Can AI Truly Represent 
 
 ## 📣 News
 
-*  2025.09.27 Our code and data are released. 
+*  2025.09.27 Our code, [data](https://huggingface.co/datasets/babytreecc/DeliberationBank) and [model](https://huggingface.co/babytreecc/DeliberationJudge) are released. 
 
 ## 🧐 Overview
 
