@@ -8,7 +8,7 @@ Scaling evaluation of LLM-based opinion summarization in public deliberation.
 
 <h3 align="center">
   <a href="https://shenzhezhu.github.io/">Shenzhe Zhu<sup>1,*</sup></a>, 
-  <a href="https://shuyhere.notion.site/Shu-Yang-1210f14e46e080f18511e448279487e6">Shuyang<sup>2,*</sup></a>, 
+  <a href="https://shuyhere.notion.site/Shu-Yang-1210f14e46e080f18511e448279487e6">Shu Yang<sup>2,*</sup></a>, 
   <a href="https://miba.dev/">Michiel A. Bakker<sup>3</sup></a>, 
   <a href="https://www.media.mit.edu/people/sandy/">Alex Pentland<sup>3,4</sup></a>, 
   <a href="https://jiaxin-pei.github.io/">Jiaxin Pei<sup>4,†</sup></a>
