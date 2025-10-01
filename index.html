@@ -14,12 +14,8 @@
 		background-color: #f5f9ff;
 	}
 
-	/* Hide both math displays initially, will display based on JS detection */
-  .mathjax-mobile, .mathml-non-mobile { display: none; }
-
-  /* Show the MathML content by default on non-mobile devices */
-  .show-mathml .mathml-non-mobile { display: block; }
-  .show-mathjax .mathjax-mobile { display: block; }
+  /* MathJax-only rendering */
+  .mathjax-mobile { display: block; }
 
 	.content-margin-container {
 		display: flex;
@@ -365,36 +361,9 @@ table.header tr:nth-child(2) td { padding-bottom: 5px; }
 				</div>
 		    <div class="main-content-block">
 					<h1>Automatic Deliberation Summarization Evaluation Framework</h1>
-                    The overall goal is to evaluate LLM's capabilities to generate representative and effective summaries for public deliberations. We create four deliberation-relevant metrics, grounded in prior work on summarization and societal deliberation: <em>Representativeness</em>, <em></em>Informativeness</em>, <em>Neutrality</em>, and <em>Policy Approval</em>, and adopt an automatic evaluation framework. For each deliberation question (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-						<msub>
-						  <mi>q</mi>
-						</msub>
-					  </math>), a subset of opinions (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-						<mover accent="true">
-						  <mi>O</mi>
-						  <mo>~</mo>
-						</mover>
-					  </math>) from public opinion dataset part of <span class="sc">DeliberationBank</span> is given to a summarization model (<i>M</i>), which produces a summary:
+                    The overall goal is to evaluate LLM's capabilities to generate representative and effective summaries for public deliberations. We create four deliberation-relevant metrics, grounded in prior work on summarization and societal deliberation: <em>Representativeness</em>, <em></em>Informativeness</em>, <em>Neutrality</em>, and <em>Policy Approval</em>, and adopt an automatic evaluation framework. For each deliberation question (\( q_i \)), a subset of opinions (\( \tilde{\mathcal{O}} \)) from public opinion dataset part of <span class="sc">DeliberationBank</span> is given to a summarization model (<i>M</i>), which produces a summary:
                     <center>
-                        <div class="mathml-non-mobile">
-                            <math xmlns="http://www.w3.org/1998/Math/MathML">
-                                <msub>
-                                    <mi>S</mi>
-                                    <mrow>
-                                        <mi>M</mi>
-                                        <mo>,</mo>
-                                        <mover accent="true"><mi>O</mi><mo>~</mo></mover>
-                                    </mrow>
-                                </msub>
-                                <mo>=</mo>
-                                <mi>M</mi>
-                                <mo>(</mo>
-                                <mi>q</mi>
-                                <mo>,</mo>
-                                <mover accent="true"><mi>O</mi><mo>~</mo></mover>
-                                <mo>)</mo>
-                            </math>
-                        </div>
+                        
                         <div class="mathjax-mobile">
                             \[ S_{\mathcal{M},\,\tilde{\mathcal{O}}} = \mathcal{M}(q,\,\tilde{\mathcal{O}}). \]
                         </div>
@@ -402,51 +371,7 @@ table.header tr:nth-child(2) td { padding-bottom: 5px; }
 
                     Each summary is then paired with an individual opinion (o<sub>i</sub>) and scored by <span class="sc">DeliberationJudge</span>, a fine-tuned DeBERTa judge, yielding a 4-dimensional vector:
                     <center>
-                        <div class="mathml-non-mobile">
-                            <math xmlns="http://www.w3.org/1998/Math/MathML">
-                                <msub><mi>J</mi><mi>θ</mi></msub>
-                                <mo>(</mo>
-                                <mi>q</mi>
-                                <mo>,</mo>
-                                <msub><mi>o</mi><mi>i</mi></msub>
-                                <mo>,</mo>
-                                <msub>
-                                    <mi>S</mi>
-                                    <mrow>
-                                        <mi>M</mi>
-                                        <mo>,</mo>
-                                        <mover accent="true"><mi>O</mi><mo>~</mo></mover>
-                                    </mrow>
-                                </msub>
-                                <mo>)</mo>
-                                <mo>=</mo>
-                                <mo>(</mo>
-                                <mrow>
-                                    <mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>rep</mtext><mo>)</mo>
-                                </mrow>
-                                <mo>,</mo>
-                                <mrow>
-                                    <mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>inf</mtext><mo>)</mo>
-                                </mrow>
-                                <mo>,</mo>
-                                <mrow>
-                                    <mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>neu</mtext><mo>)</mo>
-                                </mrow>
-                                <mo>,</mo>
-                                <mrow>
-                                    <mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>pol</mtext><mo>)</mo>
-                                </mrow>
-                                <mo>)</mo>
-                                <mo>∈</mo>
-                                <msup>
-                                    <mrow>
-                                        <mo>[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>]</mo>
-                                    </mrow>
-                                    <mn>4</mn>
-                                </msup>
-                                <mo>.</mo>
-                            </math>
-                        </div>
+                        
                         <div class="mathjax-mobile">
                             \[ \mathcal{J}_\theta(q,\, o_i,\, S_{\mathcal{M},\,\tilde{\mathcal{O}}}) = (\hat{y}^{(\mathrm{rep})},\, \hat{y}^{(\mathrm{inf})},\, \hat{y}^{(\mathrm{neu})},\, \hat{y}^{(\mathrm{pol})}) \in [0,1]^4. \]
                         </div>
@@ -478,71 +403,10 @@ table.header tr:nth-child(2) td { padding-bottom: 5px; }
 				</div>
 		    <div class="main-content-block">
 						<h1>DeliberationJudge</h1>
-						Recent work has adopted pretrained LLMs as automated judges, but studies reveal systematic biases and instability rooted in their black-box nature and alignment limits. To improve reliability while retaining efficiency, we introduce <span class="sc">DeliberationJudge</span>, a DeBERTa-based model fine-tuned on human judgments for deliberation summarization and used for automatic evaluation. We utilize the summary judgement dataset to fine-tune the language model. <p> The <span class="sc">DeliberationJudge</span> is trained with normalized labels from both rating and comparison tasks on a unified [0,1] scale. Formally, given a deliberation question <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-							<msub>
-							  <mi>q</mi>
-							  <mi>i</mi>
-							</msub>
-						  </math>
-						  , an annotator opinion <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-							<msubsup>
-							  <mi>o</mi>
-							  <mi>i</mi>
-							  <mrow>
-								<mo>(</mo>
-								<mi>j</mi>
-								<mo>)</mo>
-							  </mrow>
-							</msubsup>
-						  </math>
-						  , and a candidate summary<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-							<msub>
-							  <mi>S</mi>
-							  <mrow>
-								<mi>M</mi>
-								<mo>,</mo>
-								<msub>
-								  <mover accent="true">
-									<mi>O</mi>
-									<mo>~</mo>
-								  </mover>
-								  <mi>i</mi>
-								</msub>
-							  </mrow>
-							</msub>
-						  </math>
-						  , the judge encodes: </p>
+                Recent work has adopted pretrained LLMs as automated judges, but studies reveal systematic biases and instability rooted in their black-box nature and alignment limits. To improve reliability while retaining efficiency, we introduce <span class="sc">DeliberationJudge</span>, a DeBERTa-based model fine-tuned on human judgments for deliberation summarization and used for automatic evaluation. We utilize the summary judgement dataset to fine-tune the language model. <p> The <span class="sc">DeliberationJudge</span> is trained with normalized labels from both rating and comparison tasks on a unified [0,1] scale. Formally, given a deliberation question \( q_i \), an annotator opinion \( o_i^{(j)} \), and a candidate summary \( S_{M,\tilde{O}_i} \), the judge encodes: </p>
 						  <center>
 							<!-- MathML version -->
-							<div class="mathml-non-mobile">
-							  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-								<mstyle mathvariant="monospace"><mtext>[CLS]</mtext></mstyle>
-								<mo>;</mo> <mspace width="0.4em"/>
-								<msub><mi>q</mi><mi>i</mi></msub>
-								<mo>;</mo> <mspace width="0.4em"/>
-								<mstyle mathvariant="monospace"><mtext>[SEP]</mtext></mstyle>
-								<mo>;</mo> <mspace width="0.4em"/>
-								<msubsup>
-								  <mi>o</mi><mi>i</mi>
-								  <mrow><mo>(</mo><mi>j</mi><mo>)</mo></mrow>
-								</msubsup>
-								<mo>;</mo> <mspace width="0.4em"/>
-								<mstyle mathvariant="monospace"><mtext>[SEP]</mtext></mstyle>
-								<mo>;</mo> <mspace width="0.4em"/>
-								<msub>
-								  <mi>S</mi>
-								  <mrow>
-									<mi>M</mi><mo>,</mo>
-									<msub>
-									  <mover accent="true"><mi>O</mi><mo>~</mo></mover>
-									  <mi>i</mi>
-									</msub>
-								  </mrow>
-								</msub>
-								<mo>;</mo> <mspace width="0.4em"/>
-								<mstyle mathvariant="monospace"><mtext>[SEP]</mtext></mstyle>
-							  </math>
-							</div>
+							
 						  
 							<!-- MathJax fallback -->
 							<div class="mathjax-mobile">
@@ -557,47 +421,7 @@ table.header tr:nth-child(2) td { padding-bottom: 5px; }
 						  
 						  <center>
 							<!-- MathML version -->
-							<div class="mathml-non-mobile">
-							  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-								<mover accent="true"><mi>y</mi><mo>^</mo></mover>
-								<mo>=</mo>
-								<msub><mi>J</mi><mi>θ</mi></msub>
-								<mo>(</mo>
-								<msub><mi>q</mi><mi>i</mi></msub>
-								<mo>,</mo>
-								<msubsup>
-								  <mi>o</mi><mi>i</mi>
-								  <mrow><mo>(</mo><mi>j</mi><mo>)</mo></mrow>
-								</msubsup>
-								<mo>,</mo>
-								<msub>
-								  <mi>S</mi>
-								  <mrow>
-									<mi>M</mi><mo>,</mo>
-									<msub>
-									  <mover accent="true"><mi>O</mi><mo>~</mo></mover>
-									  <mi>i</mi>
-									</msub>
-								  </mrow>
-								</msub>
-								<mo>)</mo>
-								<mo>=</mo>
-								<mo>(</mo>
-								<mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>rep</mtext><mo>)</mo>
-								<mo>,</mo>
-								<mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>inf</mtext><mo>)</mo>
-								<mo>,</mo>
-								<mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>neu</mtext><mo>)</mo>
-								<mo>,</mo>
-								<mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>(</mo><mtext>pol</mtext><mo>)</mo>
-								<mo>)</mo>
-								<mo>∈</mo>
-								<msup>
-								  <mrow><mo>[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>]</mrow>
-								  <mn>4</mn>
-								</msup>
-							  </math>
-							</div>
+							
 						  
 							<!-- MathJax fallback -->
 							<div class="mathjax-mobile">
@@ -607,17 +431,9 @@ table.header tr:nth-child(2) td { padding-bottom: 5px; }
 							  \]
 							</div>
 						  </center>	
-						  <p>
-							Here the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-								<mstyle mathvariant="monospace"><mtext>[CLS]</mtext></mstyle>
-							  </math> representation from the final encoder layer is passed through a hidden layer and a linear projection to produce the four regression outputs. Human annotations 
-							<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-							  <msup><mi>y</mi><mtext>raw</mtext></msup>
-							</math> ∈ [-1,7]<sup>4</sup> are linearly normalized to 
-							<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-							  <mi>y</mi>
-							</math> ∈ [0,1]<sup>4</sup> for training stability. The model is trained with the Huber loss averaged across dimensions. At inference time, predictions remain in the [0,1] range and are used directly as summary scores.
-							</p>					  
+                  <p>
+                    Here the <code>[CLS]</code> representation from the final encoder layer is passed through a hidden layer and a linear projection to produce the four regression outputs. Human annotations \( y^{\mathrm{raw}} \in [-1,7]^4 \) are linearly normalized to \( y \in [0,1]^4 \) for training stability. The model is trained with the Huber loss averaged across dimensions. At inference time, predictions remain in the [0,1] range and are used directly as summary scores.
+                  </p>
 					
 						<!--
 						<div class="centered-container">
@@ -662,14 +478,7 @@ table.header tr:nth-child(2) td { padding-bottom: 5px; }
 		</div>
 	<div class="main-content-block">
 				<h1>Main Results</h1>
-				As shown below, table shows the LLM's global average score (GAS), expressed as 
-				<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline">
-					<mi>GAS</mi>
-					<mo>&#177;</mo>
-					<mn>95</mn>
-					<mo>%</mo>
-					<mi>CI</mi>
-				</math>,
+                As shown below, table shows the LLM's global average score (\(\mathrm{GAS} \pm 95\%\,\mathrm{CI}\)),
 				computed across four evaluation dimensions (Representativeness, Informativeness, Neutrality, and Policy Approval) over all data samples. Models are arranged from left to right and top to bottom in descending order of mean performance.
 	</div>
 	</div>
@@ -738,10 +547,24 @@ table.header tr:nth-child(2) td { padding-bottom: 5px; }
       return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1) || /Mobi|Android/i.test(navigator.userAgent);
   }
 
-  // Set up display without external CDNs: always use MathML locally
+  // Load MathJax on demand (mobile only)
+  function loadMathJaxOnce() {
+      if (window.MathJax || document.getElementById('mathjax-loader')) return;
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]], displayMath: [["\\[", "\\]"]] },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      };
+      var s = document.createElement('script');
+      s.id = 'mathjax-loader';
+      s.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.min.js';
+      s.async = true;
+      document.head.appendChild(s);
+  }
+
+  // Set up display: use MathJax on all devices (previous behavior)
   function applyDisplay() {
-      // Always show MathML content (pure local)
-      document.body.classList.add('show-mathml');
+      document.body.classList.add('show-mathjax');
+      loadMathJaxOnce();
 
       // Toggle video variants based on device
       if (isMobileDevice()) {
