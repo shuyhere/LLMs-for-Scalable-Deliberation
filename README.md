@@ -32,7 +32,7 @@ If you like our project, please give us a star ⭐ on GitHub for the latest upda
 
 <div align=center>
   
-[![arXiv](https://img.shields.io/badge/Arxiv-123.svg?logo=arXiv)](https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/) 
+[![arXiv](https://img.shields.io/badge/Arxiv-123.svg?logo=arXiv)](https://arxiv.org/abs/2510.05154) 
 [![Home Page](https://img.shields.io/badge/Project-LLMDeliberation-green.svg)](https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/)
 
 This repository contains the official code and data for *Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs*.
