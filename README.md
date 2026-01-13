@@ -255,5 +255,10 @@ uv run scripts/batch_evaluate_summaries.py --checkpoint evalsum_logs/evaluation_
 
 ## 📖 BibTeX:
 ```
-TODO
+@article{zhu2025can,
+  title={Can AI Truly Represent Your Voice in Deliberations? A Comprehensive Study of Large-Scale Opinion Aggregation with LLMs},
+  author={Zhu, Shenzhe and Yang, Shu and Bakker, Michiel A and Pentland, Alex and Pei, Jiaxin},
+  journal={arXiv preprint arXiv:2510.05154},
+  year={2025}
+}
 ```
