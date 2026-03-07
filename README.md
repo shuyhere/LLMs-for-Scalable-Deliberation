@@ -8,7 +8,7 @@ Scaling evaluation of LLM-based opinion summarization in public deliberation.
 
 
 <p align="center">
-  <img src="assets/affiliations.png" alt="University of Toronto · KAUST · MIT · Stanford University" height="80">
+  <img src="assets/affiliations_v2.png" alt="Stanford University · University of Toronto · KAUST · MIT" height="80">
 </p>
 
 
