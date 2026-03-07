@@ -14,12 +14,9 @@ Scaling evaluation of LLM-based opinion summarization in public deliberation.
   <a href="https://jiaxin-pei.github.io/">Jiaxin Pei<sup>4,†</sup></a>
 </h3>
 
-<h3 align="center">
-  UofToronto<sup>1</sup>, 
-  KAUST<sup>2</sup>, 
-  MIT<sup>3</sup>, 
-  Stanford University<sup>4</sup>
-</h3>
+<p align="center">
+  <img src="assets/affiliations.png" alt="University of Toronto · KAUST · MIT · Stanford University" height="80">
+</p>
 
 
 <h4 align="center"> 
