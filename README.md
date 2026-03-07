@@ -6,13 +6,6 @@ Scaling evaluation of LLM-based opinion summarization in public deliberation.
 </div>
 <h2 align="center"> <a href="https://shuyhere.github.io/LLMs-for-Scalable-Deliberation/">	LLMs-for-Scalable-Deliberation </a></h2>
 
-<h3 align="center">
-  <a href="https://shenzhezhu.github.io/">Shenzhe Zhu<sup>1,*</sup></a>, 
-  <a href="https://shuyhere.notion.site/Shu-Yang-1210f14e46e080f18511e448279487e6">Shu Yang<sup>2,*</sup></a>, 
-  <a href="https://miba.dev/">Michiel A. Bakker<sup>3</sup></a>, 
-  <a href="https://www.media.mit.edu/people/sandy/">Alex Pentland<sup>3,4</sup></a>, 
-  <a href="https://jiaxin-pei.github.io/">Jiaxin Pei<sup>4,†</sup></a>
-</h3>
 
 <p align="center">
   <img src="assets/affiliations.png" alt="University of Toronto · KAUST · MIT · Stanford University" height="80">
